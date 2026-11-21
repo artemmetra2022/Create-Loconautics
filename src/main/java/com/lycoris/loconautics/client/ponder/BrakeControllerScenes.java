@@ -71,7 +71,7 @@ public class BrakeControllerScenes {
 
         brake(scene, util, 15);
         scene.overlay().showText(70)
-                .text("At full brake the output stops while the engine keeps turning")
+                .text("At full brake the output slows to a quarter of its speed")
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(BRAKE));
@@ -89,7 +89,8 @@ public class BrakeControllerScenes {
         scene.idle(20);
 
         GuiPonder.Panel panel = GuiPonder.open(scene, GuiPonder.TWO_ROWS,
-                Component.translatable(BrakeControllerMenu.BRAKE_KEY));
+                Component.translatable(BrakeControllerMenu.BRAKE_KEY),
+                Component.translatable(BrakeControllerMenu.EMERGENCY_KEY));
 
         scene.overlay().showControls(util.vector().topOf(BRAKE), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
@@ -111,6 +112,17 @@ public class BrakeControllerScenes {
         panel.put(scene, 0, new ItemStack(Items.GOLD_INGOT));
         scene.idle(20);
         panel.put(scene, 1, new ItemStack(Items.REDSTONE));
+        scene.idle(70);
+
+        panel.mark(scene, 1);
+        scene.overlay().showText(80)
+                .text("The Emergency row is a second frequency, while it has a signal the brake bites at full force")
+                .attachKeyFrame()
+                .placeNearTarget();
+        scene.idle(20);
+        panel.put(scene, 2, new ItemStack(Items.IRON_INGOT));
+        scene.idle(20);
+        panel.put(scene, 3, new ItemStack(Items.LAPIS_LAZULI));
         scene.idle(70);
 
         panel.mark(scene, -1);
@@ -140,7 +152,8 @@ public class BrakeControllerScenes {
         scene.world().modifyBlocks(util.select().position(BRAKE),
                 state -> state.setValue(BrakeControllerBlock.POWERED, signal > 0), false);
         scene.effects().indicateRedstone(BRAKE);
-        float coefficient = 1f - signal / (float) BrakeControllerBlockEntity.MAX_SIGNAL;
+        float coefficient = 1f - BrakeControllerBlockEntity.MAX_SPEED_REDUCTION
+                * signal / (float) BrakeControllerBlockEntity.MAX_SIGNAL;
         scene.world().setKineticSpeed(transmission(util), INPUT_RPM * coefficient);
     }
 

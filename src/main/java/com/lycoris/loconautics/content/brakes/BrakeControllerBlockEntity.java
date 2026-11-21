@@ -39,12 +39,18 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
 
     private static final int VALIDATE_INTERVAL = 10;
 
+    /** the share of the speed the brake can take away at the top lever position, the shaft never stops dead */
+    public static final float MAX_SPEED_REDUCTION = 0.75f;
+
     // only the first frequency pair is used, the second one stays empty
-    private final RedstoneLinkPair links = new RedstoneLinkPair(this, this::setBrakeSignal, s -> { });
+    // the first pair sets the brake lever, the second one is the emergency brake switch
+    private final RedstoneLinkPair links = new RedstoneLinkPair(this, this::setBrakeSignal, this::setEmergencySignal);
 
     private int brakeSignal;
 
     private boolean stateDirty;
+
+    private boolean emergency;
 
     private boolean kineticRefreshQueued;
 
@@ -108,9 +114,20 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         return isActive() ? brakeSignal : 0;
     }
 
-    /** 1 passes the speed on untouched, 0 holds the output still */
+    /** the emergency brake is on and the controller sits where it is allowed to work */
+    public boolean isEmergency() {
+        return emergency && isActive();
+    }
+
+    /** whether anything is braking, the lever or the emergency switch */
+    public boolean isBraking() {
+        return isEmergency() || getEffectiveBrakeSignal() > 0;
+    }
+
+    /** 1 passes the speed on untouched, 1 - MAX_SPEED_REDUCTION at full lever, 0 with the emergency brake on */
     public float getBrakeCoefficient() {
-        return 1f - getEffectiveBrakeSignal() / (float) MAX_SIGNAL;
+        if (isEmergency()) return 0f;
+        return 1f - MAX_SPEED_REDUCTION * getEffectiveBrakeSignal() / (float) MAX_SIGNAL;
     }
 
     public void setBrakeSignal(int signal) {
@@ -118,6 +135,16 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         if (brakeSignal == clamped) return;
         brakeSignal = clamped;
         // the link callback runs inside create's network walk, the kinetic change rides the tick instead
+        kineticRefreshQueued = true;
+        setChanged();
+        sendData();
+    }
+
+    public void setEmergencySignal(int signal) {
+        boolean on = signal > 0;
+        if (emergency == on) return;
+        emergency = on;
+        // same as the lever, the kinetic change waits for the tick
         kineticRefreshQueued = true;
         setChanged();
         sendData();
@@ -145,7 +172,8 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
     @Override
     public float calculateStressApplied() {
         float impact = LoconauticsConfig.BRAKE_CONTROLLER_SU_IMPACT.get().floatValue();
-        float applied = impact * (1f - getBrakeCoefficient());
+        float fraction = isEmergency() ? 1f : getEffectiveBrakeSignal() / (float) MAX_SIGNAL;
+        float applied = impact * fraction;
         this.lastStressApplied = applied;
         return applied;
     }
@@ -199,7 +227,7 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         block.detachKinetics(level, worldPosition);
         reattachPending = true;
         setChanged();
-        BlockState updated = state.setValue(BrakeControllerBlock.POWERED, getEffectiveBrakeSignal() > 0);
+        BlockState updated = state.setValue(BrakeControllerBlock.POWERED, isBraking());
         if (!updated.equals(state)) {
             level.setBlock(worldPosition, updated, 2);
         }
@@ -220,6 +248,21 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         return links.getFirstFreqB();
     }
 
+    public void setEmergencyFrequency(ItemStack first, ItemStack second) {
+        links.setSecondFrequency(first, second);
+        if (level != null && !level.isClientSide) links.register(level);
+        setChanged();
+        sendData();
+    }
+
+    public ItemStack getEmergencyFreqFirst() {
+        return links.getSecondFreqA();
+    }
+
+    public ItemStack getEmergencyFreqSecond() {
+        return links.getSecondFreqB();
+    }
+
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
@@ -229,6 +272,10 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         if (problem != null) {
             tooltip.add(Component.literal(" ").append(
                     Component.translatable("loconautics.brake_controller.problem." + problem))
+                    .withStyle(ChatFormatting.RED));
+        } else if (emergency) {
+            tooltip.add(Component.literal(" ").append(
+                    Component.translatable("loconautics.brake_controller.goggles.emergency"))
                     .withStyle(ChatFormatting.RED));
         } else {
             tooltip.add(Component.literal(" ").append(
@@ -251,6 +298,8 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
     public void sendToMenu(RegistryFriendlyByteBuf buffer) {
         ComponentSerialization.TRUSTED_STREAM_CODEC
                 .encode(buffer, Component.translatable(BrakeControllerMenu.BRAKE_KEY));
+        ComponentSerialization.TRUSTED_STREAM_CODEC
+                .encode(buffer, Component.translatable(BrakeControllerMenu.EMERGENCY_KEY));
         super.sendToMenu(buffer);
     }
 
@@ -258,6 +307,7 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
         tag.putInt("BrakeSignal", brakeSignal);
+        tag.putBoolean("Emergency", emergency);
         if (problem != null) tag.putString("Problem", problem);
         if (!clientPacket && reattachPending) tag.putBoolean("ReattachPending", true);
         writeFrequency(tag, registries);
@@ -273,6 +323,8 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         CompoundTag freq = new CompoundTag();
         freq.put("First", links.getFirstFreqA().saveOptional(registries));
         freq.put("Second", links.getFirstFreqB().saveOptional(registries));
+        freq.put("EmergencyFirst", links.getSecondFreqA().saveOptional(registries));
+        freq.put("EmergencySecond", links.getSecondFreqB().saveOptional(registries));
         tag.put("Frequency", freq);
     }
 
@@ -280,6 +332,7 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         brakeSignal = tag.getInt("BrakeSignal");
+        emergency = tag.getBoolean("Emergency");
         problem = tag.contains("Problem") ? tag.getString("Problem") : null;
         if (!clientPacket) {
             reattachPending = tag.getBoolean("ReattachPending");
@@ -289,6 +342,9 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
             links.setFirstFrequency(
                     ItemStack.parseOptional(registries, freq.getCompound("First")),
                     ItemStack.parseOptional(registries, freq.getCompound("Second")));
+            links.setSecondFrequency(
+                    ItemStack.parseOptional(registries, freq.getCompound("EmergencyFirst")),
+                    ItemStack.parseOptional(registries, freq.getCompound("EmergencySecond")));
         }
     }
 }

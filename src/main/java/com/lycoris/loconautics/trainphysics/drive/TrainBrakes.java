@@ -112,34 +112,44 @@ public final class TrainBrakes {
         }
         int bestHandbrake = 0;
         int bestController = 0;
+        boolean emergency = false;
         for (BlockPos pos : scan.positions()) {
             BlockState state = subLevel.getBlockState(pos);
             if (state.getBlock() instanceof HandbrakeBlock && state.getValue(HandbrakeBlock.POWERED)) {
                 bestHandbrake = Math.max(bestHandbrake, subLevel.getBestNeighborSignal(pos));
             } else if (state.getBlock() instanceof BrakeControllerBlock
                     && subLevel.getBlockEntity(pos) instanceof BrakeControllerBlockEntity brake) {
-                // the lever position, 0 to 15, but the controller reaches full strength early (see
-                // CONTROLLER_FULL_STRENGTH_SIGNAL) and holds a plateau past that point
+                // the lever position, 0 to 15, full strength only at the very top (see
+                // CONTROLLER_FULL_STRENGTH_SIGNAL)
                 bestController = Math.max(bestController, brake.getEffectiveBrakeSignal());
+                emergency |= brake.isEmergency();
             }
-            if (bestHandbrake >= 15 && bestController >= 15) {
+            if (bestHandbrake >= 15 && bestController >= 15 && emergency) {
                 break;
             }
         }
         double handbrakeFraction = bestHandbrake / 15.0;
         double handbrakeStrength = handbrakeFraction * handbrakeFraction;
 
-        // softened curve: position CONTROLLER_FULL_STRENGTH_SIGNAL (8) now reaches the strength that
-        // position 15 used to reach, halving the effective deceleration at a given lever position
+        // the curve spans the whole lever travel, so every notch brakes gentler than when it peaked at 8
         double controllerFraction = Math.min(1.0, bestController / (double) CONTROLLER_FULL_STRENGTH_SIGNAL);
-        double controllerStrength = controllerFraction * controllerFraction;
+        double controllerStrength = controllerFraction * controllerFraction * CONTROLLER_MAX_STRENGTH;
+
+        // the emergency switch skips the cap and brakes as hard as a handbrake all the way up
+        if (emergency) {
+            controllerStrength = 1.0;
+        }
 
         return Math.max(handbrakeStrength, controllerStrength);
     }
 
-    // the Brake Controller lever reaches full braking strength at this position instead of at 15,
-    // making it roughly twice as gentle per notch as a redstone handbrake
-    private static final int CONTROLLER_FULL_STRENGTH_SIGNAL = 8;
+    // the Brake Controller lever reaches full wheel braking strength only at this position, the same
+    // as a redstone handbrake (it used to be 8, which made the train stop too fast)
+    private static final int CONTROLLER_FULL_STRENGTH_SIGNAL = 15;
+
+    // the controller never brakes harder than this share of a handbrake, even with the lever all the way up. 0.5 stays
+    // at the wheel grip limit, so the wheels do not lock and skid either
+    private static final double CONTROLLER_MAX_STRENGTH = 0.5;
 
     private static final double MIN_ROLLING_WEIGHT = 0.25;
     private static final double MAX_ROLLING_WEIGHT = 4.0;
