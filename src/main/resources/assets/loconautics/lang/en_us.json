@@ -581,6 +581,7 @@
   "loconautics.gui.goggles.gauge_odometer_km": "Odometer (km)",
   "loconautics.gui.goggles.gauge_trip_km": "Trip (km)",
   "loconautics.gui.goggles.gauge_clock": "Clock",
+  "loconautics.gui.goggles.gauge_acceleration": "Acceleration",
   "loconautics.gui.goggles.speedometer_distance": "Distance:",
   "loconautics.gui.goggles.speedometer_trip": "Trip:",
   "loconautics.gui.speedometer.trip_reset": "Trip counter reset",

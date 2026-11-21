@@ -21,6 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -225,7 +226,12 @@ public enum GaugeMetric implements StringRepresentable {
             ChatFormatting.GOLD, GaugeBlockEntity.DEFAULT_BACKGROUND),
     CLOCK(SpeedometerBlockEntity.class,
             GaugeMetric::clockText, GaugeMetric::clockFraction,
-            ChatFormatting.WHITE, GaugeBlockEntity.DEFAULT_BACKGROUND);
+            ChatFormatting.WHITE, GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    ACCELERATION(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%+.2f m/s²", be.getAcceleration()),
+            GaugeMetric::accelerationFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -399,6 +405,13 @@ public enum GaugeMetric implements StringRepresentable {
     // a twelve hour dial, the needle goes round twice a day
     private static float clockFraction(SpeedometerBlockEntity be) {
         return (clockHours(be) % 12f) / 12f;
+    }
+
+    // centered dial: 0 m/s^2 sits at the middle (0.5), full scale braking/accelerating swings it to either end
+    private static float accelerationFraction(SpeedometerBlockEntity be) {
+        double clamped = Mth.clamp(be.getAcceleration(),
+                -SpeedometerBlockEntity.ACCELERATION_FULL_SCALE, SpeedometerBlockEntity.ACCELERATION_FULL_SCALE);
+        return (float) (0.5 + clamped / (SpeedometerBlockEntity.ACCELERATION_FULL_SCALE * 2.0));
     }
 
     private static String speed(VelocitySensorBlockEntity be, double factor, String unit) {

@@ -110,23 +110,36 @@ public final class TrainBrakes {
             scan = new BrakeScan(now, found);
             BRAKE_SCANS.put(sub, scan);
         }
-        int best = 0;
+        int bestHandbrake = 0;
+        int bestController = 0;
         for (BlockPos pos : scan.positions()) {
             BlockState state = subLevel.getBlockState(pos);
             if (state.getBlock() instanceof HandbrakeBlock && state.getValue(HandbrakeBlock.POWERED)) {
-                best = Math.max(best, subLevel.getBestNeighborSignal(pos));
+                bestHandbrake = Math.max(bestHandbrake, subLevel.getBestNeighborSignal(pos));
             } else if (state.getBlock() instanceof BrakeControllerBlock
                     && subLevel.getBlockEntity(pos) instanceof BrakeControllerBlockEntity brake) {
-                // the lever position, 0 to 15, goes through the same curve as a redstone handbrake
-                best = Math.max(best, brake.getBrakeSignal());
+                // the lever position, 0 to 15, but the controller reaches full strength early (see
+                // CONTROLLER_FULL_STRENGTH_SIGNAL) and holds a plateau past that point
+                bestController = Math.max(bestController, brake.getBrakeSignal());
             }
-            if (best >= 15) {
+            if (bestHandbrake >= 15 && bestController >= 15) {
                 break;
             }
         }
-        double fraction = best / 15.0;
-        return fraction * fraction;
+        double handbrakeFraction = bestHandbrake / 15.0;
+        double handbrakeStrength = handbrakeFraction * handbrakeFraction;
+
+        // softened curve: position CONTROLLER_FULL_STRENGTH_SIGNAL (8) now reaches the strength that
+        // position 15 used to reach, halving the effective deceleration at a given lever position
+        double controllerFraction = Math.min(1.0, bestController / (double) CONTROLLER_FULL_STRENGTH_SIGNAL);
+        double controllerStrength = controllerFraction * controllerFraction;
+
+        return Math.max(handbrakeStrength, controllerStrength);
     }
+
+    // the Brake Controller lever reaches full braking strength at this position instead of at 15,
+    // making it roughly twice as gentle per notch as a redstone handbrake
+    private static final int CONTROLLER_FULL_STRENGTH_SIGNAL = 8;
 
     private static final double MIN_ROLLING_WEIGHT = 0.25;
     private static final double MAX_ROLLING_WEIGHT = 4.0;

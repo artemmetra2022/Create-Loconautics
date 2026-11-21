@@ -32,8 +32,15 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
 
     private static final double DISTANCE_SYNC_STEP = 5.0;
 
+    /** full dial scale for acceleration, in m/s^2; matches a brisk locomotive start/stop */
+    public static final double ACCELERATION_FULL_SCALE = 1.5;
+    private static final float ACCELERATION_SMOOTHING = 0.3f;
+    private static final float ACCELERATION_SYNC_STEP = 0.02f;
+
     private float speed;
     private float syncedSpeed;
+    private float acceleration;
+    private float syncedAcceleration;
     private int signal;
 
     // meters driven, saved with the block, the trip counter can be reset by hand
@@ -52,6 +59,11 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     /** blocks per second */
     public float getSpeed() {
         return speed;
+    }
+
+    /** signed acceleration in m/s^2, smoothed; positive while speeding up, negative while braking */
+    public float getAcceleration() {
+        return acceleration;
     }
 
     public int getSignal() {
@@ -83,13 +95,20 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         double driven = target * (SAMPLE_TICKS / 20.0);
         totalMeters += driven;
         tripMeters += driven;
+        float previousSpeed = speed;
         speed += (target - speed) * SMOOTHING;
         if (target <= 0f && speed < SYNC_STEP) speed = 0f;
 
+        // change in (unsigned) speed over the sample window, smoothed again so the needle does not jitter
+        float instantAccel = (speed - previousSpeed) / (SAMPLE_TICKS / 20f);
+        acceleration += (instantAccel - acceleration) * ACCELERATION_SMOOTHING;
+
         if (Math.abs(speed - syncedSpeed) >= SYNC_STEP
-                || Math.abs(totalMeters - syncedMeters) >= DISTANCE_SYNC_STEP) {
+                || Math.abs(totalMeters - syncedMeters) >= DISTANCE_SYNC_STEP
+                || Math.abs(acceleration - syncedAcceleration) >= ACCELERATION_SYNC_STEP) {
             syncedSpeed = speed;
             syncedMeters = totalMeters;
+            syncedAcceleration = acceleration;
             setChanged();
             sendData();
         }
@@ -138,6 +157,7 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
         tag.putFloat("Speed", speed);
+        tag.putFloat("Acceleration", acceleration);
         tag.putInt("Signal", signal);
         tag.putDouble("TotalMeters", totalMeters);
         tag.putDouble("TripMeters", tripMeters);
@@ -147,8 +167,10 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         speed = tag.getFloat("Speed");
+        acceleration = tag.getFloat("Acceleration");
         signal = tag.getInt("Signal");
         syncedSpeed = speed;
+        syncedAcceleration = acceleration;
         totalMeters = tag.getDouble("TotalMeters");
         tripMeters = tag.getDouble("TripMeters");
         syncedMeters = totalMeters;
