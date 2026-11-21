@@ -30,9 +30,16 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     private static final float SMOOTHING = 0.5f;
     private static final float SYNC_STEP = 0.05f;
 
+    private static final double DISTANCE_SYNC_STEP = 5.0;
+
     private float speed;
     private float syncedSpeed;
     private int signal;
+
+    // meters driven, saved with the block, the trip counter can be reset by hand
+    private double totalMeters;
+    private double tripMeters;
+    private double syncedMeters;
 
     public SpeedometerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -51,6 +58,21 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         return signal;
     }
 
+    public double getTotalMeters() {
+        return totalMeters;
+    }
+
+    public double getTripMeters() {
+        return tripMeters;
+    }
+
+    public void resetTrip() {
+        tripMeters = 0.0;
+        syncedMeters = totalMeters;
+        setChanged();
+        sendData();
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -58,11 +80,16 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         if ((level.getGameTime() + worldPosition.asLong()) % SAMPLE_TICKS != 0) return;
 
         float target = (float) measure();
+        double driven = target * (SAMPLE_TICKS / 20.0);
+        totalMeters += driven;
+        tripMeters += driven;
         speed += (target - speed) * SMOOTHING;
         if (target <= 0f && speed < SYNC_STEP) speed = 0f;
 
-        if (Math.abs(speed - syncedSpeed) >= SYNC_STEP) {
+        if (Math.abs(speed - syncedSpeed) >= SYNC_STEP
+                || Math.abs(totalMeters - syncedMeters) >= DISTANCE_SYNC_STEP) {
             syncedSpeed = speed;
+            syncedMeters = totalMeters;
             setChanged();
             sendData();
         }
@@ -94,6 +121,16 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         LoconauticsLang.builder()
                 .text(String.format(Locale.US, "%.1f m/s", speed))
                 .style(ChatFormatting.DARK_GRAY).forGoggles(tooltip, 1);
+        LoconauticsLang.translate("gui.goggles.speedometer_distance")
+                .style(ChatFormatting.GRAY).forGoggles(tooltip);
+        LoconauticsLang.builder()
+                .text(String.format(Locale.US, "%.2f km", totalMeters / 1000.0))
+                .style(ChatFormatting.GOLD).forGoggles(tooltip, 1);
+        LoconauticsLang.translate("gui.goggles.speedometer_trip")
+                .style(ChatFormatting.GRAY).forGoggles(tooltip);
+        LoconauticsLang.builder()
+                .text(String.format(Locale.US, "%.2f km", tripMeters / 1000.0))
+                .style(ChatFormatting.GOLD).forGoggles(tooltip, 1);
         return true;
     }
 
@@ -102,6 +139,8 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         super.write(tag, registries, clientPacket);
         tag.putFloat("Speed", speed);
         tag.putInt("Signal", signal);
+        tag.putDouble("TotalMeters", totalMeters);
+        tag.putDouble("TripMeters", tripMeters);
     }
 
     @Override
@@ -110,5 +149,8 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         speed = tag.getFloat("Speed");
         signal = tag.getInt("Signal");
         syncedSpeed = speed;
+        totalMeters = tag.getDouble("TotalMeters");
+        tripMeters = tag.getDouble("TripMeters");
+        syncedMeters = totalMeters;
     }
 }

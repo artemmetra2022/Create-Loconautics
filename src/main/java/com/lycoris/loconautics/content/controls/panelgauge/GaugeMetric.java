@@ -214,7 +214,18 @@ public enum GaugeMetric implements StringRepresentable {
     TRAIN_SPEED_MPH(SpeedometerBlockEntity.class,
             be -> String.format(Locale.US, "%.1f mph", be.getSpeed() * 2.23694f),
             be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
-            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND);
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    ODOMETER_KM(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.2f km", be.getTotalMeters() / 1000.0),
+            be -> (float) ((be.getTotalMeters() / 1000.0) % 1.0),
+            ChatFormatting.GOLD, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRIP_KM(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.2f km", be.getTripMeters() / 1000.0),
+            be -> (float) ((be.getTripMeters() / 1000.0) % 1.0),
+            ChatFormatting.GOLD, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    CLOCK(SpeedometerBlockEntity.class,
+            GaugeMetric::clockText, GaugeMetric::clockFraction,
+            ChatFormatting.WHITE, GaugeBlockEntity.DEFAULT_BACKGROUND);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -371,6 +382,23 @@ public enum GaugeMetric implements StringRepresentable {
         if (controller == null) return 0f;
         return over(controller.getTankInventory().getFluidAmount(),
                 controller.getTankInventory().getCapacity());
+    }
+
+    private static float clockHours(SpeedometerBlockEntity be) {
+        if (be.getLevel() == null) return 0f;
+        // day time 0 is six in the morning
+        return ((be.getLevel().getDayTime() % 24000L) / 1000f + 6f) % 24f;
+    }
+
+    private static String clockText(SpeedometerBlockEntity be) {
+        float hours = clockHours(be);
+        int whole = (int) hours;
+        return String.format(Locale.US, "%02d:%02d", whole, (int) ((hours - whole) * 60f));
+    }
+
+    // a twelve hour dial, the needle goes round twice a day
+    private static float clockFraction(SpeedometerBlockEntity be) {
+        return (clockHours(be) % 12f) / 12f;
     }
 
     private static String speed(VelocitySensorBlockEntity be, double factor, String unit) {
