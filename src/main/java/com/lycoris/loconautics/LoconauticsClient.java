@@ -282,6 +282,7 @@ public final class LoconauticsClient {
                 new com.lycoris.loconautics.client.VariableStressTooltip(false, "tooltip.stress.variable",
                         "tooltip.stress.bearing_axle_note"));
         registerTooltip(LoconauticsRegistries.TRANSMISSION_ITEM.get(), "block.loconautics.transmission");
+        registerTooltip(LoconauticsRegistries.BRAKE_CONTROLLER_ITEM.get(), "block.loconautics.brake_controller");
         registerTooltip(LoconauticsRegistries.TURNTABLE_BEARING_ITEM.get(), "block.loconautics.turntable_bearing");
         registerExtraTooltip(com.lycoris.loconautics.content.boiler.BoilerBlocks.STEAM_TAKEOFF_ITEM.get(),
                 new com.lycoris.loconautics.client.VariableStressTooltip(true, "tooltip.stress.variable",
@@ -419,6 +420,8 @@ public final class LoconauticsClient {
                 AnalogControllerScreen::new);
         event.register(LoconauticsRegistries.TRANSMISSION_MENU.get(),
                 TransmissionScreen::new);
+        event.register(LoconauticsRegistries.BRAKE_CONTROLLER_MENU.get(),
+                com.lycoris.loconautics.content.brakes.BrakeControllerScreen::new);
         event.register(LoconauticsRegistries.BEARING_AXLE_MENU.get(),
                 com.lycoris.loconautics.content.bearingaxle.BearingAxleScreen::new);
         event.register(LoconauticsRegistries.BOILER_BOGEY_MENU.get(),

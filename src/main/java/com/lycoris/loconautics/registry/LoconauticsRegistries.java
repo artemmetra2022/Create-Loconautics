@@ -370,6 +370,32 @@ public final class LoconauticsRegistries {
             TRANSMISSION_MENU = MENUS.register("transmission", () ->
             IMenuTypeExtension.create(LoconauticsRegistries::createTransmissionMenu));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.brakes.BrakeControllerBlock>
+            BRAKE_CONTROLLER = BLOCKS.register("brake_controller", () ->
+            new com.lycoris.loconautics.content.brakes.BrakeControllerBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .requiresCorrectToolForDrops()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> BRAKE_CONTROLLER_ITEM =
+            ITEMS.register("brake_controller", () ->
+                    new BlockItem(BRAKE_CONTROLLER.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<BlockEntityType<?>,
+            BlockEntityType<com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity>>
+            BRAKE_CONTROLLER_BE = BLOCK_ENTITIES.register("brake_controller", () ->
+            BlockEntityType.Builder
+                    .of(LoconauticsRegistries::createBrakeControllerBE, BRAKE_CONTROLLER.get())
+                    .build(null));
+
+    public static final DeferredHolder<MenuType<?>,
+            MenuType<com.lycoris.loconautics.content.brakes.BrakeControllerMenu>>
+            BRAKE_CONTROLLER_MENU = MENUS.register("brake_controller", () ->
+            IMenuTypeExtension.create(LoconauticsRegistries::createBrakeControllerMenu));
+
     public static final DeferredHolder<Item, SteelCableItem> STEEL_CABLE =
             ITEMS.register("steel_cable", () -> new SteelCableItem(new Item.Properties().stacksTo(16)));
 
@@ -546,6 +572,7 @@ public final class LoconauticsRegistries {
 
                         output.accept(BEARING_AXLE_ITEM.get());
                         output.accept(TRANSMISSION_ITEM.get());
+                        output.accept(BRAKE_CONTROLLER_ITEM.get());
 
                         com.lycoris.loconautics.content.dashboard.DashboardBlocks.DASHBOARD_ITEMS
                                 .forEach((color, item) -> output.accept(new net.minecraft.world.item.ItemStack(item.get()),
@@ -674,6 +701,18 @@ public final class LoconauticsRegistries {
 
     static TransmissionBlockEntity createTransmissionBE(BlockPos pos, BlockState state) {
         return new TransmissionBlockEntity(TRANSMISSION_BE.get(), pos, state);
+    }
+
+    static com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity createBrakeControllerBE(
+            BlockPos pos, BlockState state) {
+        return new com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity(
+                BRAKE_CONTROLLER_BE.get(), pos, state);
+    }
+
+    static com.lycoris.loconautics.content.brakes.BrakeControllerMenu createBrakeControllerMenu(
+            int id, Inventory inv, RegistryFriendlyByteBuf buf) {
+        return new com.lycoris.loconautics.content.brakes.BrakeControllerMenu(
+                BRAKE_CONTROLLER_MENU.get(), id, inv, buf);
     }
 
     static TransmissionMenu createTransmissionMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {

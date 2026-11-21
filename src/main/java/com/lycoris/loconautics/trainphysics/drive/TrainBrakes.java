@@ -3,6 +3,8 @@ package com.lycoris.loconautics.trainphysics.drive;
 import com.lycoris.loconautics.trainphysics.debug.force.ForceSource;
 import com.lycoris.loconautics.trainphysics.debug.force.ForceTrace;
 import com.lycoris.loconautics.config.LoconauticsConfig;
+import com.lycoris.loconautics.content.brakes.BrakeControllerBlock;
+import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.brakes.HandbrakeBlock;
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.common.sable.SubLevelBlocks;
@@ -100,7 +102,7 @@ public final class TrainBrakes {
         if (scan == null || now - scan.tick() >= BRAKE_SCAN_TICKS || now < scan.tick()) {
             List<BlockPos> found = new ArrayList<>();
             SubLevelBlocks.forEachBlock(sub, (pos, state) -> {
-                if (state.getBlock() instanceof HandbrakeBlock) {
+                if (state.getBlock() instanceof HandbrakeBlock || state.getBlock() instanceof BrakeControllerBlock) {
                     found.add(pos.immutable());
                 }
                 return true;
@@ -113,6 +115,10 @@ public final class TrainBrakes {
             BlockState state = subLevel.getBlockState(pos);
             if (state.getBlock() instanceof HandbrakeBlock && state.getValue(HandbrakeBlock.POWERED)) {
                 best = Math.max(best, subLevel.getBestNeighborSignal(pos));
+            } else if (state.getBlock() instanceof BrakeControllerBlock
+                    && subLevel.getBlockEntity(pos) instanceof BrakeControllerBlockEntity brake) {
+                // the lever position, 0 to 15, goes through the same curve as a redstone handbrake
+                best = Math.max(best, brake.getBrakeSignal());
             }
             if (best >= 15) {
                 break;
