@@ -384,6 +384,7 @@ public final class LoconauticsRegistries {
                             .mapColor(MapColor.METAL)
                             .strength(3.5f)
                             .sound(SoundType.NETHERITE_BLOCK)
+                            .noOcclusion()
                             .requiresCorrectToolForDrops()
             ));
 

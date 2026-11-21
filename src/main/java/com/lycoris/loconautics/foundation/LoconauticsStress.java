@@ -14,6 +14,8 @@ public final class LoconauticsStress {
     public static void register() {
         BlockStressValues.IMPACTS.register(LoconauticsRegistries.TRANSMISSION.get(),
                 LoconauticsConfig.TRANSMISSION_SU_IMPACT::get);
+        BlockStressValues.IMPACTS.register(LoconauticsRegistries.BRAKE_CONTROLLER.get(),
+                LoconauticsConfig.BRAKE_CONTROLLER_SU_IMPACT::get);
         BlockStressValues.IMPACTS.register(LoconauticsRegistries.TURNTABLE_BEARING.get(),
                 LoconauticsConfig.TURNTABLE_SU_IMPACT::get);
 

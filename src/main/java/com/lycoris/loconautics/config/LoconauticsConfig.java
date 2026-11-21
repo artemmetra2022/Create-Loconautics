@@ -79,6 +79,8 @@ public final class LoconauticsConfig {
     public static ModConfigSpec.DoubleValue OPPOSED_STRESS_FACTOR;
     public static ModConfigSpec.IntValue ANALOG_DECAY_TICKS;
     public static ModConfigSpec.DoubleValue TRANSMISSION_SU_IMPACT;
+
+    public static ModConfigSpec.DoubleValue BRAKE_CONTROLLER_SU_IMPACT;
     public static ModConfigSpec.DoubleValue TURNTABLE_SU_IMPACT;
 
     public static ModConfigSpec.DoubleValue STEEL_CABLE_MAX_RANGE;
@@ -422,6 +424,16 @@ public final class LoconauticsConfig {
 
         TRANSMISSION_SU_IMPACT = BUILDER
                 .translation(TRANSLATION_PREFIX + "blocks.transmission.suImpact")
+                .defineInRange("suImpact", 8.0, 0.0, 100.0);
+
+        BUILDER.pop();
+
+        BUILDER.translation(TRANSLATION_PREFIX + "blocks.brake_controller").push("brake_controller");
+
+        BRAKE_CONTROLLER_SU_IMPACT = BUILDER
+                .comment("Stress the Brake Controller adds per RPM of shaft speed at full braking.",
+                        "It scales with how far the brake is pulled, a released brake adds none.")
+                .translation(TRANSLATION_PREFIX + "blocks.brake_controller.suImpact")
                 .defineInRange("suImpact", 8.0, 0.0, 100.0);
 
         BUILDER.pop();

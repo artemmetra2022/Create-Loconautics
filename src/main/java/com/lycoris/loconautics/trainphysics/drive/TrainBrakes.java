@@ -120,7 +120,7 @@ public final class TrainBrakes {
                     && subLevel.getBlockEntity(pos) instanceof BrakeControllerBlockEntity brake) {
                 // the lever position, 0 to 15, but the controller reaches full strength early (see
                 // CONTROLLER_FULL_STRENGTH_SIGNAL) and holds a plateau past that point
-                bestController = Math.max(bestController, brake.getBrakeSignal());
+                bestController = Math.max(bestController, brake.getEffectiveBrakeSignal());
             }
             if (bestHandbrake >= 15 && bestController >= 15) {
                 break;

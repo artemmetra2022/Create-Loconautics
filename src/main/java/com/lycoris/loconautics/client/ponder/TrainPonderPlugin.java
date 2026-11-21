@@ -30,6 +30,10 @@ public class TrainPonderPlugin implements PonderPlugin {
                 .addStoryBoard("train/train", TrainScenes::controls)
                 .addStoryBoard("train/train", TrainScenes::assembly);
 
+        helper.forComponents(LoconauticsRegistries.BRAKE_CONTROLLER.getId())
+                .addStoryBoard("brake_controller/brake_controller", BrakeControllerScenes::single)
+                .addStoryBoard("brake_controller/brake_controller", BrakeControllerScenes::frequency);
+
         helper.forComponents(controllers())
                 .addStoryBoard("analog_controller/analog_controller", AnalogControllerScenes::intro)
                 .addStoryBoard("analog_controller/analog_controller", AnalogControllerScenes::frequency)
