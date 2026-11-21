@@ -17,6 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -50,6 +52,10 @@ public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRen
                 case LeverPart lever -> LeverPartRenderer.render(animation, ms, buffers, packedLight, state,
                         lever.body(), lever.knobColor(), lever.style(), lever.shownOptions(),
                         panel.bulbGlow(slot, partialTick));
+                case com.lycoris.loconautics.content.controls.panelreverser.ReverserPart reverser ->
+                        com.lycoris.loconautics.content.controls.panelreverser.ReverserPartRenderer.render(
+                                animation, ms, buffers, packedLight, state, reverser.body(), reverser.knobColor(),
+                                reverser.style(), reverser.shownOptions(), panel.bulbGlow(slot, partialTick));
                 case com.lycoris.loconautics.content.controls.panelswitch.SwitchPart flip ->
                         com.lycoris.loconautics.content.controls.panelswitch.SwitchPartRenderer.render(
                                 animation, ms, buffers, packedLight, state, flip.body(), flip.knobColor(), flip.style(), flip.shownOptions(),
@@ -69,6 +75,20 @@ public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRen
 
     protected void applyPartTransform(PoseStack ms, BlockState state) {
         placePanel(ms, state);
+    }
+
+    public static Vec3 toPartSpace(BlockState state, Vec3 localInBlock) {
+        AttachFace face = state.getValue(PanelBlock.FACE);
+        Direction facing = state.getValue(PanelBlock.FACING);
+
+        int x = face == AttachFace.WALL ? 90 : face == AttachFace.CEILING ? 180 : 0;
+        int yaw = ((facing.get2DDataValue() + 2) % 4) * 90 + (face == AttachFace.CEILING ? 180 : 0);
+
+        Vector3f point = new Vector3f((float) (localInBlock.x - 0.5), (float) (localInBlock.y - 0.5),
+                (float) (localInBlock.z - 0.5));
+        Axis.YP.rotationDegrees(Mth.wrapDegrees(yaw)).transform(point);
+        Axis.XP.rotationDegrees(x).transform(point);
+        return new Vec3(point.x + 0.5, point.y + 0.5, point.z + 0.5);
     }
 
     public static void placePanel(PoseStack ms, BlockState state) {

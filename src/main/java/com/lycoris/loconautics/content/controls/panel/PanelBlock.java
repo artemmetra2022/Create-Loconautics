@@ -266,6 +266,11 @@ public abstract class PanelBlock extends FaceAttachedHorizontalDirectionalBlock
         return getTargetedSlot(pos, state, clickLocation);
     }
 
+    @Override
+    public Vec3 partSpace(BlockPos pos, BlockState state, Vec3 clickLocation) {
+        return PanelRenderer.toPartSpace(state, clickLocation.subtract(Vec3.atLowerCornerOf(pos)));
+    }
+
     public static boolean mountedOn(BlockState state, Direction face) {
         return getConnectedDirection(state) == face;
     }

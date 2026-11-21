@@ -315,6 +315,11 @@ public final class BoilerBlocks {
             new com.lycoris.loconautics.content.controls.panelswitch.SwitchBlockItem(
                     LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
 
+    public static final DeferredHolder<Item, com.lycoris.loconautics.content.controls.panelreverser.ReverserBlockItem>
+            GAUGE_REVERSER_ITEM = LoconauticsRegistries.ITEMS.register("gauge_reverser", () ->
+            new com.lycoris.loconautics.content.controls.panelreverser.ReverserBlockItem(
+                    LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<BlockEntityType<?>,
             BlockEntityType<GaugeBlockEntity>>
             LOCOMOTIVE_GAUGE_BE = BLOCK_ENTITIES.register("locomotive_gauge", () ->

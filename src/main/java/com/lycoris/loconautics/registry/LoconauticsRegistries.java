@@ -156,6 +156,13 @@ public final class LoconauticsRegistries {
                             .build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>>
+            REVERSER_TARGET = DATA_COMPONENTS.register("reverser_target", () ->
+                    DataComponentType.<BlockPos>builder()
+                            .persistent(BlockPos.CODEC)
+                            .networkSynchronized(BlockPos.STREAM_CODEC)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>>
             LEVER_TARGET = DATA_COMPONENTS.register("lever_target", () ->
                     DataComponentType.<BlockPos>builder()
                             .persistent(BlockPos.CODEC)
@@ -607,6 +614,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_BUTTON_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_LEVER_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_SWITCH_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_REVERSER_ITEM.get());
 
                         output.accept(com.simibubi.create.AllBlocks.TRACK_STATION.asStack());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_SIGNAL.asStack());

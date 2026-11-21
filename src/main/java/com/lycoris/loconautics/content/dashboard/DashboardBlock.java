@@ -306,6 +306,11 @@ public class DashboardBlock extends HorizontalDirectionalBlock
                 ? PanelSlot.TOP_RIGHT : PanelSlot.TOP_LEFT;
     }
 
+    @Override
+    public Vec3 partSpace(BlockPos pos, BlockState state, Vec3 clickLocation) {
+        return blockToBoard(state.getValue(FACING), clickLocation.subtract(Vec3.atLowerCornerOf(pos)));
+    }
+
     private static double modelCoord(Vec3 local, Direction axis) {
         double along = axis.getAxis() == Direction.Axis.X ? local.x : local.z;
         return axis.getAxisDirection() == Direction.AxisDirection.NEGATIVE ? 1 - along : along;

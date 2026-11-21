@@ -29,6 +29,11 @@ public interface PanelHost {
 
     PanelSlot targetedSlot(BlockPos pos, BlockState state, Vec3 clickLocation);
 
+    @Nullable
+    default Vec3 partSpace(BlockPos pos, BlockState state, Vec3 clickLocation) {
+        return null;
+    }
+
     default boolean supportsCenteredPart() {
         return true;
     }
@@ -99,7 +104,7 @@ public interface PanelHost {
             part.clientUse(panel, slot, player);
             return InteractionResult.SUCCESS;
         }
-        return part.use(panel, slot, player);
+        return part.use(panel, slot, player, hit);
     }
 
     default ItemStack targetedPartStack(BlockState state, HitResult target, LevelReader level,

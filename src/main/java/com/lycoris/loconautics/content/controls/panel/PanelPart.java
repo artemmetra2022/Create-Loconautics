@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public interface PanelPart {
     ItemStack asStack();
 
     InteractionResult use(PanelBlockEntity panel, PanelSlot slot, Player player);
+
+    default InteractionResult use(PanelBlockEntity panel, PanelSlot slot, Player player, BlockHitResult hit) {
+        return use(panel, slot, player);
+    }
 
     default InteractionResult configure(PanelBlockEntity panel, PanelSlot slot, Player player) {
         return InteractionResult.PASS;

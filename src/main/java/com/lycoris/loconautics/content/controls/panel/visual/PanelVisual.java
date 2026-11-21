@@ -111,6 +111,8 @@ public class PanelVisual extends AbstractBlockEntityVisual<PanelBlockEntity> imp
             case Gauge gauge -> new GaugePartVisual(context, gauge);
             case LeverPart lever -> new LeverPartVisual(context, lever);
             case SwitchPart flip -> new SwitchPartVisual(context, flip);
+            case com.lycoris.loconautics.content.controls.panelreverser.ReverserPart reverser ->
+                    new ReverserPartVisual(context, reverser);
             case ButtonPart button -> new ButtonPartVisual(context, button);
             case ValvePart valve -> new ValvePartVisual(context, valve);
             default -> null;

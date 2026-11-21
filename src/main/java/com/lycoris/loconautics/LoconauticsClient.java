@@ -307,6 +307,8 @@ public final class LoconauticsClient {
                 "item.loconautics.gauge_lever");
         registerTooltip(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_SWITCH_ITEM.get(),
                 "item.loconautics.gauge_switch");
+        registerTooltip(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_REVERSER_ITEM.get(),
+                "item.loconautics.gauge_reverser");
         registerTooltip(com.lycoris.loconautics.content.industrial.IndustrialBlocks.TANK_ITEM.get(),
                 "block.loconautics.industrial_fluid_tank");
         registerTooltip(com.lycoris.loconautics.content.industrial.IndustrialBlocks.PUMP_ITEM.get(),
