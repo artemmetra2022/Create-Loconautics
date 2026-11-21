@@ -396,6 +396,27 @@ public final class LoconauticsRegistries {
             BRAKE_CONTROLLER_MENU = MENUS.register("brake_controller", () ->
             IMenuTypeExtension.create(LoconauticsRegistries::createBrakeControllerMenu));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.speedometer.SpeedometerBlock>
+            SPEEDOMETER = BLOCKS.register("speedometer", () ->
+            new com.lycoris.loconautics.content.speedometer.SpeedometerBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .requiresCorrectToolForDrops()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> SPEEDOMETER_ITEM =
+            ITEMS.register("speedometer", () ->
+                    new BlockItem(SPEEDOMETER.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<BlockEntityType<?>,
+            BlockEntityType<com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity>>
+            SPEEDOMETER_BE = BLOCK_ENTITIES.register("speedometer", () ->
+            BlockEntityType.Builder
+                    .of(LoconauticsRegistries::createSpeedometerBE, SPEEDOMETER.get())
+                    .build(null));
+
     public static final DeferredHolder<Item, SteelCableItem> STEEL_CABLE =
             ITEMS.register("steel_cable", () -> new SteelCableItem(new Item.Properties().stacksTo(16)));
 
@@ -573,6 +594,7 @@ public final class LoconauticsRegistries {
                         output.accept(BEARING_AXLE_ITEM.get());
                         output.accept(TRANSMISSION_ITEM.get());
                         output.accept(BRAKE_CONTROLLER_ITEM.get());
+                        output.accept(SPEEDOMETER_ITEM.get());
 
                         com.lycoris.loconautics.content.dashboard.DashboardBlocks.DASHBOARD_ITEMS
                                 .forEach((color, item) -> output.accept(new net.minecraft.world.item.ItemStack(item.get()),
@@ -713,6 +735,12 @@ public final class LoconauticsRegistries {
             int id, Inventory inv, RegistryFriendlyByteBuf buf) {
         return new com.lycoris.loconautics.content.brakes.BrakeControllerMenu(
                 BRAKE_CONTROLLER_MENU.get(), id, inv, buf);
+    }
+
+    static com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity createSpeedometerBE(
+            BlockPos pos, BlockState state) {
+        return new com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity(
+                SPEEDOMETER_BE.get(), pos, state);
     }
 
     static TransmissionMenu createTransmissionMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {

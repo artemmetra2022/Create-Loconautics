@@ -6,6 +6,7 @@ import com.lycoris.loconautics.compat.gauge.PropulsionGauges;
 import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineTuning;
+import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
@@ -200,7 +201,20 @@ public enum GaugeMetric implements StringRepresentable {
     SMALL_ENGINE_BURNS_FOR(SmallEngineBlockEntity.class,
             GaugeMetric::smallEngineBurnsFor,
             be -> be.getBurnsForSeconds() < 0 ? 0f : over(be.getBurnsForSeconds(), 600f),
-            ChatFormatting.WHITE, 32);
+            ChatFormatting.WHITE, 32),
+
+    TRAIN_SPEED_KMH(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f km/h", be.getSpeed() * 3.6f),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRAIN_SPEED_MS(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f m/s", be.getSpeed()),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRAIN_SPEED_MPH(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f mph", be.getSpeed() * 2.23694f),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -210,6 +224,7 @@ public enum GaugeMetric implements StringRepresentable {
         ALTITUDE("simulated", "Create: Simulated", "Altitude Sensor", AltitudeSensorBlockEntity.class),
         GIMBAL("simulated", "Create: Simulated", "Gimbal Sensor", GimbalSensorBlockEntity.class),
         SMALL_ENGINE("loconautics", "Loconautics", "Small Combustion Engine", SmallEngineBlockEntity.class),
+        TRAIN_SPEEDOMETER("loconautics", "Loconautics", "Speedometer", SpeedometerBlockEntity.class),
         FLUID_VALVE("create", "Create", "Fluid Valve", FluidValveBlockEntity.class),
         PORTABLE_ENGINE("simulated", "Create: Simulated", "Portable Engine", PortableEngineBlockEntity.class),
         FLUID_TANK("create", "Create", "Fluid Tank", FluidTankBlockEntity.class),
