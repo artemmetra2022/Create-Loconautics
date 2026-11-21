@@ -1,10 +1,11 @@
 package com.lycoris.loconautics.content.brakes;
 
-import com.lycoris.loconautics.content.combustion.SmallEngineBlock;
 import com.lycoris.loconautics.content.frequency.FrequencyBindUtil;
 import com.lycoris.loconautics.content.transmission.TransmissionBlock;
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import com.simibubi.create.content.kinetics.RotationPropagator;
+import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
+import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.AbstractEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
@@ -135,11 +136,17 @@ public class BrakeControllerBlock extends AbstractEncasedShaftBlock implements I
         return state.getBlock() instanceof TransmissionBlock && state.getValue(BlockStateProperties.AXIS) == axis;
     }
 
-    /** @param shaftFace the face of the engine that has to carry the shaft, the one looking at the controller */
+    /**
+     * Any rotation source counts: an engine, a Creative Motor, a water wheel and so on, as long as it is a kinetic
+     * generator whose shaft looks at the controller.
+     *
+     * @param shaftFace the face of the source that has to carry the shaft, the one looking at the controller
+     */
     private static boolean isEngine(LevelReader level, BlockPos at, Direction shaftFace) {
         BlockState state = level.getBlockState(at);
-        return state.getBlock() instanceof SmallEngineBlock engine
-                && engine.hasShaftTowards(level, at, state, shaftFace);
+        return state.getBlock() instanceof IRotate rotate
+                && rotate.hasShaftTowards(level, at, state, shaftFace)
+                && level.getBlockEntity(at) instanceof GeneratingKineticBlockEntity;
     }
 
     @Override
