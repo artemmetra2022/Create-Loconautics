@@ -5,6 +5,7 @@
     "loconautics:transmission",
     "loconautics:handbrake",
     "loconautics:track_switch",
+    "loconautics:retarder_track",
     "loconautics:brake_controller",
     "loconautics:speedometer",
     "loconautics:speed_sign",

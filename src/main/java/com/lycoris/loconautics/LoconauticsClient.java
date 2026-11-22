@@ -62,6 +62,7 @@ public final class LoconauticsClient {
         modBus.addListener(this::onRegisterSpriteSources);
         modBus.addListener(this::onRegisterClientExtensions);
         modBus.addListener(this::onRegisterBlockColors);
+        modBus.addListener(com.lycoris.loconautics.content.retardertrack.RetarderTrackClient::onModifyBakingResult);
         modBus.addListener(this::onAddPackFinders);
 
         NeoForge.EVENT_BUS.addListener(this::onRegisterClientCommands);
@@ -105,6 +106,8 @@ public final class LoconauticsClient {
     private void onRegisterBlockColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) -> com.lycoris.loconautics.content.cerisene.CeriseneTint.color(state),
                 com.lycoris.loconautics.content.cerisene.CeriseneBlocks.CERISENE_BLOCK.get());
+        event.register((state, level, pos, tintIndex) -> com.lycoris.loconautics.content.retardertrack.RetarderTrackClient.TINT,
+                LoconauticsRegistries.RETARDER_TRACK.get());
     }
 
     private void onRegisterClientExtensions(
@@ -274,6 +277,7 @@ public final class LoconauticsClient {
         registerTooltip(com.lycoris.loconautics.content.cerisene.CeriseneBlocks.CERISENE_BLOCK_ITEM.get(), "block.loconautics.cerisene_block");
         registerTooltip(LoconauticsRegistries.HOSE.get(), "item.loconautics.hose");
         registerTooltip(LoconauticsRegistries.TRACK_SWITCH_ITEM.get(), "block.loconautics.track_switch");
+        registerTooltip(LoconauticsRegistries.RETARDER_TRACK_ITEM.get(), "block.loconautics.retarder_track");
         com.lycoris.loconautics.content.combustion.SmallEngineBlocks.ENGINE_ITEMS
                 .forEach((color, item) -> registerTooltip(item.get(), "block.loconautics.small_combustion_engine"));
 

@@ -1488,5 +1488,12 @@
   "loconautics.track_switch.direction.south": "south",
   "loconautics.track_switch.direction.west": "west",
   "loconautics.track_switch.controls": "Empty-hand right click: bind / next branch → auto",
-  "loconautics.track_switch.rebind_hint": "Sneak + right click: rebind (4-block radius)"
+  "loconautics.track_switch.rebind_hint": "Sneak + right click: rebind (4-block radius)",
+  "block.loconautics.retarder_track": "Retarder Track",
+  "block.loconautics.retarder_track.tooltip.summary": "A _Create track_ that brakes a train down to a set speed while it is powered. It never stops the train, a train that is already slower is left alone.",
+  "block.loconautics.retarder_track.tooltip.condition1": "When Powered by Redstone",
+  "block.loconautics.retarder_track.tooltip.behaviour1": "Cars on this rail are slowed down to the _chosen speed_.",
+  "block.loconautics.retarder_track.tooltip.condition2": "When Right-Clicked with a Wrench",
+  "block.loconautics.retarder_track.tooltip.behaviour2": "Click the _top_ for the next speed, click a _side_ for the previous one.",
+  "loconautics.gui.retarder_track.limit": "Retarder limit: %s km/h"
 }

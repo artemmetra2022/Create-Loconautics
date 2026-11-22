@@ -6,6 +6,7 @@ import com.lycoris.loconautics.config.LoconauticsConfig;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlock;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.brakes.HandbrakeBlock;
+import com.lycoris.loconautics.content.retardertrack.RetarderTracks;
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.common.sable.SubLevelBlocks;
 import dev.ryanhcode.sable.api.physics.force.ForceTotal;
@@ -206,7 +207,12 @@ public final class TrainBrakes {
     public static void applyResistance(ServerSubLevel sub, ServerSubLevel trackSub, Vector3d railPoint,
                                        Vector3d tangent, double dt, double scale, ForceSource source) {
         RigidBodyHandle handle = RigidBodyHandle.of(sub);
-        if (handle == null || scale <= 0.0) {
+        if (handle == null) {
+            return;
+        }
+        // a powered retarder rail under the car caps its speed, whether or not the train brakes or pulls
+        double retarderLimit = RetarderTracks.limitAt(sub.getLevel(), trackSub, railPoint);
+        if (scale <= 0.0 && Double.isNaN(retarderLimit)) {
             return;
         }
         Vector3d vel = handle.getLinearVelocity(new Vector3d());
@@ -217,6 +223,18 @@ public final class TrainBrakes {
         MassData md = sub.getMassTracker();
         double mass = (md != null && !md.isInvalid()) ? md.getMass() : 1.0;
         double decel = Math.min(BRAKE_DECEL * scale, Math.abs(vTan) / dt);
+        if (!Double.isNaN(retarderLimit) && Math.abs(vTan) > retarderLimit) {
+            // never brake past the limit, so a train that is already slow is left alone
+            double excess = (Math.abs(vTan) - retarderLimit) / dt;
+            double retarded = Math.min(RetarderTracks.RETARDER_DECEL, excess);
+            if (retarded > decel) {
+                decel = retarded;
+                source = ForceSource.BRAKE;
+            }
+        }
+        if (decel <= 0.0) {
+            return;
+        }
         Vector3d worldImpulse = new Vector3d(tangent).mul(-mass * decel * dt * Math.signum(vTan));
         Vector3d localImpulse = new Quaterniond(sub.logicalPose().orientation())
                 .conjugate().transform(worldImpulse, new Vector3d());

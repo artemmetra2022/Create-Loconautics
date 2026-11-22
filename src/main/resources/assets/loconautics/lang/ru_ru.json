@@ -1483,5 +1483,12 @@
   "loconautics.track_switch.direction.south": "юг",
   "loconautics.track_switch.direction.west": "запад",
   "loconautics.track_switch.controls": "ПКМ пустой рукой: привязать / следующая ветка → авто",
-  "loconautics.track_switch.rebind_hint": "Shift + ПКМ: привязать заново (радиус 4 блока)"
+  "loconautics.track_switch.rebind_hint": "Shift + ПКМ: привязать заново (радиус 4 блока)",
+  "block.loconautics.retarder_track": "Замедляющий рельс",
+  "block.loconautics.retarder_track.tooltip.summary": "_Рельс Create_, который при подаче сигнала замедляет поезд до заданной скорости. Он не останавливает поезд: если поезд уже едет медленнее, он его не трогает.",
+  "block.loconautics.retarder_track.tooltip.condition1": "При сигнале редстоуна",
+  "block.loconautics.retarder_track.tooltip.behaviour1": "Вагоны на этом рельсе замедляются до _выбранной скорости_.",
+  "block.loconautics.retarder_track.tooltip.condition2": "При клике гаечным ключом",
+  "block.loconautics.retarder_track.tooltip.behaviour2": "Клик по _верху_ выбирает следующую скорость, клик по _боку_ — предыдущую.",
+  "loconautics.gui.retarder_track.limit": "Замедление до: %s км/ч"
 }

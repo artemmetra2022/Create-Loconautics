@@ -364,6 +364,21 @@ public final class LoconauticsRegistries {
                             TRACK_SWITCH.get())
                     .build(null));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.retardertrack.RetarderTrackBlock>
+            RETARDER_TRACK = BLOCKS.register("retarder_track", () ->
+            new com.lycoris.loconautics.content.retardertrack.RetarderTrackBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(0.8f)
+                            .sound(SoundType.METAL)
+                            .noOcclusion()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> RETARDER_TRACK_ITEM =
+            ITEMS.register("retarder_track", () ->
+                    new com.simibubi.create.content.trains.track.TrackBlockItem(
+                            RETARDER_TRACK.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<Block, GhostWheelBlock> GHOST_WHEEL =
             BLOCKS.register("ghost_wheel", () -> new GhostWheelBlock(
                     BlockBehaviour.Properties.of()
@@ -662,6 +677,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.simibubi.create.AllBlocks.PACKAGE_POSTBOXES
                                 .get(net.minecraft.world.item.DyeColor.RED).asStack());
                         output.accept(com.simibubi.create.AllBlocks.TRACK.asStack());
+                        output.accept(RETARDER_TRACK_ITEM.get());
                         output.accept(com.simibubi.create.AllBlocks.RAILWAY_CASING.asStack());
                         output.accept(com.simibubi.create.AllItems.SCHEDULE.asStack());
 

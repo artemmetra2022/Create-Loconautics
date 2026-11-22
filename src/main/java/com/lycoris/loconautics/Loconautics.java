@@ -46,6 +46,8 @@ public final class Loconautics {
         modEventBus.addListener(com.lycoris.loconautics.content.boiler.FuelGrades::register);
         modEventBus.addListener(this::onAddPackFinders);
         modEventBus.addListener(
+                com.lycoris.loconautics.content.retardertrack.RetarderTrackBlock::onAddBlockEntityBlocks);
+        modEventBus.addListener(
                 com.lycoris.loconautics.trainphysics.state.StationChunkTickets::register);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, LoconauticsConfig.SERVER_SPEC);
