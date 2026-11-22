@@ -19,5 +19,23 @@
                 "stream": false
             }
         ]
+    },
+    "typhon": {
+        "sounds": [
+            {
+                "name": "loconautics:typhon",
+                "stream": false,
+                "attenuation_distance": 48
+            }
+        ]
+    },
+    "safety_alert": {
+        "sounds": [
+            {
+                "name": "loconautics:safety_alert",
+                "stream": false,
+                "attenuation_distance": 24
+            }
+        ]
     }
 }

@@ -21,6 +21,12 @@ public final class LoconauticsSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> SAFETY_VALVE_HISS = SOUND_EVENTS.register(
             "safety_valve_hiss", () -> SoundEvent.createVariableRangeEvent(LoconauticsConstants.id("safety_valve_hiss")));
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> TYPHON = SOUND_EVENTS.register(
+            "typhon", () -> SoundEvent.createVariableRangeEvent(LoconauticsConstants.id("typhon")));
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> SAFETY_ALERT = SOUND_EVENTS.register(
+            "safety_alert", () -> SoundEvent.createVariableRangeEvent(LoconauticsConstants.id("safety_alert")));
+
     private LoconauticsSounds() {
     }
 

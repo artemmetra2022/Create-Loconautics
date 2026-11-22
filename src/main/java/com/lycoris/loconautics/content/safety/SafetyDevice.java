@@ -17,7 +17,10 @@ public enum SafetyDevice {
     OVERSPEED("overspeed", true),
 
     /** placeholder for a dead man's switch, the driver has to prove he is awake */
-    VIGILANCE("vigilance", false);
+    VIGILANCE("vigilance", false),
+
+    /** the train has derailed (via SableTrainRegistry): emergency brake */
+    DERAILMENT("derailment", true);
 
     public static final int COUNT = values().length;
 

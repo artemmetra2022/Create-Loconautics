@@ -8,7 +8,10 @@ import com.lycoris.loconautics.content.speedometer.SpeedometerBlock;
 import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
 import com.lycoris.loconautics.content.transmission.TransmissionBlock;
 import com.lycoris.loconautics.content.transmission.TransmissionBlockEntity;
+import com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket;
 import com.lycoris.loconautics.network.packets.safety.SafetyOpenPacket;
+import com.lycoris.loconautics.trainphysics.SableTrain;
+import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -22,10 +25,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3d;
 
 import java.util.ArrayList;
@@ -45,12 +51,21 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     public static final int MIN_SPEED_LIMIT = 10;
     public static final int MAX_SPEED_LIMIT = 400;
 
+    public static final int ALARM_NONE = 0;
+    public static final int ALARM_APPROACHING_LIMIT = 1;
+    public static final int ALARM_ANTI_ROLLBACK = 2;
+    public static final int ALARM_OVERSPEED = 3;
+    public static final int ALARM_DERAILMENT = 4;
+
     /** problem bits, shown in the goggles */
     public static final int PROBLEM_NO_SPEEDOMETER = 1;
     public static final int PROBLEM_NO_TRANSMISSION = 2;
 
     private static final int SAMPLE_TICKS = 2;
     private static final int SCAN_TICKS = 20;
+    private static final double APPROACHING_RATIO = 0.9;
+    private static final double ALERT_RANGE_SQ = 32.0 * 32.0;
+    private static final int ALERT_REFRESH_SAMPLES = 10;
 
     /** blocks per second, below this the train counts as standing (about 1.8 km/h) */
     private static final double ROLLBACK_MIN_SPEED = 0.5;
@@ -60,6 +75,7 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
 
     private final RedstoneLinkPair linksLow = new RedstoneLinkPair(this, s -> setSignal(0, s), s -> setSignal(1, s));
     private final RedstoneLinkPair linksHigh = new RedstoneLinkPair(this, s -> setSignal(2, s), s -> setSignal(3, s));
+    private final RedstoneLinkPair linksExtra = new RedstoneLinkPair(this, s -> setSignal(4, s), s -> {});
 
     // saved settings
     private int enabledMask = (1 << SafetyDevice.COUNT) - 1;
@@ -70,14 +86,19 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     private final int[] signal = new int[SafetyDevice.COUNT];
     private boolean latched;
     private int latchReason = -1;
+    private boolean approachingLimit;
     private int activeMask;
     private int problemMask;
     private int calmSamples;
 
     private boolean syncedLatched;
     private int syncedReason = -1;
+    private boolean syncedApproaching;
     private int syncedActive;
     private int syncedProblem;
+
+    private int lastAlertSent = ALARM_NONE;
+    private int alertRefreshSamples;
 
     // carriage blocks found by the last scan
     private ServerSubLevel scannedSub;
@@ -101,6 +122,7 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (level == null || level.isClientSide) return;
         linksLow.register(level);
         linksHigh.register(level);
+        linksExtra.register(level);
     }
 
     @Override
@@ -108,6 +130,7 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (level == null) return;
         linksLow.unregister(level);
         linksHigh.unregister(level);
+        linksExtra.unregister(level);
     }
 
     @Override
@@ -130,7 +153,9 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     }
 
     private RedstoneLinkPair pairOf(int device) {
-        return device < 2 ? linksLow : linksHigh;
+        if (device < 2) return linksLow;
+        if (device < 4) return linksHigh;
+        return linksExtra;
     }
 
     public ItemStack freqFirst(int device) {
@@ -220,6 +245,32 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         return latched;
     }
 
+    public boolean isApproachingLimit() {
+        return approachingLimit;
+    }
+
+    public int latchReason() {
+        return latchReason;
+    }
+
+    public int alarmState() {
+        if (latched) {
+            if (latchReason == SafetyDevice.ANTI_ROLLBACK.ordinal()) return ALARM_ANTI_ROLLBACK;
+            if (latchReason == SafetyDevice.OVERSPEED.ordinal()) return ALARM_OVERSPEED;
+            if (latchReason == SafetyDevice.DERAILMENT.ordinal()) return ALARM_DERAILMENT;
+        }
+        if (approachingLimit) return ALARM_APPROACHING_LIMIT;
+        return ALARM_NONE;
+    }
+
+    public static boolean isEmergencyAlarm(int alarm) {
+        return alarm == ALARM_ANTI_ROLLBACK || alarm == ALARM_OVERSPEED || alarm == ALARM_DERAILMENT;
+    }
+
+    public Vec3 worldPositionProjected() {
+        return Sable.HELPER.projectOutOfSubLevel(level, Vec3.atCenterOf(worldPosition));
+    }
+
     public int activeMask() {
         return activeMask;
     }
@@ -231,7 +282,11 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     @Override
     public void tick() {
         super.tick();
-        if (level == null || level.isClientSide) return;
+        if (level == null) return;
+        if (level.isClientSide) {
+            SafetyAlertClient.tick(this);
+            return;
+        }
         if ((level.getGameTime() + worldPosition.asLong()) % SAMPLE_TICKS != 0) return;
 
         SubLevel found = Sable.HELPER.getContaining(this);
@@ -239,15 +294,20 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             // not on a carriage, nothing to guard
             latched = false;
             latchReason = -1;
+            approachingLimit = false;
             calmSamples = 0;
             problemMask = 0;
             activeMask = 0;
             publish();
+            if (level instanceof ServerLevel sl && lastAlertSent != ALARM_NONE) {
+                broadcastAlerts(sl);
+            }
             return;
         }
 
         rescanIfNeeded(sub);
         ServerLevel sl = sub.getLevel();
+        SableTrain train = SableTrainRegistry.bySubLevel(sub.getUniqueId());
 
         double speed = 0.0;
         boolean hasSpeedometer = false;
@@ -293,9 +353,11 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         problemMask = problems;
 
         int reason = -1;
-        // reverser says one way, the carriage moves the other way
-        if (isRunning(SafetyDevice.ANTI_ROLLBACK) && hasSpeedometer && hasTransmission && intended != 0
+        if (isRunning(SafetyDevice.DERAILMENT) && train != null && train.isDerailed()) {
+            reason = SafetyDevice.DERAILMENT.ordinal();
+        } else if (isRunning(SafetyDevice.ANTI_ROLLBACK) && hasSpeedometer && hasTransmission && intended != 0
                 && speed >= ROLLBACK_MIN_SPEED && along * intended < -ROLLBACK_MIN_SPEED) {
+            // reverser says one way, the carriage moves the other way
             reason = SafetyDevice.ANTI_ROLLBACK.ordinal();
         } else if (isRunning(SafetyDevice.OVERSPEED) && hasSpeedometer && speed * 3.6 > speedLimit) {
             reason = SafetyDevice.OVERSPEED.ordinal();
@@ -305,19 +367,72 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (reason >= 0) {
             latched = true;
             latchReason = reason;
+            approachingLimit = false;
             calmSamples = 0;
         } else if (latched) {
+            approachingLimit = false;
             boolean reasonStillRuns = latchReason >= 0 && (activeMask & (1 << latchReason)) != 0;
             if (!reasonStillRuns) {
                 // the system that tripped was switched off, let the brake go at once
                 release();
-            } else if (speed < RELEASE_SPEED) {
+            } else if (latchReason == SafetyDevice.DERAILMENT.ordinal()
+                    && train != null && !train.isDerailed() && speed < RELEASE_SPEED) {
+                if (++calmSamples >= RELEASE_SAMPLES) release();
+            } else if (latchReason != SafetyDevice.DERAILMENT.ordinal() && speed < RELEASE_SPEED) {
                 if (++calmSamples >= RELEASE_SAMPLES) release();
             } else {
                 calmSamples = 0;
             }
+        } else {
+            // 90% speed limit warning: warns the cab without latching the brake
+            approachingLimit = isRunning(SafetyDevice.OVERSPEED) && hasSpeedometer
+                    && speed * 3.6 >= speedLimit * APPROACHING_RATIO;
         }
+
         publish();
+        broadcastAlerts(sl);
+    }
+
+    private void broadcastAlerts(ServerLevel sl) {
+        int alarm = alarmState();
+        boolean changed = alarm != lastAlertSent;
+        if (alarm == ALARM_NONE && !changed) {
+            alertRefreshSamples = 0;
+            return;
+        }
+        if (!changed && ++alertRefreshSamples < ALERT_REFRESH_SAMPLES) {
+            return;
+        }
+        alertRefreshSamples = 0;
+        lastAlertSent = alarm;
+
+        Vec3 worldPos = worldPositionProjected();
+        Component actionBar = alarm == ALARM_NONE ? null : alertComponent(alarm);
+        SafetyAlertPacket packet = new SafetyAlertPacket(alarm);
+
+        for (ServerPlayer player : sl.players()) {
+            if (player.isSpectator()) continue;
+            if (player.position().distanceToSqr(worldPos) <= ALERT_RANGE_SQ) {
+                PacketDistributor.sendToPlayer(player, packet);
+                if (actionBar != null) {
+                    player.displayClientMessage(actionBar, true);
+                }
+            }
+        }
+    }
+
+    private static Component alertComponent(int alarm) {
+        return switch (alarm) {
+            case ALARM_APPROACHING_LIMIT -> Component.translatable("loconautics.safety.alert.approaching_limit")
+                    .withStyle(ChatFormatting.GOLD);
+            case ALARM_ANTI_ROLLBACK -> Component.translatable("loconautics.safety.alert.anti_rollback")
+                    .withStyle(ChatFormatting.RED);
+            case ALARM_OVERSPEED -> Component.translatable("loconautics.safety.alert.overspeed")
+                    .withStyle(ChatFormatting.RED);
+            case ALARM_DERAILMENT -> Component.translatable("loconautics.safety.alert.derailment")
+                    .withStyle(ChatFormatting.RED);
+            default -> Component.empty();
+        };
     }
 
     private void release() {
@@ -346,11 +461,13 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     // sends the state to the clients and lights the block, only when something changed
     private void publish() {
         boolean changed = latched != syncedLatched || latchReason != syncedReason
+                || approachingLimit != syncedApproaching
                 || activeMask != syncedActive || problemMask != syncedProblem;
         if (!changed) return;
         boolean latchChanged = latched != syncedLatched;
         syncedLatched = latched;
         syncedReason = latchReason;
+        syncedApproaching = approachingLimit;
         syncedActive = activeMask;
         syncedProblem = problemMask;
         setChanged();
@@ -381,6 +498,8 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
                 state = Component.translatable("loconautics.safety.goggles.toggle_off").withStyle(ChatFormatting.GOLD);
             } else if (latched && latchReason == i) {
                 state = Component.translatable("loconautics.safety.goggles.tripped").withStyle(ChatFormatting.RED);
+            } else if (device == SafetyDevice.OVERSPEED && approachingLimit) {
+                state = Component.translatable("loconautics.safety.goggles.warning").withStyle(ChatFormatting.GOLD);
             } else {
                 state = Component.translatable("loconautics.safety.goggles.armed").withStyle(ChatFormatting.GREEN);
             }
@@ -410,6 +529,7 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         tag.putBoolean("Invert", invertDirection);
         tag.putBoolean("Latched", latched);
         tag.putInt("Reason", latchReason);
+        tag.putBoolean("Approaching", approachingLimit);
         tag.putInt("Active", activeMask);
         tag.putInt("Problem", problemMask);
         writeFrequencies(tag, registries);
@@ -439,10 +559,12 @@ public class SafetyBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         invertDirection = tag.getBoolean("Invert");
         latched = tag.getBoolean("Latched");
         latchReason = tag.contains("Reason") ? tag.getInt("Reason") : -1;
+        approachingLimit = tag.getBoolean("Approaching");
         activeMask = tag.getInt("Active");
         problemMask = tag.getInt("Problem");
         syncedLatched = latched;
         syncedReason = latchReason;
+        syncedApproaching = approachingLimit;
         syncedActive = activeMask;
         syncedProblem = problemMask;
         if (tag.contains("Frequency")) {

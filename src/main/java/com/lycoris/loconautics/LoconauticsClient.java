@@ -289,6 +289,7 @@ public final class LoconauticsClient {
         registerTooltip(LoconauticsRegistries.TRANSMISSION_ITEM.get(), "block.loconautics.transmission");
         registerTooltip(LoconauticsRegistries.BRAKE_CONTROLLER_ITEM.get(), "block.loconautics.brake_controller");
         registerTooltip(LoconauticsRegistries.SPEEDOMETER_ITEM.get(), "block.loconautics.speedometer");
+        registerTooltip(LoconauticsRegistries.TYPHON_ITEM.get(), "block.loconautics.typhon");
         registerTooltip(LoconauticsRegistries.TURNTABLE_BEARING_ITEM.get(), "block.loconautics.turntable_bearing");
         registerExtraTooltip(com.lycoris.loconautics.content.boiler.BoilerBlocks.STEAM_TAKEOFF_ITEM.get(),
                 new com.lycoris.loconautics.client.VariableStressTooltip(true, "tooltip.stress.variable",
@@ -443,6 +444,9 @@ public final class LoconauticsClient {
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR,
                 LoconauticsConstants.id("analog_controller_hud"),
                 AnalogControllerHUD.OVERLAY);
+        event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR,
+                LoconauticsConstants.id("safety_alert_hud"),
+                com.lycoris.loconautics.content.safety.SafetyAlertHUD.OVERLAY);
         event.registerAbove(VanillaGuiLayers.HOTBAR, LoconauticsConstants.id("scroll_picker"),
                 com.lycoris.loconautics.client.scrollmenu.ScrollMenuRenderer.OVERLAY);
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, LoconauticsConstants.id("grab_crosshair"),
@@ -464,6 +468,7 @@ public final class LoconauticsClient {
         com.lycoris.loconautics.trainphysics.portal.PortalCutsClient.tickReport();
         AnalogControllerClientHandler.tick();
         AnalogControllerHUD.tick();
+        com.lycoris.loconautics.content.safety.SafetyAlertHUD.tick();
         SableTrainRelocator.clientTick();
         SableTrainSounds.tickAll();
         com.lycoris.loconautics.content.analogcontroller.WhistleHonks.tick();
@@ -590,6 +595,8 @@ public final class LoconauticsClient {
             com.lycoris.loconautics.trainphysics.portal.PortalCutsClient.onLevelUnload(level);
             com.lycoris.loconautics.foundation.particle.LateParticles.clear();
             com.lycoris.loconautics.content.analogcontroller.AnalogControllerClientHandler.clear();
+        com.lycoris.loconautics.content.safety.SafetyAlertHUD.clear();
+            com.lycoris.loconautics.content.safety.SafetyAlertHUD.clear();
         }
     }
 

@@ -109,6 +109,7 @@
     "loconautics:brown_buffer",
     "loconautics:green_buffer",
     "loconautics:red_buffer",
-    "loconautics:black_buffer"
+    "loconautics:black_buffer",
+    "loconautics:typhon"
   ]
 }

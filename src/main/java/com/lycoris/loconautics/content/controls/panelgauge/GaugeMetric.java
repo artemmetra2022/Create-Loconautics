@@ -7,6 +7,7 @@ import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineTuning;
+import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
 import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
@@ -244,7 +245,16 @@ public enum GaugeMetric implements StringRepresentable {
             ChatFormatting.GOLD, 22),
     BRAKE_STATE(BrakeControllerBlockEntity.class,
             GaugeMetric::brakeStateText, GaugeMetric::brakeStateFraction,
-            ChatFormatting.GREEN, 22);
+            ChatFormatting.GREEN, 22),
+
+    // safety unit: appended last on purpose, the network codec writes enum ordinals
+    SAFETY_STATUS(SafetyBlockEntity.class,
+            GaugeMetric::safetyStatusText, GaugeMetric::safetyStatusFraction,
+            ChatFormatting.GREEN, 22),
+    SAFETY_SPEED_LIMIT(SafetyBlockEntity.class,
+            be -> String.format(Locale.US, "%d km/h", be.speedLimit()),
+            be -> over(be.speedLimit(), SafetyBlockEntity.MAX_SPEED_LIMIT),
+            ChatFormatting.AQUA, 22);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -266,7 +276,8 @@ public enum GaugeMetric implements StringRepresentable {
                 AeronauticsGauges::bearingSources),
         HOT_AIR_BURNER("aeronautics", "Create: Aeronautics", "Hot Air Burner", AeronauticsGauges::hotAirSources),
         STEAM_VENT("aeronautics", "Create: Aeronautics", "Steam Vent", AeronauticsGauges::steamSources),
-        BRAKE_CONTROLLER("loconautics", "Loconautics", "Brake Controller", BrakeControllerBlockEntity.class);
+        BRAKE_CONTROLLER("loconautics", "Loconautics", "Brake Controller", BrakeControllerBlockEntity.class),
+        SAFETY_UNIT("loconautics", "Loconautics", "Safety Unit", SafetyBlockEntity.class);
 
         private final String modId;
         private final String modName;
@@ -401,6 +412,26 @@ public enum GaugeMetric implements StringRepresentable {
         return Component.translatable("loconautics.gui.goggles.gauge_brake_inactive").getString();
     }
 
+    private static String safetyStatusText(SafetyBlockEntity be) {
+        String key = switch (be.alarmState()) {
+            case SafetyBlockEntity.ALARM_APPROACHING_LIMIT -> "loconautics.gui.goggles.gauge_safety_warning";
+            case SafetyBlockEntity.ALARM_ANTI_ROLLBACK -> "loconautics.gui.goggles.gauge_safety_rollback";
+            case SafetyBlockEntity.ALARM_OVERSPEED -> "loconautics.gui.goggles.gauge_safety_overspeed";
+            case SafetyBlockEntity.ALARM_DERAILMENT -> "loconautics.gui.goggles.gauge_safety_derailed";
+            default -> be.activeMask() == 0
+                    ? "loconautics.gui.goggles.gauge_safety_off"
+                    : "loconautics.gui.goggles.gauge_safety_armed";
+        };
+        return Component.translatable(key).getString();
+    }
+
+    private static float safetyStatusFraction(SafetyBlockEntity be) {
+        int alarm = be.alarmState();
+        if (SafetyBlockEntity.isEmergencyAlarm(alarm)) return 1f;
+        if (alarm == SafetyBlockEntity.ALARM_APPROACHING_LIMIT) return 0.5f;
+        return 0f;
+    }
+
     private static boolean valveOpen(FluidValveBlockEntity be) {
         BlockState state = be.getBlockState();
         return state.hasProperty(FluidValveBlock.ENABLED) && state.getValue(FluidValveBlock.ENABLED);
@@ -530,6 +561,12 @@ public enum GaugeMetric implements StringRepresentable {
             if (be.isEmergency()) return ChatFormatting.RED;
             if (this == BRAKE_STATE && be.isBraking()) return ChatFormatting.GOLD;
         }
+        if (group == Group.SAFETY_UNIT && source instanceof SafetyBlockEntity be) {
+            if (be.isEmergency()) return ChatFormatting.RED;
+            if (be.isApproachingLimit()) return ChatFormatting.GOLD;
+            if (be.activeMask() == 0) return ChatFormatting.DARK_GRAY;
+            return ChatFormatting.GREEN;
+        }
         return color;
     }
 
@@ -547,6 +584,9 @@ public enum GaugeMetric implements StringRepresentable {
     public boolean faulted(BlockEntity source) {
         if (group == Group.BRAKE_CONTROLLER) {
             return source instanceof BrakeControllerBlockEntity be && !be.isActive();
+        }
+        if (group == Group.SAFETY_UNIT) {
+            return source instanceof SafetyBlockEntity be && (be.isEmergency() || be.problemMask() != 0);
         }
         return this == WATER_LEVEL && source instanceof FireboxBlockEntity be && !be.isDisplayValid();
     }

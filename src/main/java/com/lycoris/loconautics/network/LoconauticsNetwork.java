@@ -79,6 +79,9 @@ public final class LoconauticsNetwork {
         r.playToServer(com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket.TYPE,
                 com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket::handle);
+        r.playToClient(com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket.TYPE,
+                com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket::handle);
 
         r.playToServer(com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.TYPE,
                 com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.STREAM_CODEC,
