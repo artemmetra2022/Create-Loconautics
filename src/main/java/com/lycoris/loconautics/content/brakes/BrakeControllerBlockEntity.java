@@ -40,7 +40,10 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
     private static final int VALIDATE_INTERVAL = 10;
 
     /** the share of the speed the brake can take away at the top lever position, the shaft never stops dead */
-    public static final float MAX_SPEED_REDUCTION = 0.75f;
+    public static final float MAX_SPEED_REDUCTION = 0.375f;
+
+    /** the share of the speed the emergency brake takes away, it used to stop the shaft dead */
+    public static final float EMERGENCY_SPEED_REDUCTION = 0.5f;
 
     // only the first frequency pair is used, the second one stays empty
     // the first pair sets the brake lever, the second one is the emergency brake switch
@@ -124,9 +127,9 @@ public class BrakeControllerBlockEntity extends SplitShaftBlockEntity implements
         return isEmergency() || getEffectiveBrakeSignal() > 0;
     }
 
-    /** 1 passes the speed on untouched, 1 - MAX_SPEED_REDUCTION at full lever, 0 with the emergency brake on */
+    /** 1 passes the speed on untouched, 1 - MAX_SPEED_REDUCTION at full lever, 1 - EMERGENCY_SPEED_REDUCTION with the emergency brake on */
     public float getBrakeCoefficient() {
-        if (isEmergency()) return 0f;
+        if (isEmergency()) return 1f - EMERGENCY_SPEED_REDUCTION;
         return 1f - MAX_SPEED_REDUCTION * getEffectiveBrakeSignal() / (float) MAX_SIGNAL;
     }
 

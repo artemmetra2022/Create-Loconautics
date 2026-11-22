@@ -74,9 +74,12 @@ public final class TrainPropulsion {
 
     static final double SAFETY_MAX_SPEED_MPS = 200.0;
 
+    /** 99.5 km/h, a train that reaches 99.9 km/h comes off the rails, so no config goes above this */
+    public static final double DERAIL_SAFE_MAX_SPEED_MPS = 99.5 / 3.6;
+
     public static double speedCeilingMps() {
-        return AxleGearing.speedCeiling(LoconauticsConfig.TRAIN_MAX_SPEED.get(), SAFETY_MAX_SPEED_MPS,
-                LoconauticsConfig.GEARING_CAP_AT_CREATE_TOP_SPEED.get(), createTopSpeedMps());
+        return Math.min(DERAIL_SAFE_MAX_SPEED_MPS, AxleGearing.speedCeiling(LoconauticsConfig.TRAIN_MAX_SPEED.get(),
+                SAFETY_MAX_SPEED_MPS, LoconauticsConfig.GEARING_CAP_AT_CREATE_TOP_SPEED.get(), createTopSpeedMps()));
     }
 
     public static double gearingCeilingRatio() {
