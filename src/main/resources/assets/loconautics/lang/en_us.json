@@ -1461,5 +1461,16 @@
   "loconautics.gui.goggles.gauge_brake_released": "Released",
   "loconautics.gui.goggles.gauge_brake_braking": "Braking",
   "loconautics.gui.goggles.gauge_brake_emergency": "EMERGENCY",
-  "loconautics.gui.goggles.gauge_brake_inactive": "Not in line"
+  "loconautics.gui.goggles.gauge_brake_inactive": "Not in line",
+  "block.loconautics.track_switch": "Switch Stand",
+  "block.loconautics.track_switch.tooltip.summary": "Sets a nearby _track junction_. In auto mode scheduled trains set it along their route, a chosen branch is _locked_ for every train.",
+  "block.loconautics.track_switch.tooltip.condition1": "When Right-Clicked",
+  "block.loconautics.track_switch.tooltip.behaviour1": "Picks the _next branch_. Sneak and right click binds the nearest junction.",
+  "block.loconautics.track_switch.tooltip.condition2": "When Powered by Redstone",
+  "block.loconautics.track_switch.tooltip.behaviour2": "Each pulse picks the _next branch_, after the last one the stand goes back to auto.",
+  "loconautics.track_switch.no_junction": "No track junction within reach",
+  "loconautics.track_switch.bound": "Bound to the nearest junction, auto mode",
+  "loconautics.track_switch.lost": "The junction is gone, bind again",
+  "loconautics.track_switch.free": "Auto: scheduled trains set the switch themselves",
+  "loconautics.track_switch.set": "Branch %s of %s, toward %s %s %s"
 }

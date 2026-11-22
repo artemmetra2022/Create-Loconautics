@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "powered=false": { "model": "loconautics:block/track_switch/off" },
+    "powered=true": { "model": "loconautics:block/track_switch/on" }
+  }
+}

@@ -1456,5 +1456,16 @@
   "loconautics.gui.goggles.gauge_brake_released": "Отпущен",
   "loconautics.gui.goggles.gauge_brake_braking": "Торможение",
   "loconautics.gui.goggles.gauge_brake_emergency": "ЭКСТРЕННОЕ",
-  "loconautics.gui.goggles.gauge_brake_inactive": "Не в линии"
+  "loconautics.gui.goggles.gauge_brake_inactive": "Не в линии",
+  "block.loconautics.track_switch": "Стрелочный привод",
+  "block.loconautics.track_switch.tooltip.summary": "Управляет ближайшей _развилкой путей_. В режиме авто поезда по расписанию ставят её сами по своему маршруту, выбранная ветка _запирается_ для всех поездов.",
+  "block.loconautics.track_switch.tooltip.condition1": "При клике правой кнопкой",
+  "block.loconautics.track_switch.tooltip.behaviour1": "Выбирает _следующую ветку_. Shift + клик привязывает ближайшую развилку.",
+  "block.loconautics.track_switch.tooltip.condition2": "При сигнале редстоуна",
+  "block.loconautics.track_switch.tooltip.behaviour2": "Каждый импульс выбирает _следующую ветку_, после последней привод возвращается в авто.",
+  "loconautics.track_switch.no_junction": "Рядом нет развилки путей",
+  "loconautics.track_switch.bound": "Привязан к ближайшей развилке, режим авто",
+  "loconautics.track_switch.lost": "Развилка пропала, привяжите заново",
+  "loconautics.track_switch.free": "Авто: поезда по расписанию сами ставят стрелку",
+  "loconautics.track_switch.set": "Ветка %s из %s, к %s %s %s"
 }

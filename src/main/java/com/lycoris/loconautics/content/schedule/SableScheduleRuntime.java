@@ -231,6 +231,7 @@ public final class SableScheduleRuntime implements PostalState {
 
     public static void clear(UUID trainId) {
         RUNTIMES.remove(trainId);
+        com.lycoris.loconautics.content.trackswitch.SwitchReservations.release(trainId);
         ConsistNose.forget(SableTrainRegistry.get(trainId));
     }
 
@@ -581,6 +582,9 @@ public final class SableScheduleRuntime implements PostalState {
     }
 
     private void clearRoute() {
+        if (train != null) {
+            com.lycoris.loconautics.content.trackswitch.SwitchReservations.release(train.id());
+        }
         setRoute(null);
     }
 
@@ -1473,6 +1477,7 @@ public final class SableScheduleRuntime implements PostalState {
     private void reportNextJunction(RailCarriage rail) {
         List<Couple<TrackNode>> route = rail.remainingPath();
         TrackGraph graph = rail.graph();
+        com.lycoris.loconautics.content.trackswitch.SwitchReservations.sync(train.id(), route);
         if (route == null || route.isEmpty() || graph == null) {
             return;
         }

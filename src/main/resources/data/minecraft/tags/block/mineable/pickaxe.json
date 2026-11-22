@@ -4,6 +4,7 @@
     "loconautics:bearing_axle",
     "loconautics:transmission",
     "loconautics:handbrake",
+    "loconautics:track_switch",
     "loconautics:brake_controller",
     "loconautics:speedometer",
     "loconautics:turntable_bearing",

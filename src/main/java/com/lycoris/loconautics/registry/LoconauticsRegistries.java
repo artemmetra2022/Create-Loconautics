@@ -342,6 +342,28 @@ public final class LoconauticsRegistries {
             ITEMS.register("handbrake", () ->
                     new BlockItem(HANDBRAKE.get(), new Item.Properties().stacksTo(64)));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.trackswitch.TrackSwitchBlock>
+            TRACK_SWITCH = BLOCKS.register("track_switch", () ->
+            new com.lycoris.loconautics.content.trackswitch.TrackSwitchBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .requiresCorrectToolForDrops()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> TRACK_SWITCH_ITEM =
+            ITEMS.register("track_switch", () ->
+                    new BlockItem(TRACK_SWITCH.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<BlockEntityType<?>,
+            BlockEntityType<com.lycoris.loconautics.content.trackswitch.TrackSwitchBlockEntity>>
+            TRACK_SWITCH_BE = BLOCK_ENTITIES.register("track_switch", () ->
+            BlockEntityType.Builder
+                    .of(com.lycoris.loconautics.content.trackswitch.TrackSwitchBlockEntity::new,
+                            TRACK_SWITCH.get())
+                    .build(null));
+
     public static final DeferredHolder<Block, GhostWheelBlock> GHOST_WHEEL =
             BLOCKS.register("ghost_wheel", () -> new GhostWheelBlock(
                     BlockBehaviour.Properties.of()
@@ -627,6 +649,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.simibubi.create.AllItems.SCHEDULE.asStack());
 
                         output.accept(HANDBRAKE_ITEM.get());
+                        output.accept(TRACK_SWITCH_ITEM.get());
                         output.accept(TURNTABLE_BEARING_ITEM.get());
 
                         output.accept(dev.simulated_team.simulated.index.SimBlocks.ROPE_CONNECTOR);

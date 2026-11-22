@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ " A ", "BCB", " D " ],
+  "key": {
+    "A": { "item": "minecraft:lever" },
+    "B": { "item": "minecraft:iron_ingot" },
+    "C": { "item": "minecraft:redstone_block" },
+    "D": { "item": "minecraft:rail" }
+  },
+  "result": { "id": "loconautics:track_switch", "count": 1 }
+}

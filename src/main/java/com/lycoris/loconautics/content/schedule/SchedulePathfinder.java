@@ -1,5 +1,6 @@
 package com.lycoris.loconautics.content.schedule;
 
+import com.lycoris.loconautics.common.railway.PointOverrides;
 import com.lycoris.loconautics.common.turntable.TurntableRegistry;
 import com.lycoris.loconautics.trainphysics.rail.RailSeams;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
@@ -203,12 +204,17 @@ public final class SchedulePathfinder {
             }
             TrackEdge arrivedOn = graph.getConnection(Couple.create(f.cameFrom, f.node));
             Map<TrackNode, TrackEdge> connections = graph.getConnectionsFrom(f.node);
+            String locked = lockedBranch(f, arrivedOn, connections);
             for (Map.Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
                 TrackNode next = entry.getKey();
                 if (next == f.cameFrom) {
                     continue;
                 }
                 if (!stepAllowed(arrivedOn, f.node, next, entry.getValue())) {
+                    continue;
+                }
+                // a switch stand in forced mode closes every other branch
+                if (locked != null && !locked.equals(PointOverrides.nodeId(next.getLocation()))) {
                     continue;
                 }
                 List<Couple<TrackNode>> edges = new ArrayList<>(f.edges);
@@ -240,6 +246,27 @@ public final class SchedulePathfinder {
                 queue.add(new Frontier(next, f.node, distance, cost, edges, f.hop, f.edgesToHop, f.rel));
             }
             queueTurntableExits(graph, f, queue, routing);
+        }
+        return null;
+    }
+
+    // the branch a switch stand holds at this node, only when that branch is one this walk could take
+    @Nullable
+    private static String lockedBranch(Frontier f, @Nullable TrackEdge arrivedOn,
+                                       Map<TrackNode, TrackEdge> connections) {
+        if (connections.size() < 3 || !PointOverrides.hasManualLocks()) {
+            return null;
+        }
+        String lock = PointOverrides.manualLock(PointOverrides.nodeId(f.node.getLocation()));
+        if (lock == null) {
+            return null;
+        }
+        for (Map.Entry<TrackNode, TrackEdge> entry : connections.entrySet()) {
+            TrackNode next = entry.getKey();
+            if (next != f.cameFrom && stepAllowed(arrivedOn, f.node, next, entry.getValue())
+                    && lock.equals(PointOverrides.nodeId(next.getLocation()))) {
+                return lock;
+            }
         }
         return null;
     }
