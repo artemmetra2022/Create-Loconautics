@@ -6,6 +6,8 @@ import com.lycoris.loconautics.config.LoconauticsConfig;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlock;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.brakes.HandbrakeBlock;
+import com.lycoris.loconautics.content.safety.SafetyBlock;
+import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
 import com.lycoris.loconautics.content.retardertrack.RetarderTracks;
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.common.sable.SubLevelBlocks;
@@ -72,7 +74,7 @@ public final class TrainBrakes {
         train.setBrakeScale(scale);
         train.setBraked(scale > 0.0);
         // the handbrake never cuts drive, the engine pulls against it and its drag shows up as axle stress instead
-        train.setBrakeHold(consist.hold() || train.brakePulseActive());
+        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub));
         train.setBrakeHard(locked);
     }
 
@@ -96,6 +98,13 @@ public final class TrainBrakes {
 
     private static final Map<ServerSubLevel, BrakeScan> BRAKE_SCANS = new WeakHashMap<>();
 
+    // set by handbrakeStrength, true while a Safety Unit on the carriage holds the emergency brake
+    private static final Map<ServerSubLevel, Boolean> SAFETY_STOPS = new WeakHashMap<>();
+
+    private static boolean safetyStop(ServerSubLevel sub) {
+        return Boolean.TRUE.equals(SAFETY_STOPS.get(sub));
+    }
+
     public static double handbrakeStrength(ServerSubLevel sub) {
         ServerLevel subLevel = sub.getLevel();
         long now = subLevel.getGameTime();
@@ -103,7 +112,8 @@ public final class TrainBrakes {
         if (scan == null || now - scan.tick() >= BRAKE_SCAN_TICKS || now < scan.tick()) {
             List<BlockPos> found = new ArrayList<>();
             SubLevelBlocks.forEachBlock(sub, (pos, state) -> {
-                if (state.getBlock() instanceof HandbrakeBlock || state.getBlock() instanceof BrakeControllerBlock) {
+                if (state.getBlock() instanceof HandbrakeBlock || state.getBlock() instanceof BrakeControllerBlock
+                        || state.getBlock() instanceof SafetyBlock) {
                     found.add(pos.immutable());
                 }
                 return true;
@@ -111,6 +121,7 @@ public final class TrainBrakes {
             scan = new BrakeScan(now, found);
             BRAKE_SCANS.put(sub, scan);
         }
+        boolean safetyStop = false;
         int bestHandbrake = 0;
         int bestController = 0;
         boolean emergency = false;
@@ -124,11 +135,17 @@ public final class TrainBrakes {
                 // CONTROLLER_FULL_STRENGTH_SIGNAL)
                 bestController = Math.max(bestController, brake.getEffectiveBrakeSignal());
                 emergency |= brake.isEmergency();
+            } else if (state.getBlock() instanceof SafetyBlock
+                    && subLevel.getBlockEntity(pos) instanceof SafetyBlockEntity safety && safety.isEmergency()) {
+                // a tripped Safety Unit brakes like the emergency switch and also cuts the drive
+                emergency = true;
+                safetyStop = true;
             }
             if (bestHandbrake >= 15 && bestController >= 15 && emergency) {
                 break;
             }
         }
+        SAFETY_STOPS.put(sub, safetyStop);
         double handbrakeFraction = bestHandbrake / 15.0;
         double handbrakeStrength = handbrakeFraction * handbrakeFraction;
 

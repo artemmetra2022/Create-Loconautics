@@ -73,6 +73,13 @@ public final class LoconauticsNetwork {
                 com.lycoris.loconautics.network.packets.controls.ValveOpenPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.controls.ValveOpenPacket::handle);
 
+        r.playToClient(com.lycoris.loconautics.network.packets.safety.SafetyOpenPacket.TYPE,
+                com.lycoris.loconautics.network.packets.safety.SafetyOpenPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.safety.SafetyOpenPacket::handle);
+        r.playToServer(com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket.TYPE,
+                com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.safety.SafetyConfigurePacket::handle);
+
         r.playToServer(com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.TYPE,
                 com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket::handle);

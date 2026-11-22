@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "T",
+    "S",
+    "B"
+  ],
+  "key": {
+    "T": {
+      "item": "create:electron_tube"
+    },
+    "S": {
+      "item": "loconautics:speedometer"
+    },
+    "B": {
+      "item": "create:industrial_iron_block"
+    }
+  },
+  "result": {
+    "id": "loconautics:safety_unit",
+    "count": 1
+  }
+}

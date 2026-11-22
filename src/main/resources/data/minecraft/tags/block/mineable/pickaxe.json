@@ -8,6 +8,7 @@
     "loconautics:retarder_track",
     "loconautics:brake_controller",
     "loconautics:speedometer",
+    "loconautics:safety_unit",
     "loconautics:speed_sign",
     "loconautics:turntable_bearing",
     "loconautics:turntable_plate",

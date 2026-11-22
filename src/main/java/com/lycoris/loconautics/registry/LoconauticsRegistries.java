@@ -462,6 +462,29 @@ public final class LoconauticsRegistries {
                     .of(LoconauticsRegistries::createSpeedometerBE, SPEEDOMETER.get())
                     .build(null));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.safety.SafetyBlock>
+            SAFETY = BLOCKS.register("safety_unit", () ->
+            new com.lycoris.loconautics.content.safety.SafetyBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> state.getValue(
+                                    com.lycoris.loconautics.content.safety.SafetyBlock.TRIPPED) ? 7 : 0)
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> SAFETY_ITEM =
+            ITEMS.register("safety_unit", () ->
+                    new BlockItem(SAFETY.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<BlockEntityType<?>,
+            BlockEntityType<com.lycoris.loconautics.content.safety.SafetyBlockEntity>>
+            SAFETY_BE = BLOCK_ENTITIES.register("safety_unit", () ->
+            BlockEntityType.Builder
+                    .of(LoconauticsRegistries::createSafetyBE, SAFETY.get())
+                    .build(null));
+
     public static final DeferredHolder<Block, com.lycoris.loconautics.content.speedsign.SpeedSignBlock>
             SPEED_SIGN = BLOCKS.register("speed_sign", () ->
             new com.lycoris.loconautics.content.speedsign.SpeedSignBlock(
@@ -656,6 +679,7 @@ public final class LoconauticsRegistries {
                         output.accept(TRANSMISSION_ITEM.get());
                         output.accept(BRAKE_CONTROLLER_ITEM.get());
                         output.accept(SPEEDOMETER_ITEM.get());
+                        output.accept(SAFETY_ITEM.get());
                         output.accept(SPEED_SIGN_ITEM.get());
 
                         com.lycoris.loconautics.content.dashboard.DashboardBlocks.DASHBOARD_ITEMS
@@ -806,6 +830,11 @@ public final class LoconauticsRegistries {
             BlockPos pos, BlockState state) {
         return new com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity(
                 SPEEDOMETER_BE.get(), pos, state);
+    }
+
+    static com.lycoris.loconautics.content.safety.SafetyBlockEntity createSafetyBE(
+            BlockPos pos, BlockState state) {
+        return new com.lycoris.loconautics.content.safety.SafetyBlockEntity(SAFETY_BE.get(), pos, state);
     }
 
     static TransmissionMenu createTransmissionMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {
