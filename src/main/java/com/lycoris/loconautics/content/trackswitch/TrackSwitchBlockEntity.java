@@ -25,6 +25,11 @@ public class TrackSwitchBlockEntity extends BlockEntity {
     private String junction = "";
     /** node id of the branch trains are sent to, empty while the stand lets Create choose */
     private String toward = "";
+    private int branchNumber;
+    private int branchCount;
+
+    public int branchNumber() { return branchNumber; }
+    public int branchCount() { return branchCount; }
 
     public TrackSwitchBlockEntity(BlockPos pos, BlockState state) {
         super(LoconauticsRegistries.TRACK_SWITCH_BE.get(), pos, state);
@@ -35,6 +40,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         super.onLoad();
         if (level instanceof ServerLevel) {
             apply();
+            if (junction.isEmpty() || toward.isEmpty()) show(null, null);
         }
     }
 
@@ -51,6 +57,8 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tag.putString("Junction", junction);
         tag.putString("Toward", toward);
+        tag.putInt("BranchNumber", branchNumber);
+        tag.putInt("BranchCount", branchCount);
     }
 
     @Override
@@ -58,7 +66,24 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         junction = tag.getString("Junction");
         toward = tag.getString("Toward");
+        branchNumber = tag.getInt("BranchNumber");
+        branchCount = tag.getInt("BranchCount");
     }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public boolean isBound() { return !junction.isEmpty(); }
+    public boolean isForced() { return !toward.isEmpty(); }
 
     /** looks for the nearest junction and binds to it, dropping the old one */
     public void rebind(Player player) {
@@ -72,6 +97,8 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         }
         release();
         junction = found.id();
+        branchCount = found.branches().size();
+        branchNumber = 0;
         toward = "";
         setChanged();
         apply();
@@ -86,9 +113,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         }
         if (junction.isEmpty()) {
             rebind(player);
-            if (junction.isEmpty()) {
-                return;
-            }
+            return;
         }
         TrackSwitchJunctions.Junction current = TrackSwitchJunctions.find(junction);
         if (current == null) {
@@ -108,6 +133,8 @@ public class TrackSwitchBlockEntity extends BlockEntity {
             }
         }
         index++;
+        branchCount = branches.size();
+        branchNumber = index >= branches.size() ? 0 : index + 1;
         if (index >= branches.size()) {
             PointOverrides.clear(junction);
             toward = "";
@@ -141,7 +168,8 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         }
         BlockState shown;
         if (junctionAt == null || branchAt == null) {
-            shown = state.setValue(TrackSwitchBlock.MODE, TrackSwitchBlock.Mode.AUTO);
+            shown = state.setValue(TrackSwitchBlock.MODE, junction.isEmpty()
+                    ? TrackSwitchBlock.Mode.UNBOUND : TrackSwitchBlock.Mode.AUTO);
         } else {
             double dx = branchAt.x - junctionAt.x;
             double dz = branchAt.z - junctionAt.z;
@@ -154,6 +182,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         if (shown != state) {
             level.setBlock(worldPosition, shown, Block.UPDATE_CLIENTS);
         }
+        level.sendBlockUpdated(worldPosition, state, shown, Block.UPDATE_CLIENTS);
     }
 
     private void apply() {

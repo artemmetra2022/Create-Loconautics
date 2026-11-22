@@ -273,6 +273,7 @@ public final class LoconauticsClient {
         registerTooltip(com.lycoris.loconautics.content.cerisene.CeriseneBlocks.RAW_CERISENE.get(), "item.loconautics.raw_cerisene");
         registerTooltip(com.lycoris.loconautics.content.cerisene.CeriseneBlocks.CERISENE_BLOCK_ITEM.get(), "block.loconautics.cerisene_block");
         registerTooltip(LoconauticsRegistries.HOSE.get(), "item.loconautics.hose");
+        registerTooltip(LoconauticsRegistries.TRACK_SWITCH_ITEM.get(), "block.loconautics.track_switch");
         com.lycoris.loconautics.content.combustion.SmallEngineBlocks.ENGINE_ITEMS
                 .forEach((color, item) -> registerTooltip(item.get(), "block.loconautics.small_combustion_engine"));
 
@@ -433,6 +434,8 @@ public final class LoconauticsClient {
     }
 
     private void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.HOTBAR, LoconauticsConstants.id("track_switch_status"),
+                com.lycoris.loconautics.client.TrackSwitchHUD.OVERLAY);
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR,
                 LoconauticsConstants.id("analog_controller_hud"),
                 AnalogControllerHUD.OVERLAY);

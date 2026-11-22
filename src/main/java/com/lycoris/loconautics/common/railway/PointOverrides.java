@@ -108,6 +108,11 @@ public final class PointOverrides {
         };
     }
 
+    /** the option a switch stand (or a train reserving an auto junction) holds among these, null when none */
+    public static Map.Entry<TrackNode, TrackEdge> locked(List<Map.Entry<TrackNode, TrackEdge>> options) {
+        return choose(options);
+    }
+
     private static Map.Entry<TrackNode, TrackEdge> choose(List<Map.Entry<TrackNode, TrackEdge>> options) {
         if (POINTS.isEmpty() || options.size() < 2) {
             return null;

@@ -85,7 +85,12 @@ public final class TrackSwitchJunctions {
         for (TrackNode next : connections.keySet()) {
             branches.add(new Branch(PointOverrides.nodeId(next.getLocation()), next.getLocation().getLocation()));
         }
-        branches.sort(Comparator.comparing(Branch::id));
+        // Clockwise from north; ids only break ties for collinear branches.
+        Vec3 origin = location.getLocation();
+        branches.sort(Comparator.comparingDouble((Branch branch) -> {
+            double angle = Math.atan2(branch.at().x - origin.x, origin.z - branch.at().z);
+            return angle < 0 ? angle + Math.PI * 2 : angle;
+        }).thenComparing(Branch::id));
         return new Junction(PointOverrides.nodeId(location), location.getLocation(), branches);
     }
 }

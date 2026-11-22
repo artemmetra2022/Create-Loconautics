@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.trainphysics.rail;
 
 import com.lycoris.loconautics.LoconauticsConstants;
+import com.lycoris.loconautics.common.railway.PointOverrides;
 import com.lycoris.loconautics.compat.railways.RailwaysSwitches;
 import com.lycoris.loconautics.foundation.debug.SteerTrace;
 import com.lycoris.loconautics.trainphysics.portal.PortalFrame;
@@ -536,6 +537,11 @@ public final class RailCarriage {
                 SteerTrace.pick(this, "follow target edge " + followTarget.edge.node1.getLocation().getLocation()
                         + " pos " + followTarget.position, targets.size(), followed == targets.get(0) ? "first" : "other");
                 return recordTurn(followed);
+            }
+            java.util.Map.Entry<TrackNode, TrackEdge> held = PointOverrides.locked(targets);
+            if (held != null) {
+                SteerTrace.pick(this, "switch stand lock", targets.size(), held == targets.get(0) ? "first" : "other");
+                return recordTurn(held);
             }
             boolean unprompted = steerTarget == null;
             java.util.Map.Entry<TrackNode, TrackEdge> best = bestByGoal(targets, unprompted ? trajectory : steerTarget,

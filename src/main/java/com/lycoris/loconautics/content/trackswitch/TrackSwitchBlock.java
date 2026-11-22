@@ -35,7 +35,7 @@ public class TrackSwitchBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public enum Mode implements StringRepresentable {
-        AUTO("auto"), FORCED("forced");
+        UNBOUND("unbound"), AUTO("auto"), FORCED("forced");
 
         private final String name;
 
@@ -52,7 +52,7 @@ public class TrackSwitchBlock extends Block implements EntityBlock {
     public TrackSwitchBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any()
-                .setValue(POWERED, false).setValue(MODE, Mode.AUTO).setValue(FACING, Direction.NORTH));
+                .setValue(POWERED, false).setValue(MODE, Mode.UNBOUND).setValue(FACING, Direction.NORTH));
     }
 
     @Override
