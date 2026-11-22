@@ -7,6 +7,7 @@
     "loconautics:track_switch",
     "loconautics:brake_controller",
     "loconautics:speedometer",
+    "loconautics:speed_sign",
     "loconautics:turntable_bearing",
     "loconautics:turntable_plate",
     "loconautics:copycat_headstock",

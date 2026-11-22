@@ -66,6 +66,7 @@
 - Derailed carts no longer twitch on the spot when only one bogey can reach the rail.
 
 ### Added
+- Speed Limit Sign: a two-block-tall post sign that shows a speed limit. Wrench the sign for the next limit, the post for the previous one. Informative only.
 - Boilers show a level in the goggles, set by their size and fire.
 - Fuel quality sets the boiler fire limit, wood is weakest and coal blocks strongest.
 - Redstone signal sets the boiler burn, 0 is full and 15 banks the fire.

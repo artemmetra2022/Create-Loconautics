@@ -447,6 +447,22 @@ public final class LoconauticsRegistries {
                     .of(LoconauticsRegistries::createSpeedometerBE, SPEEDOMETER.get())
                     .build(null));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.speedsign.SpeedSignBlock>
+            SPEED_SIGN = BLOCKS.register("speed_sign", () ->
+            new com.lycoris.loconautics.content.speedsign.SpeedSignBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(2.0f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .noOcclusion()
+                            .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
+                            .requiresCorrectToolForDrops()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> SPEED_SIGN_ITEM =
+            ITEMS.register("speed_sign", () ->
+                    new BlockItem(SPEED_SIGN.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<Item, SteelCableItem> STEEL_CABLE =
             ITEMS.register("steel_cable", () -> new SteelCableItem(new Item.Properties().stacksTo(16)));
 
@@ -625,6 +641,7 @@ public final class LoconauticsRegistries {
                         output.accept(TRANSMISSION_ITEM.get());
                         output.accept(BRAKE_CONTROLLER_ITEM.get());
                         output.accept(SPEEDOMETER_ITEM.get());
+                        output.accept(SPEED_SIGN_ITEM.get());
 
                         com.lycoris.loconautics.content.dashboard.DashboardBlocks.DASHBOARD_ITEMS
                                 .forEach((color, item) -> output.accept(new net.minecraft.world.item.ItemStack(item.get()),
