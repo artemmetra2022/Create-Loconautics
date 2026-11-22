@@ -1,6 +1,5 @@
 package com.lycoris.loconautics.content.trackswitch;
 
-import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -69,7 +68,7 @@ public class TrackSwitchBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new TrackSwitchBlockEntity(LoconauticsRegistries.TRACK_SWITCH_BE.get(), pos, state);
+        return new TrackSwitchBlockEntity(pos, state);
     }
 
     @Override

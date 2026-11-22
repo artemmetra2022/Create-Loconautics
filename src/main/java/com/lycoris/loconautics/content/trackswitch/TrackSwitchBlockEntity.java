@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.content.trackswitch;
 
 import com.lycoris.loconautics.common.railway.PointOverrides;
+import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -11,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -26,8 +26,8 @@ public class TrackSwitchBlockEntity extends BlockEntity {
     /** node id of the branch trains are sent to, empty while the stand lets Create choose */
     private String toward = "";
 
-    public TrackSwitchBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public TrackSwitchBlockEntity(BlockPos pos, BlockState state) {
+        super(LoconauticsRegistries.TRACK_SWITCH_BE.get(), pos, state);
     }
 
     @Override
