@@ -1454,5 +1454,12 @@
   "loconautics.ponder.train_casing_shaft.text_1": "Bogeys can be fitted with a Shaft by right clicking them with one",
   "loconautics.ponder.train_casing_shaft.text_2": "Rotation from one side passes straight through, like an encased Shaft",
   "loconautics.ponder.train_casing_shaft.text_3": "Sneak and Right click with a Wrench to remove the Shaft again",
-  "loconautics.ponder.train_casing_shaft.text_4": "Without the Shaft, rotation stops at the Bogey"
+  "loconautics.ponder.train_casing_shaft.text_4": "Without the Shaft, rotation stops at the Bogey",
+  "loconautics.gui.goggles.gauge_brake_pressure": "Brake Pressure",
+  "loconautics.gui.goggles.gauge_brake_force": "Braking Force",
+  "loconautics.gui.goggles.gauge_brake_state": "Brake State",
+  "loconautics.gui.goggles.gauge_brake_released": "Released",
+  "loconautics.gui.goggles.gauge_brake_braking": "Braking",
+  "loconautics.gui.goggles.gauge_brake_emergency": "EMERGENCY",
+  "loconautics.gui.goggles.gauge_brake_inactive": "Not in line"
 }

@@ -1449,5 +1449,12 @@
   "loconautics.ponder.train_casing_shaft.text_1": "Возьмите вал и нажмите ПКМ по вагонной тележке, чтобы установить его",
   "loconautics.ponder.train_casing_shaft.text_2": "Вращение проходит насквозь с одной стороны на другую, как у вала в корпусе",
   "loconautics.ponder.train_casing_shaft.text_3": "Удерживая Shift, нажмите ПКМ гаечным ключом, чтобы снять вал",
-  "loconautics.ponder.train_casing_shaft.text_4": "Без вала вращение не проходит через вагонную тележку"
+  "loconautics.ponder.train_casing_shaft.text_4": "Без вала вращение не проходит через вагонную тележку",
+  "loconautics.gui.goggles.gauge_brake_pressure": "Давление в тормозах",
+  "loconautics.gui.goggles.gauge_brake_force": "Сила торможения",
+  "loconautics.gui.goggles.gauge_brake_state": "Состояние тормоза",
+  "loconautics.gui.goggles.gauge_brake_released": "Отпущен",
+  "loconautics.gui.goggles.gauge_brake_braking": "Торможение",
+  "loconautics.gui.goggles.gauge_brake_emergency": "ЭКСТРЕННОЕ",
+  "loconautics.gui.goggles.gauge_brake_inactive": "Не в линии"
 }

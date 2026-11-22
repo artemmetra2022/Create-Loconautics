@@ -4,6 +4,7 @@ import com.lycoris.loconautics.compat.gauge.AeronauticsGauges;
 import com.lycoris.loconautics.compat.gauge.DieselGauges;
 import com.lycoris.loconautics.compat.gauge.PropulsionGauges;
 import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
+import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineTuning;
 import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
@@ -231,7 +232,19 @@ public enum GaugeMetric implements StringRepresentable {
     ACCELERATION(SpeedometerBlockEntity.class,
             be -> String.format(Locale.US, "%+.2f m/s²", be.getAcceleration()),
             GaugeMetric::accelerationFraction,
-            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND);
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    // brake controller: appended last on purpose, the network codec writes enum ordinals
+    BRAKE_PRESSURE(BrakeControllerBlockEntity.class,
+            GaugeMetric::brakePressureText, GaugeMetric::brakeLevelFraction,
+            ChatFormatting.GOLD, 22),
+    BRAKE_FORCE(BrakeControllerBlockEntity.class,
+            be -> be.isActive() ? pct(brakeForce(be)) : inactiveBrake(),
+            be -> be.isActive() ? brakeForce(be) : 0f,
+            ChatFormatting.GOLD, 22),
+    BRAKE_STATE(BrakeControllerBlockEntity.class,
+            GaugeMetric::brakeStateText, GaugeMetric::brakeStateFraction,
+            ChatFormatting.GREEN, 22);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -252,7 +265,8 @@ public enum GaugeMetric implements StringRepresentable {
         PROPELLER_BEARING("aeronautics", "Create: Aeronautics", "Propeller Bearing",
                 AeronauticsGauges::bearingSources),
         HOT_AIR_BURNER("aeronautics", "Create: Aeronautics", "Hot Air Burner", AeronauticsGauges::hotAirSources),
-        STEAM_VENT("aeronautics", "Create: Aeronautics", "Steam Vent", AeronauticsGauges::steamSources);
+        STEAM_VENT("aeronautics", "Create: Aeronautics", "Steam Vent", AeronauticsGauges::steamSources),
+        BRAKE_CONTROLLER("loconautics", "Loconautics", "Brake Controller", BrakeControllerBlockEntity.class);
 
         private final String modId;
         private final String modName;
@@ -348,6 +362,43 @@ public enum GaugeMetric implements StringRepresentable {
     private static <S extends BlockEntity, T> Function<BlockEntity, T> from(Class<S> source,
                                                                             Function<S, T> reader) {
         return be -> source.isInstance(be) ? reader.apply(source.cast(be)) : null;
+    }
+
+    /** the brake cylinder pressure the dial shows, the full lever and the emergency brake both read this */
+    public static final float BRAKE_FULL_BAR = 5.0f;
+
+    private static float brakeLevelFraction(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return 0f;
+        if (be.isEmergency()) return 1f;
+        return over(be.getEffectiveBrakeSignal(), BrakeControllerBlockEntity.MAX_SIGNAL);
+    }
+
+    private static String brakePressureText(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return inactiveBrake();
+        return String.format(Locale.US, "%.1f bar", brakeLevelFraction(be) * BRAKE_FULL_BAR);
+    }
+
+    /** the share of the shaft speed the brake takes away right now */
+    private static float brakeForce(BrakeControllerBlockEntity be) {
+        return 1f - be.getBrakeCoefficient();
+    }
+
+    private static String brakeStateText(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return inactiveBrake();
+        String key = be.isEmergency() ? "loconautics.gui.goggles.gauge_brake_emergency"
+                : be.isBraking() ? "loconautics.gui.goggles.gauge_brake_braking"
+                : "loconautics.gui.goggles.gauge_brake_released";
+        return Component.translatable(key).getString();
+    }
+
+    // 0 released, 0.5 braking with the lever, 1 emergency
+    private static float brakeStateFraction(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return 0f;
+        return be.isEmergency() ? 1f : be.isBraking() ? 0.5f : 0f;
+    }
+
+    private static String inactiveBrake() {
+        return Component.translatable("loconautics.gui.goggles.gauge_brake_inactive").getString();
     }
 
     private static boolean valveOpen(FluidValveBlockEntity be) {
@@ -475,6 +526,10 @@ public enum GaugeMetric implements StringRepresentable {
     }
 
     public ChatFormatting colorFor(BlockEntity source) {
+        if (group == Group.BRAKE_CONTROLLER && source instanceof BrakeControllerBlockEntity be) {
+            if (be.isEmergency()) return ChatFormatting.RED;
+            if (this == BRAKE_STATE && be.isBraking()) return ChatFormatting.GOLD;
+        }
         return color;
     }
 
@@ -490,6 +545,9 @@ public enum GaugeMetric implements StringRepresentable {
     }
 
     public boolean faulted(BlockEntity source) {
+        if (group == Group.BRAKE_CONTROLLER) {
+            return source instanceof BrakeControllerBlockEntity be && !be.isActive();
+        }
         return this == WATER_LEVEL && source instanceof FireboxBlockEntity be && !be.isDisplayValid();
     }
 
