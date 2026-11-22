@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "top": "loconautics:block/track_switch/top_forced",
+    "side": "loconautics:block/track_switch/side_forced",
+    "particle": "loconautics:block/track_switch/side_forced"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "up":    { "texture": "#top", "uv": [0, 0, 16, 16] },
+        "down":  { "texture": "#side" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "east":  { "texture": "#side" },
+        "west":  { "texture": "#side" }
+      }
+    }
+  ]
+}

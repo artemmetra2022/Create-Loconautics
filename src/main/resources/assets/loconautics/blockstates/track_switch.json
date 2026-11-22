@@ -1,6 +1,9 @@
 {
   "variants": {
-    "powered=false": { "model": "loconautics:block/track_switch/off" },
-    "powered=true": { "model": "loconautics:block/track_switch/on" }
+    "mode=auto": { "model": "loconautics:block/track_switch/auto" },
+    "mode=forced,facing=north": { "model": "loconautics:block/track_switch/forced" },
+    "mode=forced,facing=east":  { "model": "loconautics:block/track_switch/forced", "y": 90 },
+    "mode=forced,facing=south": { "model": "loconautics:block/track_switch/forced", "y": 180 },
+    "mode=forced,facing=west":  { "model": "loconautics:block/track_switch/forced", "y": 270 }
   }
 }

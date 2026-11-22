@@ -2,6 +2,9 @@ package com.lycoris.loconautics.content.trackswitch;
 
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -26,14 +29,36 @@ public class TrackSwitchBlock extends Block implements EntityBlock {
     /** lit while a branch is forced, picks the powered model */
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
+    /** auto shows the green fork, forced shows an arrow toward the branch the stand holds */
+    public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
+
+    /** compass direction of the held branch as seen from the junction, only read while forced */
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+
+    public enum Mode implements StringRepresentable {
+        AUTO("auto"), FORCED("forced");
+
+        private final String name;
+
+        Mode(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
+    }
+
     public TrackSwitchBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(POWERED, false));
+        registerDefaultState(stateDefinition.any()
+                .setValue(POWERED, false).setValue(MODE, Mode.AUTO).setValue(FACING, Direction.NORTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(POWERED);
+        builder.add(POWERED, MODE, FACING);
     }
 
     @Override

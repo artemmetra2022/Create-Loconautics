@@ -24,7 +24,7 @@ public final class TrackSwitchJunctions {
     public record Branch(String id, Vec3 at) {
     }
 
-    public record Junction(String id, List<Branch> branches) {
+    public record Junction(String id, Vec3 at, List<Branch> branches) {
     }
 
     private TrackSwitchJunctions() {
@@ -86,6 +86,6 @@ public final class TrackSwitchJunctions {
             branches.add(new Branch(PointOverrides.nodeId(next.getLocation()), next.getLocation().getLocation()));
         }
         branches.sort(Comparator.comparing(Branch::id));
-        return new Junction(PointOverrides.nodeId(location), branches);
+        return new Junction(PointOverrides.nodeId(location), location.getLocation(), branches);
     }
 }

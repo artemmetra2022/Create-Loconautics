@@ -2,6 +2,9 @@ package com.lycoris.loconautics.content.trackswitch;
 
 import com.lycoris.loconautics.common.railway.PointOverrides;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -72,6 +75,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         toward = "";
         setChanged();
         apply();
+        show(null, null);
         tell(player, "loconautics.track_switch.bound");
     }
 
@@ -92,6 +96,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
             junction = "";
             toward = "";
             setChanged();
+            show(null, null);
             tell(player, "loconautics.track_switch.lost");
             return;
         }
@@ -108,6 +113,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
             toward = "";
             setChanged();
             apply();
+            show(null, null);
             tell(player, "loconautics.track_switch.free");
             return;
         }
@@ -115,6 +121,7 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         toward = branch.id();
         setChanged();
         apply();
+        show(current.at(), branch.at());
         if (player != null) {
             player.displayClientMessage(Component.translatable("loconautics.track_switch.set",
                     index + 1, branches.size(),
@@ -123,6 +130,32 @@ public class TrackSwitchBlockEntity extends BlockEntity {
     }
 
     /** forced mode holds the branch, auto mode only marks the junction so that scheduled trains may set it */
+    /** arrow toward the held branch, or the auto fork when there is none */
+    private void show(Vec3 junctionAt, Vec3 branchAt) {
+        if (level == null) {
+            return;
+        }
+        BlockState state = getBlockState();
+        if (!(state.getBlock() instanceof TrackSwitchBlock)) {
+            return;
+        }
+        BlockState shown;
+        if (junctionAt == null || branchAt == null) {
+            shown = state.setValue(TrackSwitchBlock.MODE, TrackSwitchBlock.Mode.AUTO);
+        } else {
+            double dx = branchAt.x - junctionAt.x;
+            double dz = branchAt.z - junctionAt.z;
+            Direction toward = Math.abs(dx) > Math.abs(dz)
+                    ? (dx > 0 ? Direction.EAST : Direction.WEST)
+                    : (dz > 0 ? Direction.SOUTH : Direction.NORTH);
+            shown = state.setValue(TrackSwitchBlock.MODE, TrackSwitchBlock.Mode.FORCED)
+                    .setValue(TrackSwitchBlock.FACING, toward);
+        }
+        if (shown != state) {
+            level.setBlock(worldPosition, shown, Block.UPDATE_CLIENTS);
+        }
+    }
+
     private void apply() {
         if (junction.isEmpty()) {
             return;
