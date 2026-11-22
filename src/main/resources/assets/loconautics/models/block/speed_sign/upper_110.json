@@ -1,0 +1,6 @@
+{
+  "parent": "loconautics:block/speed_sign/upper",
+  "textures": {
+    "sign": "loconautics:block/speed_sign/face_110"
+  }
+}

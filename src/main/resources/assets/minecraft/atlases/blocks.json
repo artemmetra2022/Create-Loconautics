@@ -1,0 +1,101 @@
+{
+  "sources": [
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/body_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/body_atlas"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/combustion/red/engine",
+      "from": "red",
+      "target": "loconautics:block/combustion/{color}/engine"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/analogcontroller/red/body",
+      "from": "red",
+      "target": "loconautics:block/analogcontroller/{color}/body"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/analogcontroller/red/particle",
+      "from": "red",
+      "target": "loconautics:block/analogcontroller/{color}/particle"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/buffer/red/buffer",
+      "from": "red",
+      "target": "loconautics:block/buffer/{color}/buffer"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/dashboard/red",
+      "from": "red",
+      "target": "loconautics:block/dashboard/{color}"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:item/conductors_hat/red",
+      "from": "red",
+      "target": "loconautics:item/conductors_hat/{color}"
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/body_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/body_atlas",
+      "colors": [
+        "industrial"
+      ]
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/body_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/body_atlas",
+      "colors": [
+        "andesite",
+        "brass",
+        "copper",
+        "zinc"
+      ],
+      "keep": 0.0,
+      "gamma": 1.4
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/shell_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/shell_atlas",
+      "ignore": [[0, 0, 256, 36], [0, 36, 128, 70]]
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/shell_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/shell_atlas",
+      "ignore": [[0, 0, 256, 36], [0, 36, 128, 70]],
+      "colors": [
+        "industrial"
+      ]
+    },
+    {
+      "type": "loconautics:palette_swap",
+      "source": "loconautics:block/boiler/barrel/red/shell_atlas",
+      "from": "red",
+      "target": "loconautics:block/boiler/barrel/{color}/shell_atlas",
+      "ignore": [[0, 0, 256, 36], [0, 36, 128, 70]],
+      "colors": [
+        "andesite",
+        "brass",
+        "copper",
+        "zinc"
+      ],
+      "keep": 0.0,
+      "gamma": 1.4
+    }
+  ]
+}

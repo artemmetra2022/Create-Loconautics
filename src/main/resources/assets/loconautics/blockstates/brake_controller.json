@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "axis=z,powered=false": {
+      "model": "loconautics:block/brakes/block"
+    },
+    "axis=z,powered=true": {
+      "model": "loconautics:block/brakes/powered"
+    },
+    "axis=x,powered=false": {
+      "model": "loconautics:block/brakes/block",
+      "y": 90
+    },
+    "axis=x,powered=true": {
+      "model": "loconautics:block/brakes/powered",
+      "y": 90
+    },
+    "axis=y,powered=false": {
+      "model": "loconautics:block/brakes/block",
+      "x": 90
+    },
+    "axis=y,powered=true": {
+      "model": "loconautics:block/brakes/powered",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S",
+    "B",
+    "B"
+  ],
+  "key": {
+    "S": {
+      "item": "loconautics:industrial_iron_sheet"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "id": "loconautics:speed_sign",
+    "count": 1
+  }
+}

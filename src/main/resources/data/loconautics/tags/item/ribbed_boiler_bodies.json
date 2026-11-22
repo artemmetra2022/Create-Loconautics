@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "loconautics:red_ribbed_boiler_body",
+    "loconautics:industrial_ribbed_boiler_body",
+    "loconautics:andesite_ribbed_boiler_body",
+    "loconautics:brass_ribbed_boiler_body",
+    "loconautics:copper_ribbed_boiler_body",
+    "loconautics:zinc_ribbed_boiler_body"
+  ]
+}

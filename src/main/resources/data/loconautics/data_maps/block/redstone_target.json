@@ -1,0 +1,289 @@
+{
+  "values": {
+    "#loconautics:boiler_firebox": {
+      "kind": "analog"
+    },
+    "loconautics:smart_safety_valve": {
+      "kind": "binary"
+    },
+    "create:gearshift": {
+      "kind": "binary"
+    },
+    "create:clutch": {
+      "kind": "binary"
+    },
+    "create:sequenced_gearshift": {
+      "kind": "binary"
+    },
+    "create:sticker": {
+      "kind": "binary"
+    },
+    "create:cart_assembler": {
+      "kind": "binary"
+    },
+    "create:contraption_controls": {
+      "kind": "binary"
+    },
+    "create:portable_storage_interface": {
+      "kind": "binary"
+    },
+    "create:portable_fluid_interface": {
+      "kind": "binary"
+    },
+    "create:elevator_contact": {
+      "kind": "binary"
+    },
+    "create:mechanical_crafter": {
+      "kind": "binary"
+    },
+    "create:deployer": {
+      "kind": "binary"
+    },
+    "create:mechanical_arm": {
+      "kind": "binary"
+    },
+    "create:gantry_shaft": {
+      "kind": "binary"
+    },
+    "create:smart_chute": {
+      "kind": "binary"
+    },
+    "create:weighted_ejector": {
+      "kind": "binary"
+    },
+    "create:andesite_funnel": {
+      "kind": "binary"
+    },
+    "create:andesite_belt_funnel": {
+      "kind": "binary"
+    },
+    "create:brass_funnel": {
+      "kind": "binary"
+    },
+    "create:brass_belt_funnel": {
+      "kind": "binary"
+    },
+    "create:packager": {
+      "kind": "binary"
+    },
+    "create:repackager": {
+      "kind": "binary"
+    },
+    "create:redstone_requester": {
+      "kind": "binary"
+    },
+    "create:rose_quartz_lamp": {
+      "kind": "binary"
+    },
+    "create:track_signal": {
+      "kind": "binary"
+    },
+    "create:display_link": {
+      "kind": "binary"
+    },
+    "create:peculiar_bell": {
+      "kind": "binary"
+    },
+    "create:haunted_bell": {
+      "kind": "binary"
+    },
+    "create:andesite_door": {
+      "kind": "binary"
+    },
+    "create:brass_door": {
+      "kind": "binary"
+    },
+    "create:copper_door": {
+      "kind": "binary"
+    },
+    "create:train_door": {
+      "kind": "binary"
+    },
+    "create:framed_glass_door": {
+      "kind": "binary"
+    },
+    "create:steam_whistle": {
+      "kind": "binary"
+    },
+    "create:powered_latch": {
+      "kind": "binary"
+    },
+    "create:powered_toggle_latch": {
+      "kind": "binary"
+    },
+    "create:adjustable_chain_gearshift": {
+      "kind": "analog"
+    },
+    "create:controller_rail": {
+      "kind": "analog"
+    },
+    "create:nixie_tube": {
+      "kind": "analog"
+    },
+    "create:stock_link": {
+      "kind": "analog"
+    },
+    "create:white_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:light_gray_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:gray_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:black_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:brown_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:red_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:yellow_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:lime_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:green_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:cyan_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:light_blue_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:blue_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:purple_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:magenta_nixie_tube": {
+      "kind": "analog"
+    },
+    "create:pink_nixie_tube": {
+      "kind": "analog"
+    },
+    "minecraft:redstone_lamp": {
+      "kind": "binary"
+    },
+    "minecraft:piston": {
+      "kind": "binary"
+    },
+    "minecraft:sticky_piston": {
+      "kind": "binary"
+    },
+    "minecraft:dispenser": {
+      "kind": "binary"
+    },
+    "minecraft:dropper": {
+      "kind": "binary"
+    },
+    "minecraft:hopper": {
+      "kind": "binary"
+    },
+    "minecraft:note_block": {
+      "kind": "binary"
+    },
+    "minecraft:tnt": {
+      "kind": "binary"
+    },
+    "minecraft:iron_door": {
+      "kind": "binary"
+    },
+    "minecraft:iron_trapdoor": {
+      "kind": "binary"
+    },
+    "minecraft:powered_rail": {
+      "kind": "binary"
+    },
+    "minecraft:activator_rail": {
+      "kind": "binary"
+    },
+    "#minecraft:doors": {
+      "kind": "binary"
+    },
+    "#minecraft:trapdoors": {
+      "kind": "binary"
+    },
+    "#minecraft:fence_gates": {
+      "kind": "binary"
+    },
+    "loconautics:handbrake": {
+      "kind": "binary"
+    },
+    "loconautics:bearing_axle": {
+      "kind": "binary"
+    },
+    "loconautics:knuckle": {
+      "kind": "binary"
+    },
+    "loconautics:turntable_bearing": {
+      "kind": "binary"
+    },
+    "loconautics:hose_winch": {
+      "kind": "binary"
+    },
+    "loconautics:fluid_hatch_gray": {
+      "kind": "binary"
+    },
+    "loconautics:smokestack": {
+      "kind": "analog"
+    },
+    "minecraft:crafter": {
+      "kind": "binary"
+    },
+    "minecraft:bell": {
+      "kind": "binary"
+    },
+    "minecraft:repeater": {
+      "kind": "binary"
+    },
+    "minecraft:redstone_torch": {
+      "kind": "binary"
+    },
+    "minecraft:redstone_wall_torch": {
+      "kind": "binary"
+    },
+    "minecraft:command_block": {
+      "kind": "binary"
+    },
+    "minecraft:chain_command_block": {
+      "kind": "binary"
+    },
+    "minecraft:repeating_command_block": {
+      "kind": "binary"
+    },
+    "minecraft:copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:exposed_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:weathered_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:oxidized_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:waxed_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:waxed_exposed_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:waxed_weathered_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:waxed_oxidized_copper_bulb": {
+      "kind": "binary"
+    },
+    "minecraft:comparator": {
+      "kind": "analog"
+    }
+  }
+}

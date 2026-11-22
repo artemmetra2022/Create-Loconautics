@@ -1,0 +1,4 @@
+{
+  "parent": "loconautics:block/track_switch/base",
+  "textures": {"signal":"minecraft:block/orange_concrete"}
+}
