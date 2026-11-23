@@ -132,7 +132,7 @@ public final class TrainPropulsion {
         return 100.0 * forward.y / horizontal * direction;
     }
 
-    static final double MONORAIL_TRACTION_BOOST = 3.0;    static final double MONORAIL_TRACTION_BOOST = 3.0;
+    static final double MONORAIL_TRACTION_BOOST = 3.0;
 
     public static boolean isMonorail(SableTrain train) {
         return train.car().carriage() != null && train.car().carriage().isOnMonorail();
