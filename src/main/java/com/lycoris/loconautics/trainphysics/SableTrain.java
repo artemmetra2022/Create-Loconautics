@@ -782,11 +782,32 @@ public final class SableTrain {
 
     public void tickMotion() {
         double before = speed;
-        // sole speed authority sabletraindriver authors the cars pose from the rail using this speed physics never feeds back into it
-        if (speed < targetSpeed) {
-            speed = Math.min(targetSpeed, speed + accel);
-        } else if (speed > targetSpeed) {
-            speed = Math.max(targetSpeed, speed - accel);
+        boolean kinematic = com.lycoris.loconautics.trainphysics.drive.TrainPropulsion
+                .usesKinematicRailMotion(this);
+        boolean explicitBrake = brakeHold || braked || servoBrake;
+
+        if (explicitBrake) {
+            // Physical rail-glued cars get brake force from the brake/physics pipeline.
+            // The kinematic fallback integrates that same force below.
+        } else if (Math.abs(targetSpeed) > 1.0e-4) {
+            if (speed * targetSpeed < 0.0) {
+                // A direction reversal must first bring the train through a stop.
+                if (speed < targetSpeed) {
+                    speed = Math.min(targetSpeed, speed + accel);
+                } else if (speed > targetSpeed) {
+                    speed = Math.max(targetSpeed, speed - accel);
+                }
+            } else if (Math.abs(speed) < Math.abs(targetSpeed)) {
+                // Target speed is the available wheel speed, not a cruise-control setpoint.
+                // Do not manufacture braking when gravity carries the train faster downhill.
+                double step = Math.min(accel, Math.abs(targetSpeed) - Math.abs(speed));
+                speed += Math.signum(targetSpeed) * step;
+            }
+        }
+
+        if (kinematic) {
+            speed += com.lycoris.loconautics.trainphysics.drive.TrainPropulsion
+                    .kinematicTrackAccelerationBpt2(this);
         }
         measuredAccel = speed - before;
     }
