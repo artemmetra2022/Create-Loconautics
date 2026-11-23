@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "loconautics:item/hose"
+    "layer0": "loconautics:item/brake_hose"
   }
 }

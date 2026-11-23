@@ -1,8 +1,11 @@
 {
+  "texture_size": [
+    64,
+    64
+  ],
   "textures": {
-    "plate": "create:block/industrial_iron_block",
-    "handle": "minecraft:block/redstone_block",
-    "particle": "minecraft:block/redstone_block"
+    "t": "loconautics:block/airbrake/emergency_brake_pulled",
+    "particle": "loconautics:block/airbrake/emergency_brake_pulled"
   },
   "elements": [
     {
@@ -18,22 +21,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#plate"
+          "uv": [
+            0.0,
+            0.0,
+            1.5,
+            2.5
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#plate"
+          "uv": [
+            1.5,
+            0.0,
+            3.0,
+            2.5
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#plate"
+          "uv": [
+            3.0,
+            0.0,
+            3.75,
+            2.5
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#plate"
+          "uv": [
+            3.0,
+            0.0,
+            3.75,
+            2.5
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#plate"
+          "uv": [
+            3.75,
+            0.0,
+            5.25,
+            0.75
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#plate"
+          "uv": [
+            3.75,
+            0.0,
+            5.25,
+            0.75
+          ],
+          "texture": "#t"
         }
       }
     },
@@ -50,22 +89,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#handle"
+          "uv": [
+            5.25,
+            0.0,
+            5.75,
+            1.5
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#handle"
+          "uv": [
+            5.25,
+            0.0,
+            5.75,
+            1.5
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#handle"
+          "uv": [
+            5.75,
+            0.0,
+            6.5,
+            1.5
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#handle"
+          "uv": [
+            5.75,
+            0.0,
+            6.5,
+            1.5
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#handle"
+          "uv": [
+            6.5,
+            0.0,
+            7.0,
+            0.75
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#handle"
+          "uv": [
+            6.5,
+            0.0,
+            7.0,
+            0.75
+          ],
+          "texture": "#t"
         }
       }
     }

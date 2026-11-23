@@ -1,8 +1,11 @@
 {
+  "texture_size": [
+    64,
+    64
+  ],
   "textures": {
-    "plate": "create:block/industrial_iron_block",
-    "cock": "minecraft:block/redstone_block",
-    "particle": "create:block/industrial_iron_block"
+    "t": "loconautics:block/airbrake/brake_hose_connector_open",
+    "particle": "loconautics:block/airbrake/brake_hose_connector_open"
   },
   "elements": [
     {
@@ -18,22 +21,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#plate"
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.0
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#plate"
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.0
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#plate"
+          "uv": [
+            4.0,
+            0.0,
+            4.75,
+            2.0
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#plate"
+          "uv": [
+            4.0,
+            0.0,
+            4.75,
+            2.0
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#plate"
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            0.75
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#plate"
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            0.75
+          ],
+          "texture": "#t"
         }
       }
     },
@@ -50,22 +89,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#cock"
+          "uv": [
+            10.25,
+            0.0,
+            11.75,
+            1.5
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#cock"
+          "uv": [
+            8.75,
+            0.0,
+            10.25,
+            1.5
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#cock"
+          "uv": [
+            6.25,
+            0.0,
+            7.5,
+            1.5
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#cock"
+          "uv": [
+            7.5,
+            0.0,
+            8.75,
+            1.5
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#cock"
+          "uv": [
+            4.75,
+            0.0,
+            6.25,
+            1.25
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#cock"
+          "uv": [
+            4.75,
+            0.0,
+            6.25,
+            1.25
+          ],
+          "texture": "#t"
         }
       }
     }

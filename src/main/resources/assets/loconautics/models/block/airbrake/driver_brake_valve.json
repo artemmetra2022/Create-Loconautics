@@ -1,8 +1,11 @@
 {
+  "texture_size": [
+    64,
+    64
+  ],
   "textures": {
-    "body": "create:block/brass_block",
-    "handle": "minecraft:block/redstone_block",
-    "particle": "create:block/brass_block"
+    "t": "loconautics:block/airbrake/driver_brake_valve",
+    "particle": "loconautics:block/airbrake/driver_brake_valve"
   },
   "elements": [
     {
@@ -18,22 +21,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#body"
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.5
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#body"
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#body"
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#body"
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#body"
+          "uv": [
+            4.0,
+            0.0,
+            6.0,
+            2.0
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#body"
+          "uv": [
+            6.0,
+            0.0,
+            8.0,
+            2.0
+          ],
+          "texture": "#t"
         }
       }
     },
@@ -50,22 +89,58 @@
       ],
       "faces": {
         "north": {
-          "texture": "#handle"
+          "uv": [
+            10.0,
+            0.0,
+            10.5,
+            0.5
+          ],
+          "texture": "#t"
         },
         "south": {
-          "texture": "#handle"
+          "uv": [
+            10.0,
+            0.0,
+            10.5,
+            0.5
+          ],
+          "texture": "#t"
         },
         "east": {
-          "texture": "#handle"
+          "uv": [
+            8.0,
+            0.0,
+            10.0,
+            0.5
+          ],
+          "texture": "#t"
         },
         "west": {
-          "texture": "#handle"
+          "uv": [
+            8.0,
+            0.0,
+            10.0,
+            0.5
+          ],
+          "texture": "#t"
         },
         "up": {
-          "texture": "#handle"
+          "uv": [
+            10.5,
+            0.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#t"
         },
         "down": {
-          "texture": "#handle"
+          "uv": [
+            10.5,
+            0.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#t"
         }
       }
     }
