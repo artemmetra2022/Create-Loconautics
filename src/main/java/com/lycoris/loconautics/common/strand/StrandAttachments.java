@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public final class StrandAttachments {
@@ -16,6 +17,12 @@ public final class StrandAttachments {
     public static <B extends BlockEntityBehaviour & StrandAttachmentStore> B store(Object endpoint,
                                                                                    BehaviourType<B> type) {
         return endpoint instanceof SmartBlockEntity be ? be.getBehaviour(type) : null;
+    }
+
+    public static <B extends BlockEntityBehaviour & StrandAttachmentStore> List<UUID> strands(Object endpoint,
+                                                                                             BehaviourType<B> type) {
+        B store = store(endpoint, type);
+        return store != null ? store.strandIds() : List.of();
     }
 
     public static <B extends BlockEntityBehaviour & StrandAttachmentStore> boolean isFree(Object endpoint,

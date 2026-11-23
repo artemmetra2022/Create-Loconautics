@@ -74,6 +74,6 @@ public class RetarderTrackBlock extends TrackBlock {
 
     /** Create's track block entity only accepts the blocks it was registered with, so ours has to be added */
     public static void onAddBlockEntityBlocks(BlockEntityTypeAddBlocksEvent event) {
-        event.modifyTarget(AllBlockEntityTypes.TRACK.get(), LoconauticsRegistries.RETARDER_TRACK.get());
+        event.modify(AllBlockEntityTypes.TRACK.get(), LoconauticsRegistries.RETARDER_TRACK.get());
     }
 }

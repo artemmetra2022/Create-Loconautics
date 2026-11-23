@@ -38,6 +38,12 @@ public class SteelCableHolderBehaviour extends BlockEntityBehaviour
         return attached;
     }
 
+    @Override
+    public List<UUID> strandIds() {
+        pruneDead();
+        return new ArrayList<>(attached);
+    }
+
     public void attach(UUID id) {
         if (!attached.contains(id)) {
             attached.add(id);

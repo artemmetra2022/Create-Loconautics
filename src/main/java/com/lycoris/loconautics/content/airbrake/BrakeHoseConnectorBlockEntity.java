@@ -58,7 +58,7 @@ public class BrakeHoseConnectorBlockEntity extends SmartBlockEntity
 
     @Override
     public void onStrandAttached(SteelCableStrand strand) {
-        super.onStrandAttached(strand);
+        SteelCableHolder.super.onStrandAttached(strand);
         if (level != null && !level.isClientSide && !isCockOpen()) {
             BlockState state = getBlockState();
             if (state.hasProperty(BrakeHoseConnectorBlock.OPEN)) {
