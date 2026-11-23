@@ -1663,5 +1663,15 @@
   "gui.loconautics.status_display.engine_power": "Выход двигателя",
   "gui.loconautics.status_display.fuel": "Топливо",
   "gui.loconautics.status_display.heat": "Нагрев двигателя",
-  "gui.loconautics.status_display.live": "Телеметрия в реальном времени • обновление раз в секунду"
+  "gui.loconautics.status_display.live": "Телеметрия в реальном времени • обновление раз в секунду",
+  "block.loconautics.catenary_mast": "Сборная опора контактной сети",
+  "block.loconautics.overhead_contact_wire": "Контактный провод",
+  "block.loconautics.pantograph": "Пантограф",
+  "item.loconautics.catenary_pole_short": "Комплект короткой опоры контактной сети",
+  "item.loconautics.catenary_pole_standard": "Комплект стандартной опоры контактной сети",
+  "item.loconautics.catenary_pole_tall": "Комплект высокой опоры контактной сети",
+  "item.loconautics.overhead_contact_wire": "Контактный провод",
+  "item.loconautics.pantograph": "Пантограф",
+  "gui.goggles.pantograph_connected": "Контакт с проводом установлен",
+  "gui.goggles.pantograph_disconnected": "Контактный провод не найден"
 }

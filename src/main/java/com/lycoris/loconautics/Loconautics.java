@@ -34,6 +34,7 @@ public final class Loconautics {
         com.lycoris.loconautics.content.locomotiveready.LocomotiveReadyWorld.register(modEventBus);
         com.lycoris.loconautics.content.industrial.IndustrialBlocks.init();
         com.lycoris.loconautics.content.dashboard.DashboardBlocks.init();
+        com.lycoris.loconautics.content.overhead.OverheadBlocks.init();
         com.lycoris.loconautics.content.buffer.BufferBlocks.init();
         com.lycoris.loconautics.content.combustion.SmallEngineBlocks.init();
         com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.init();

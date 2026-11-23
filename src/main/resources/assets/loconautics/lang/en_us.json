@@ -1668,5 +1668,15 @@
   "gui.loconautics.status_display.engine_power": "Engine output",
   "gui.loconautics.status_display.fuel": "Fuel",
   "gui.loconautics.status_display.heat": "Engine heat",
-  "gui.loconautics.status_display.live": "Live telemetry • updates every second"
+  "gui.loconautics.status_display.live": "Live telemetry • updates every second",
+  "block.loconautics.catenary_mast": "Catenary mast assembly",
+  "block.loconautics.overhead_contact_wire": "Overhead contact wire",
+  "block.loconautics.pantograph": "Pantograph",
+  "item.loconautics.catenary_pole_short": "Short catenary mast kit",
+  "item.loconautics.catenary_pole_standard": "Standard catenary mast kit",
+  "item.loconautics.catenary_pole_tall": "Tall catenary mast kit",
+  "item.loconautics.overhead_contact_wire": "Overhead contact wire",
+  "item.loconautics.pantograph": "Pantograph",
+  "gui.goggles.pantograph_connected": "Contact wire connected",
+  "gui.goggles.pantograph_disconnected": "No contact wire"
 }

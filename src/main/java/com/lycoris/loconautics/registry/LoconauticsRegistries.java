@@ -862,6 +862,12 @@ public final class LoconauticsRegistries {
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.EMERGENCY_BRAKE_ITEM.get());
+
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.POLE_SHORT.get());
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.POLE_STANDARD.get());
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.POLE_TALL.get());
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.WIRE_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.PANTOGRAPH_ITEM.get());
                     })
                     .build());
 
