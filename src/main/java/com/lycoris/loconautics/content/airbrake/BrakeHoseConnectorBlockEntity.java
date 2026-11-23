@@ -57,17 +57,6 @@ public class BrakeHoseConnectorBlockEntity extends SmartBlockEntity
     }
 
     @Override
-    public void onStrandAttached(SteelCableStrand strand) {
-        SteelCableHolder.super.onStrandAttached(strand);
-        if (level != null && !level.isClientSide && !isCockOpen()) {
-            BlockState state = getBlockState();
-            if (state.hasProperty(BrakeHoseConnectorBlock.OPEN)) {
-                level.setBlock(worldPosition, state.setValue(BrakeHoseConnectorBlock.OPEN, true), 3);
-            }
-        }
-    }
-
-    @Override
     public Vec3 getAttachmentPoint() {
         Direction open = getBlockState().getValue(BrakeHoseConnectorBlock.FACING).getOpposite();
         return Vec3.atCenterOf(getBlockPos()).add(

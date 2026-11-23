@@ -159,11 +159,14 @@ public final class TrainBrakes {
                 safetyStop = true;
             } else if (state.getBlock() instanceof TripleValveBlock
                     && subLevel.getBlockEntity(pos) instanceof TripleValveBlockEntity valve) {
+                double cylinderFraction = valve.getCylinderFraction();
                 if (valve.isEmergency()) {
-                    airEmergency = true;
-                    bestAir = 1.0;
+                    // The emergency command does not create instant braking force:
+                    // force follows the pressure that has actually built in the cylinder.
+                    airEmergency |= cylinderFraction > 0.03;
+                    bestAir = Math.max(bestAir, cylinderFraction);
                 } else {
-                    bestAir = Math.max(bestAir, valve.getCylinderFraction() * AirBrakeTuning.SERVICE_BRAKE_MAX_SCALE);
+                    bestAir = Math.max(bestAir, cylinderFraction * AirBrakeTuning.SERVICE_BRAKE_MAX_SCALE);
                 }
             }
         }

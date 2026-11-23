@@ -68,9 +68,7 @@ public final class AirPipeBus {
             return;
         }
         long now = serverLevel.getGameTime();
-        if (node.lastVentTick == now) {
-            pressureBar = Math.max(0f, pressureBar - VENT_EXHAUST_PER_TICK);
-        }
+        // markVented() has already consumed this tick's vent flow. Do not drain it twice.
         node.pressureBar = Mth.clamp(pressureBar, 0f, AirBrakeTuning.WORKING_PIPE_BAR);
         node.lastTick = now;
     }

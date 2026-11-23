@@ -119,29 +119,11 @@ public class BrakeHoseConnectorBlock extends Block
                 if (strands != null && ropes != null) {
                     SteelCableStrand strand = strands.get(id);
                     if (strand != null) {
-                        dev.ryanhcode.sable.sublevel.SubLevel sub = dev.ryanhcode.sable.Sable.HELPER.getContaining(be);
-                        java.util.UUID selfSubId = sub != null ? sub.getUniqueId() : null;
-                        boolean isA = strand.isOwner(selfSubId, pos);
-                        java.util.UUID otherSubId = isA ? strand.subB : strand.subA;
-                        BlockPos otherPos = isA ? strand.localB : strand.localA;
-                        net.minecraft.world.level.block.entity.BlockEntity otherBe =
-                                com.lycoris.loconautics.common.strand.StrandEndpoints.blockEntity(
-                                        level, dev.ryanhcode.sable.api.sublevel.SubLevelContainer.getContainer(level),
-                                        otherSubId, otherPos);
                         ServerPlayer player = context.getPlayer() instanceof ServerPlayer sp ? sp : null;
                         com.lycoris.loconautics.content.steelcable.SteelCableStrandDriver.detach(
                                 level, strands, ropes, strand, player);
-                        if (StrandAttachments.strands(be, SteelCableHolderBehaviour.TYPE).isEmpty()) {
-                            level.setBlock(pos, state.setValue(OPEN, false), 3);
-                        }
-                        if (otherBe instanceof BrakeHoseConnectorBlockEntity otherConn
-                                && otherConn.getLevel() != null
-                                && StrandAttachments.strands(otherConn, SteelCableHolderBehaviour.TYPE).isEmpty()) {
-                            BlockState otherState = otherConn.getBlockState();
-                            if (otherState.hasProperty(OPEN) && otherState.getValue(OPEN)) {
-                                otherConn.getLevel().setBlock(otherConn.getBlockPos(), otherState.setValue(OPEN, false), 3);
-                            }
-                        }
+                        // Do not close either cock on separation: an open end must vent
+                        // the pipe until the player closes it manually.
                         return InteractionResult.SUCCESS;
                     }
                 }
