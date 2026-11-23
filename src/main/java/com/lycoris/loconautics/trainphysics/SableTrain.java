@@ -784,7 +784,7 @@ public final class SableTrain {
         double before = speed;
         boolean kinematic = com.lycoris.loconautics.trainphysics.drive.TrainPropulsion
                 .usesKinematicRailMotion(this);
-        boolean explicitBrake = brakeHold || braked || servoBrake;
+        boolean explicitBrake = brakeHold || braked;
 
         if (explicitBrake) {
             // Physical rail-glued cars get brake force from the brake/physics pipeline.
