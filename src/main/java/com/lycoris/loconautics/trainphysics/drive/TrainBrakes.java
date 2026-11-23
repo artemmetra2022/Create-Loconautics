@@ -196,10 +196,7 @@ public final class TrainBrakes {
     // at the wheel grip limit, so the wheels do not lock and skid either
     private static final double CONTROLLER_MAX_STRENGTH = 0.5;
 
-    private static final double MIN_ROLLING_WEIGHT = 0.25;
-    private static final double MAX_ROLLING_WEIGHT = 4.0;
-
-    // weighted, because resistance the same for every car makes a loaded one coast as far as an empty one and
+    // Rolling resistance is configured as an equivalent deceleration and does not scale with wagon load.
     public static double rollingScale(SableTrain train, ServerSubLevel sub) {
         boolean activelyPulling = train.isPowered() && Math.abs(train.targetSpeed()) > 1.0e-4
                 && train.speed() * train.targetSpeed() >= 0.0
@@ -210,10 +207,6 @@ public final class TrainBrakes {
         // Rolling resistance force grows with axle load, but so does the car's mass:
         // its resulting deceleration is therefore approximately independent of load.
         return Math.min(1.0, LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() / BRAKE_DECEL);
-    }
-
-    private static double rollingWeight(ServerSubLevel sub) {
-        return Math.max(MIN_ROLLING_WEIGHT, Math.min(MAX_ROLLING_WEIGHT, rollingWeightUnclamped(sub)));
     }
 
     private static double rollingWeightUnclamped(ServerSubLevel sub) {
