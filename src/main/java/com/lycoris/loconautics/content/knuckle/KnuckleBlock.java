@@ -310,6 +310,12 @@ public class KnuckleBlock extends HorizontalDirectionalBlock
         }
         if (!level.isClientSide()
                 && level.getBlockEntity(context.getClickedPos()) instanceof KnuckleBlockEntity be
+                && be.isFailed()) {
+            be.repairAfterOverload();
+            return InteractionResult.sidedSuccess(false);
+        }
+        if (!level.isClientSide()
+                && level.getBlockEntity(context.getClickedPos()) instanceof KnuckleBlockEntity be
                 && be.isRotateLocked()) {
             return InteractionResult.SUCCESS;
         }

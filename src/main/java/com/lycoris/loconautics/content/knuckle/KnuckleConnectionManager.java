@@ -149,8 +149,8 @@ public final class KnuckleConnectionManager {
         }
 
         private boolean available(KnuckleBlockEntity be) {
-            return !be.isConnected() && !be.isReleasing() && !be.isCouplingLocked() && !be.isRedstoneLocked()
-                    && !stillHeldApart(be);
+            return !be.isConnected() && !be.isReleasing() && !be.isFailed()
+                    && !be.isCouplingLocked() && !be.isRedstoneLocked() && !stillHeldApart(be);
         }
 
         private boolean stillHeldApart(KnuckleBlockEntity be) {
@@ -215,6 +215,12 @@ public final class KnuckleConnectionManager {
             if (partnerSub == null || partnerPos == null
                     || !(partnerSub.getLevel().getBlockEntity(partnerPos) instanceof KnuckleBlockEntity partnerBe)) {
                 be.clearPartner();
+                return;
+            }
+            if (be.isFailed() || partnerBe.isFailed()) {
+                if (hingeGap(sub, be, partnerSub, partnerBe) >= KnuckleTuning.mateOpenGap) {
+                    be.clearPartner();
+                }
                 return;
             }
             if (canResume(sub, be, partnerBe)) {

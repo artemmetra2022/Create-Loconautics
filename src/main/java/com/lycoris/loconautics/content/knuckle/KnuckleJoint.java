@@ -43,8 +43,8 @@ public final class KnuckleJoint {
 
     private static final Set<Live> ALL = ConcurrentHashMap.newKeySet();
 
-    public static Live hold(Live live, ServerSubLevel subA, Vector3dc hingeA, ServerSubLevel subB, Vector3dc hingeB,
-                            double startGap, double gain) {
+    public static Live hold(KnuckleBlockEntity owner, Live live, ServerSubLevel subA, Vector3dc hingeA,
+                            ServerSubLevel subB, Vector3dc hingeB, double startGap, double gain, double dt) {
         if (subA.isRemoved() || subB.isRemoved()) {
             release(live);
             return null;
@@ -87,6 +87,13 @@ public final class KnuckleJoint {
         double effectiveMass = massA.getMass() * massB.getMass() / (massA.getMass() + massB.getMass());
         current.handle.setMotor(ConstraintJointAxis.LINEAR_X, length, KnuckleTuning.springStiffness,
                 2.0 * Math.sqrt(KnuckleTuning.springStiffness), true, effectiveMass * accel);
+        double estimatedLoad = Math.min(KnuckleTuning.MAX_ACCEL,
+                KnuckleTuning.springStiffness * Math.abs(gap - length) / Math.max(0.1, effectiveMass));
+        if (owner.recordCouplerLoad(estimatedLoad, gap >= length, dt)) {
+            owner.breakByLoad();
+            release(current);
+            return null;
+        }
         long now = subA.getLevel().getGameTime();
         if (KnuckleTuning.trace && now - current.traced >= TRACE_TICKS) {
             current.traced = now;

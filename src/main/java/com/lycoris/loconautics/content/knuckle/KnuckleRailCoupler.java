@@ -289,12 +289,18 @@ public final class KnuckleRailCoupler {
                 relax(links.get(i));
             }
         }
+        List<KnuckleBlockEntity> failedCouplers = new ArrayList<>();
         for (Link link : links) {
             if (Math.abs(link.error) > WAKE_ERROR || Math.abs(link.rate()) > WAKE_SPEED) {
                 pipeline.wakeUp(link.a.sub);
                 pipeline.wakeUp(link.b.sub);
             }
             if (!link.contact()) {
+                double specificLoad = link.effective <= 1.0e-9 ? 0.0
+                        : Math.abs(link.lambdaNet) * link.effective / Math.max(dt, 1.0e-6);
+                if (link.owner.recordCouplerLoad(specificLoad, link.error >= 0.0, dt)) {
+                    failedCouplers.add(link.owner);
+                }
                 reportBar(link, now);
             } else if (link.contactKey != null) {
                 SEPARATION.put(link.contactKey, Math.max(0.0, link.rate()));
@@ -302,6 +308,9 @@ public final class KnuckleRailCoupler {
         }
         for (Body body : bodies.values()) {
             apply(body, dt);
+        }
+        for (KnuckleBlockEntity failed : failedCouplers) {
+            failed.breakByLoad();
         }
     }
 
@@ -386,11 +395,21 @@ public final class KnuckleRailCoupler {
             line.negate();
         }
         double error = gap - pair.length();
-        double bias = biasLimit(Math.abs(error));
-        double target = Math.abs(error) < KnuckleTuning.SLOP ? 0.0
-                : Math.max(-bias, Math.min(bias, -error * KnuckleTuning.BAUMGARTE / dt));
-        return new Link(owner, a, b, -line.dot(hingeSpeed(a.frame, hingeA)), line.dot(hingeSpeed(b.frame, hingeB)),
-                railRate(a, b, line), target, error, pair.length());
+        boolean draft = error >= 0.0;
+        double activeError = draft
+                ? Math.max(0.0, error - KnuckleTuning.DRAFT_SLACK)
+                : Math.min(0.0, error + KnuckleTuning.BUFF_SLACK);
+        double beta = draft ? KnuckleTuning.DRAFT_BAUMGARTE : KnuckleTuning.BUFF_BAUMGARTE;
+        double damping = draft ? KnuckleTuning.DRAFT_DAMPING : KnuckleTuning.BUFF_DAMPING;
+        double maxBias = draft ? KnuckleTuning.DRAFT_MAX_BIAS : KnuckleTuning.BUFF_MAX_BIAS;
+        double bias = Math.min(biasLimit(Math.abs(activeError)), maxBias);
+        double coefA = -line.dot(hingeSpeed(a.frame, hingeA));
+        double coefB = line.dot(hingeSpeed(b.frame, hingeB));
+        double railRate = railRate(a, b, line);
+        double relativeRate = railRate + coefA * a.speed() + coefB * b.speed();
+        double target = Math.abs(activeError) < KnuckleTuning.SLOP ? 0.0
+                : Math.max(-bias, Math.min(bias, -activeError * beta / dt - relativeRate * damping));
+        return new Link(owner, a, b, coefA, coefB, railRate, target, error, pair.length());
     }
 
     // a gap far off its length is a crash, not drift, so the correction speed rises with the error
@@ -448,9 +467,13 @@ public final class KnuckleRailCoupler {
         }
         LoconauticsConstants.LOGGER.info("[knuckle] bar" + ids + " gap=" + KnuckleTuning.fmt(link.length + link.error)
                 + " L=" + KnuckleTuning.fmt(link.length) + " err=" + KnuckleTuning.fmt(link.error)
+                + " mode=" + (link.error >= 0.0 ? "draft" : "buff")
                 + " gdot=" + KnuckleTuning.fmt(link.rate()) + " bias=" + KnuckleTuning.fmt(link.target)
-                + " lambda=" + KnuckleTuning.fmt(link.lambdaNet) + coefs + " heldA=" + link.a.held
-                + " heldB=" + link.b.held + " holdA=" + link.a.heldWhy + " holdB=" + link.b.heldWhy);
+                + " lambda=" + KnuckleTuning.fmt(link.lambdaNet)
+                + " load=" + KnuckleTuning.fmt(link.owner.getLastCouplerLoadAccel())
+                + " fatigue=" + KnuckleTuning.fmt(link.owner.getCouplerFatigue())
+                + coefs + " heldA=" + link.a.held + " heldB=" + link.b.held
+                + " holdA=" + link.a.heldWhy + " holdB=" + link.b.heldWhy);
     }
 
     private static void addContacts(ServerLevel level, ServerSubLevelContainer container, Map<UUID, Body> bodies,

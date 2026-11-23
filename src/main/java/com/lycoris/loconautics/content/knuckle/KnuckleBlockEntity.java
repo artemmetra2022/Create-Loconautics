@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.content.knuckle;
 
 import com.simibubi.create.api.schematic.nbt.PartialSafeNBT;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.lycoris.loconautics.LoconauticsConstants;
 import com.lycoris.loconautics.common.copycat.CopycatBlockLogic;
 import com.lycoris.loconautics.common.copycat.CopycatMaterialHolder;
@@ -21,7 +22,9 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -29,9 +32,11 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
-public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeNBT, BlockEntitySubLevelActor, SteelCableHolder, CopycatMaterialHolder {
+public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeNBT, BlockEntitySubLevelActor,
+        SteelCableHolder, CopycatMaterialHolder, IHaveGoggleInformation {
 
     private static final long NOT_ENGAGED = -1L;
     private static final double TIP_OUTWARD = 0.04;
@@ -51,6 +56,13 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
     private transient double engageFrom = KnuckleTuning.REST_LENGTH;
     private transient int missingScans;
     private transient KnuckleJoint.Live joint;
+
+    // Condition is stored on both ends so either side can be inspected or repaired.
+    private double couplerFatigue;
+    private double lastCouplerLoadAccel;
+    private transient double syncedFatigue;
+    private transient double syncedLoadAccel;
+    private transient long lastCouplerSyncTick = Long.MIN_VALUE;
 
     private transient float clip;
     private transient boolean clipLatched;
@@ -302,7 +314,8 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
             return;
         }
         KnuckleRailCoupler.remove(this);
-        joint = KnuckleJoint.hold(joint, subLevel, hingeA, partnerSub, hingeB, engageFrom, engageGain());
+        joint = KnuckleJoint.hold(this, joint, subLevel, hingeA, partnerSub, hingeB,
+                engageFrom, engageGain(), timeStep);
     }
 
     @Override
@@ -383,6 +396,143 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
                 p.getZ() + 0.5 - 0.5 * facing.getStepZ());
     }
 
+    public boolean isFailed() {
+        return couplerFatigue >= 1.0;
+    }
+
+    public double getCouplerFatigue() {
+        return couplerFatigue;
+    }
+
+    public double getLastCouplerLoadAccel() {
+        return lastCouplerLoadAccel;
+    }
+
+    /**
+     * Records the specific force applied by the longitudinal coupler solver. Draft and
+     * buff have separate working ratings; repeated overloads accumulate fatigue.
+     *
+     * @return true when the connection should be broken after this physics step
+     */
+    public boolean recordCouplerLoad(double specificAccel, boolean draft, double dt) {
+        if (level == null || level.isClientSide || !isConnected() || dt <= 0.0) {
+            return false;
+        }
+
+        double safeLoad = Math.max(0.0, Double.isFinite(specificAccel) ? specificAccel : 0.0);
+        lastCouplerLoadAccel = Math.max(safeLoad, lastCouplerLoadAccel * Math.exp(-dt * 3.0));
+        double rating = Math.max(1.0, draft ? KnuckleTuning.draftRatingAccel : KnuckleTuning.buffRatingAccel);
+        double ratio = safeLoad / rating;
+
+        if (ratio > KnuckleTuning.FATIGUE_START_RATIO) {
+            double over = (ratio - KnuckleTuning.FATIGUE_START_RATIO)
+                    / (1.0 - KnuckleTuning.FATIGUE_START_RATIO);
+            couplerFatigue = Math.min(1.0, couplerFatigue
+                    + over * over * dt / KnuckleTuning.FATIGUE_LIFE_SECONDS);
+        }
+
+        long now = level.getGameTime();
+        boolean publish = now - lastCouplerSyncTick >= 5L
+                && (Math.abs(lastCouplerLoadAccel - syncedLoadAccel) >= 1.0
+                    || Math.abs(couplerFatigue - syncedFatigue) >= 0.002);
+        if (publish) {
+            lastCouplerSyncTick = now;
+            syncedLoadAccel = lastCouplerLoadAccel;
+            syncedFatigue = couplerFatigue;
+            setChanged();
+            sendData();
+            mirrorCouplerCondition();
+        }
+
+        return ratio >= KnuckleTuning.failureLoadRatio || couplerFatigue >= 1.0;
+    }
+
+    private void mirrorCouplerCondition() {
+        if (level == null || partnerSubLevelId == null || partnerLocalPos == null) {
+            return;
+        }
+        ServerSubLevelContainer container = SubLevelContainer.getContainer(level);
+        if (container == null
+                || !(container.getSubLevel(partnerSubLevelId) instanceof ServerSubLevel partnerSub)
+                || partnerSub.isRemoved()
+                || !(partnerSub.getLevel().getBlockEntity(partnerLocalPos) instanceof KnuckleBlockEntity partner)) {
+            return;
+        }
+        partner.couplerFatigue = couplerFatigue;
+        partner.lastCouplerLoadAccel = lastCouplerLoadAccel;
+        partner.syncedFatigue = couplerFatigue;
+        partner.syncedLoadAccel = lastCouplerLoadAccel;
+        partner.setChanged();
+        partner.sendData();
+    }
+
+    /** Break both ends cleanly after an overload, returning collision contacts. */
+    public void breakByLoad() {
+        if (level == null || level.isClientSide || !isConnected()) {
+            return;
+        }
+        UUID mateId = partnerSubLevelId;
+        BlockPos matePos = partnerLocalPos;
+        couplerFatigue = 1.0;
+        syncedFatigue = 1.0;
+        setChanged();
+        sendData();
+
+        KnuckleBlockEntity mate = null;
+        ServerSubLevelContainer container = SubLevelContainer.getContainer(level);
+        if (container != null && mateId != null && matePos != null
+                && container.getSubLevel(mateId) instanceof ServerSubLevel mateSub
+                && !mateSub.isRemoved()
+                && mateSub.getLevel().getBlockEntity(matePos) instanceof KnuckleBlockEntity found) {
+            mate = found;
+            mate.couplerFatigue = 1.0;
+            mate.lastCouplerLoadAccel = lastCouplerLoadAccel;
+            mate.syncedFatigue = 1.0;
+            mate.syncedLoadAccel = lastCouplerLoadAccel;
+            mate.setChanged();
+            mate.sendData();
+        }
+
+        LoconauticsConstants.LOGGER.warn("[knuckle] overload failure at {} load={} m/s^2 fatigue={}",
+                getBlockPos(), String.format(Locale.ROOT, "%.1f", lastCouplerLoadAccel),
+                String.format(Locale.ROOT, "%.2f", couplerFatigue));
+        clearConnection();
+        if (mate != null && mate.isConnected()) {
+            mate.clearConnection();
+        }
+    }
+
+    /** A failed, fully uncoupled knuckle can be restored with a wrench. */
+    public boolean repairAfterOverload() {
+        if (level == null || level.isClientSide || isConnected() || !isFailed()) {
+            return false;
+        }
+        couplerFatigue = 0.0;
+        lastCouplerLoadAccel = 0.0;
+        syncedFatigue = 0.0;
+        syncedLoadAccel = 0.0;
+        setChanged();
+        sendData();
+        return true;
+    }
+
+    @Override
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_stats")
+                .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_load",
+                String.format(Locale.ROOT, "%.1f", lastCouplerLoadAccel))
+                .withStyle(ChatFormatting.GOLD));
+        tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_fatigue",
+                String.format(Locale.ROOT, "%.0f", couplerFatigue * 100.0))
+                .withStyle(couplerFatigue >= 0.7 ? ChatFormatting.RED : ChatFormatting.AQUA));
+        if (isFailed()) {
+            tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_broken")
+                    .withStyle(ChatFormatting.RED));
+        }
+        return true;
+    }
+
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
@@ -393,6 +543,8 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
             tag.putLong("PartnerLocalPos", partnerLocalPos.asLong());
         }
         tag.putBoolean("Coupled", coupled);
+        tag.putDouble("CouplerFatigue", couplerFatigue);
+        tag.putDouble("CouplerLastLoadAccel", lastCouplerLoadAccel);
         if (clientPacket) {
             tag.putBoolean("PanelLocked", panelLocked);
         }
@@ -411,6 +563,10 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
         partnerSubLevelId = tag.contains("PartnerSubLevel") ? UUID.fromString(tag.getString("PartnerSubLevel")) : null;
         partnerLocalPos = tag.contains("PartnerLocalPos") ? BlockPos.of(tag.getLong("PartnerLocalPos")) : null;
         coupled = tag.getBoolean("Coupled");
+        couplerFatigue = Math.max(0.0, Math.min(1.0, tag.getDouble("CouplerFatigue")));
+        lastCouplerLoadAccel = Math.max(0.0, tag.getDouble("CouplerLastLoadAccel"));
+        syncedFatigue = couplerFatigue;
+        syncedLoadAccel = lastCouplerLoadAccel;
         if (clientPacket) {
             panelLocked = tag.getBoolean("PanelLocked");
         }
