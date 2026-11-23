@@ -392,7 +392,7 @@ public final class SableTrainDriver {
         }
 
         double resistance = train.isBraked() ? train.brakeScale() : TrainBrakes.rollingScale(train, bodySub);
-        TrainBrakes.applyResistance(bodySub, trackSub, railPoint, tangent, dt, resistance,
+        TrainBrakes.applyResistance(train, bodySub, trackSub, railPoint, tangent, dt, resistance,
                 train.isBraked() ? ForceSource.BRAKE : ForceSource.ROLLING);
         TrainBrakes.relieveSlopeGravity(bodySub, railPoint, tangent, dt);
     }
@@ -527,7 +527,7 @@ public final class SableTrainDriver {
             }
         }
         double railedShare = (double) railedCount / bogeys.size();
-        TrainBrakes.applyResistance(bodySub, pivotTrackSub, railPoint, tangent, dt,
+        TrainBrakes.applyResistance(train, bodySub, pivotTrackSub, railPoint, tangent, dt,
                 railedShare * (train.isBraked() ? train.brakeScale() : TrainBrakes.rollingScale(train, bodySub)),
                 train.isBraked() ? ForceSource.BRAKE : ForceSource.ROLLING);
         if (!runningOff) {
@@ -561,11 +561,21 @@ public final class SableTrainDriver {
         Vector3d vel = handle.getLinearVelocity(new Vector3d());
         Vector3d relVel = new Vector3d(vel).sub(
                 TrackHostMotion.railVelocity(sub.getLevel(), trackSub, railPoint, new Vector3d()));
-        double vTarget = train.targetSpeed() * 20.0;
+        double vTarget = (train.servoBrake() ? 0.0 : train.targetSpeed()) * 20.0;
         double vCurrent = relVel.dot(tangent);
-        double desiredAccel = DRIVE_K * (vTarget - vCurrent);
+        boolean reversing = vTarget * vCurrent < 0.0;
+        boolean braking = train.servoBrake() || reversing;
 
-        boolean braking = TrainPropulsion.isBraking(vTarget, vCurrent);
+        // The pneumatic/hand brake path applies its own force. Do not counteract it
+        // with the traction servo, and do not turn a lower wheel-speed target into braking.
+        if (train.brakeHold() || train.isBraked()) {
+            return;
+        }
+        if (!braking && (Math.abs(vTarget) < TrainPropulsion.STANDSTILL_SPEED
+                || (vTarget * vCurrent >= 0.0 && Math.abs(vCurrent) >= Math.abs(vTarget)))) {
+            return;
+        }
+        double desiredAccel = DRIVE_K * (vTarget - vCurrent);
         Vector3d offRail = new Vector3d(relVel).sub(new Vector3d(tangent).mul(relVel.dot(tangent)));
         boolean falling = CarriageRoll.isRolling(sub.getUniqueId())
                 ? CarriageRoll.wheelsLifted(sub.getUniqueId())
