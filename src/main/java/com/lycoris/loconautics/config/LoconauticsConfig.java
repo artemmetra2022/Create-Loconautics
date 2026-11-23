@@ -201,7 +201,8 @@ public final class LoconauticsConfig {
                 .defineInRange("baseAcceleration", 3.0, 0.0, 1000.0);
 
         DYNAMICS_BASE_DECELERATION = BUILDER
-                .comment("How hard the brakes bite, the same number whatever the train is hauling.")
+                .comment("Base braking deceleration at the reference consist mass.",
+                        "A heavier connected consist brakes with less deceleration; a lighter consist brakes harder.")
                 .translation(TRANSLATION_PREFIX + "train.dynamics.baseDeceleration")
                 .defineInRange("baseDeceleration", 3.0, 0.0, 1000.0);
 
