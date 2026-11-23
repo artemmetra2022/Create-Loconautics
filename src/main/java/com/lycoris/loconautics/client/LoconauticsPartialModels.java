@@ -19,6 +19,9 @@ public class LoconauticsPartialModels {
     public static final PartialModel CONTROLS_LEVER =
             PartialModel.of(LoconauticsConstants.id("block/analogcontroller/controls_lever"));
 
+    public static final PartialModel STATUS_DISPLAY =
+            PartialModel.of(LoconauticsConstants.id("block/controls/panel/status_display"));
+
     public static final PartialModel GAUGE_BACK =
             PartialModel.of(LoconauticsConstants.id("block/controls/gauge/back"));
     public static final PartialModel BODY =

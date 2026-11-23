@@ -15,6 +15,7 @@ import com.lycoris.loconautics.content.controls.panelgauge.GaugeBlock;
 import com.lycoris.loconautics.content.controls.panelgauge.GaugeBlockEntity;
 import com.lycoris.loconautics.content.controls.panelgauge.GaugeBlockItem;
 import com.lycoris.loconautics.content.controls.panellamp.SignalLampBlockItem;
+import com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusBlockItem;
 import com.lycoris.loconautics.foundation.LoconauticsBlockProperties;
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
@@ -300,6 +301,10 @@ public final class BoilerBlocks {
             SIGNAL_LAMP_ITEM = LoconauticsRegistries.ITEMS.register("signal_lamp", () ->
             new SignalLampBlockItem(
                     LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<Item, LocomotiveStatusBlockItem>
+            LOCOMOTIVE_STATUS_DISPLAY_ITEM = LoconauticsRegistries.ITEMS.register("locomotive_status_display", () ->
+            new LocomotiveStatusBlockItem(LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
 
     public static final DeferredHolder<Item, com.lycoris.loconautics.content.controls.panelvalve.ValveBlockItem>
             VALVE_ITEM = LoconauticsRegistries.ITEMS.register("locomotive_valve", () ->

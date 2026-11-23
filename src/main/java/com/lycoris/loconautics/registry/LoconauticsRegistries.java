@@ -771,6 +771,7 @@ public final class LoconauticsRegistries {
 
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_GAUGE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.SIGNAL_LAMP_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_STATUS_DISPLAY_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.VALVE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_BUTTON_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_LEVER_ITEM.get());
