@@ -1607,5 +1607,15 @@
   "block.loconautics.triple_valve.tooltip.summary": "Тормозит вагон пропорционально падению давления в _тормозной магистрали_. _Shift+ПКМ_ на отцепленном вагоне стравливает воздух.",
   "block.loconautics.brake_hose_connector.tooltip.summary": "Порт для подключения _тормозных рукавов_ между вагонами. Клик переключает концевой кран.",
   "item.loconautics.brake_hose.tooltip.summary": "Соединяет два _адаптера тормозных рукавов_ на соседних вагонах в общую магистраль.",
-  "block.loconautics.emergency_brake.tooltip.summary": "При срыве сбрасывает давление в _тормозной магистрали_ до _0 бар_, останавливая весь сцепленный состав."
+  "block.loconautics.emergency_brake.tooltip.summary": "При срыве сбрасывает давление в _тормозной магистрали_ до _0 бар_, останавливая весь сцепленный состав.",
+  "loconautics.gui.goggles.knuckle_stats": "Состояние автосцепки",
+  "loconautics.gui.goggles.knuckle_load": "Нагрузка сцепки: %s м/с²",
+  "loconautics.gui.goggles.knuckle_fatigue": "Износ: %s%%",
+  "loconautics.gui.goggles.knuckle_broken": "Разрушена перегрузкой — отремонтируйте ключом",
+  "loconautics.gui.goggles.speedometer_train": "Динамика поезда",
+  "loconautics.gui.goggles.speedometer_mass": "Масса состава: %s",
+  "loconautics.gui.goggles.speedometer_grade": "Уклон пути: %s%%",
+  "loconautics.gui.goggles.speedometer_adhesion": "Предел сцепления: %s м/с²",
+  "loconautics.gui.goggles.speedometer_slip": "Буксование ведущих осей: %s%%",
+  "loconautics.gui.goggles.speedometer_brake": "Тормозное усилие: %s%%"
 }

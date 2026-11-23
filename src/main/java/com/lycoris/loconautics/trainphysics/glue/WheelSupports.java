@@ -70,6 +70,11 @@ public final class WheelSupports {
     private record Support(GenericConstraintHandle handle, UUID hostId) {
     }
 
+    private static final double SUSPENSION_FREQUENCY_HZ = 1.25;
+    private static final double SUSPENSION_DAMPING_RATIO = 0.82;
+    private static final double SUSPENSION_COMPRESSION = 0.08;
+    private static final double SUSPENSION_FORCE_MULTIPLIER = 2.5;
+
     private static final ConcurrentHashMap<UUID, Support[]> SUPPORTS = new ConcurrentHashMap<>();
 
     public static Prepared prepare(ServerSubLevel sub, List<SableTrain.Bogey> chain, RollFrame frame,
@@ -166,6 +171,15 @@ public final class WheelSupports {
 
     private static void updateJoints(PhysicsPipeline pipeline, ServerSubLevel sub, Wheel[] wheels) {
         UUID id = sub.getUniqueId();
+        MassData bodyMass = sub.getMassTracker();
+        double mass = bodyMass == null || bodyMass.isInvalid() ? 1.0 : Math.max(0.1, bodyMass.getMass());
+        double sprungMass = mass / Math.max(1, wheels.length);
+        double gravity = Math.max(0.1, DimensionPhysicsData.getGravity(sub.getLevel()).length());
+        double omega = 2.0 * Math.PI * SUSPENSION_FREQUENCY_HZ;
+        double spring = sprungMass * omega * omega;
+        double damping = 2.0 * SUSPENSION_DAMPING_RATIO * Math.sqrt(spring * sprungMass);
+        double forceLimit = sprungMass * gravity * SUSPENSION_FORCE_MULTIPLIER;
+
         Support[] supports = SUPPORTS.get(id);
         if (supports == null || supports.length != wheels.length) {
             release(id);
@@ -187,6 +201,7 @@ public final class WheelSupports {
             if (held != null && held.handle().isValid() && Objects.equals(held.hostId(), hostId)) {
                 held.handle().setFrame1(pos1, frame1);
                 held.handle().setFrame2(new Vector3d(wheel.local()), new Quaterniond());
+                tuneSuspension(held.handle(), spring, damping, forceLimit);
                 continue;
             }
             dropSupport(supports, i);
@@ -197,9 +212,16 @@ public final class WheelSupports {
             if (created == null) {
                 continue;
             }
-            created.setLimit(ConstraintJointAxis.LINEAR_Y, 0.0, CarriageRoll.LIFT_RANGE);
+            created.setLimit(ConstraintJointAxis.LINEAR_Y, -SUSPENSION_COMPRESSION, CarriageRoll.LIFT_RANGE);
+            tuneSuspension(created, spring, damping, forceLimit);
             supports[i] = new Support(created, hostId);
         }
+    }
+
+    private static void tuneSuspension(GenericConstraintHandle handle, double spring,
+                                       double damping, double forceLimit) {
+        // The bogey can move a short distance into the spring; the motor returns it smoothly.
+        handle.setMotor(ConstraintJointAxis.LINEAR_Y, 0.0, spring, damping, true, forceLimit);
     }
 
     private static Quaterniond hostFrame(Wheel wheel) {

@@ -7,11 +7,13 @@ import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.trainphysics.SableTrain.Car;
 import com.lycoris.loconautics.common.sable.SubLevelData;
 import com.lycoris.loconautics.trainphysics.TrainConsist;
+import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
 import com.lycoris.loconautics.trainphysics.rail.RailCarriage;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import dev.ryanhcode.sable.api.physics.mass.MassData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +22,8 @@ import net.minecraft.world.phys.Vec3;
 import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
 import org.joml.Vector3d;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public final class TrainPropulsion {
@@ -37,10 +41,98 @@ public final class TrainPropulsion {
         double limit = Math.max(MIN_ACCELERATION,
                 Math.min(scaled, MAX_ACCELERATION));
         double boosted = limit * ConsistPower.driverBoost(train) * drivePowerFraction(train);
-        return isMonorail(train) ? boosted * MONORAIL_TRACTION_BOOST : boosted;
+        double mechanical = isMonorail(train) ? boosted * MONORAIL_TRACTION_BOOST : boosted;
+        return Math.min(mechanical, adhesionAccelLimitMps2(train));
     }
 
-    static final double MONORAIL_TRACTION_BOOST = 3.0;
+    /**
+     * Maximum acceleration before powered wheelsets exceed their share of the
+     * consist's adhesive weight. Wheelspin progressively reduces usable adhesion.
+     */
+    public static double adhesionAccelLimitMps2(SableTrain train) {
+        ConsistPower.Result result = ConsistPower.resultFor(train);
+        if (result == null || result.axles().isEmpty() || result.totalMass() <= 0.0) {
+            return MAX_ACCELERATION;
+        }
+
+        Set<UUID> drivenCars = new HashSet<>();
+        int poweredAxles = 0;
+        int slippingAxles = 0;
+        for (ConsistPower.Axle axle : result.axles()) {
+            if (!axle.powered()) {
+                continue;
+            }
+            poweredAxles++;
+            SableTrain member = SableTrainRegistry.bySubLevel(axle.subLevelId());
+            if (member != null && member.slippingBogeys().contains(axle.bogeyLocalPos())) {
+                slippingAxles++;
+            }
+            drivenCars.add(axle.subLevelId());
+        }
+        if (drivenCars.isEmpty()) {
+            return MAX_ACCELERATION;
+        }
+
+        double drivenMass = 0.0;
+        for (UUID id : drivenCars) {
+            ServerSubLevel sub = SubLevelData.resolve(train.level(), id);
+            MassData mass = sub == null ? null : sub.getMassTracker();
+            if (mass != null && !mass.isInvalid()) {
+                drivenMass += Math.max(0.0, mass.getMass());
+            }
+        }
+        if (drivenMass <= 0.0) {
+            return MAX_ACCELERATION;
+        }
+
+        double totalMass = Math.max(1.0, result.totalMass());
+        double adhesiveShare = Math.max(0.01, Math.min(1.0, drivenMass / totalMass));
+        double slipRatio = poweredAxles <= 0 ? 0.0 : (double) slippingAxles / poweredAxles;
+        double slipFactor = Math.max(0.25, 1.0 - 0.70 * slipRatio);
+        double railAdhesion = isMonorail(train) ? 0.35 : 0.25;
+        return Math.max(0.15, railAdhesion * 9.81 * adhesiveShare * slipFactor);
+    }
+
+    /** Share of powered wheelsets currently reporting wheelspin, from 0 to 1. */
+    public static double poweredAxleSlipRatio(SableTrain train) {
+        ConsistPower.Result result = ConsistPower.resultFor(train);
+        if (result == null) {
+            return 0.0;
+        }
+        int powered = 0;
+        int slipping = 0;
+        for (ConsistPower.Axle axle : result.axles()) {
+            if (!axle.powered()) {
+                continue;
+            }
+            powered++;
+            SableTrain member = SableTrainRegistry.bySubLevel(axle.subLevelId());
+            if (member != null && member.slippingBogeys().contains(axle.bogeyLocalPos())) {
+                slipping++;
+            }
+        }
+        return powered == 0 ? 0.0 : (double) slipping / powered;
+    }
+
+    /** Track gradient, signed in the current direction of travel. */
+    public static double gradePercent(SableTrain train) {
+        if (train == null || train.car() == null || train.car().carriage() == null) {
+            return 0.0;
+        }
+        Vec3 forward = train.car().carriage().forward();
+        double horizontal = Math.sqrt(forward.x * forward.x + forward.z * forward.z);
+        if (horizontal < 1.0e-6) {
+            return 0.0;
+        }
+        double direction = Math.abs(train.speed()) > 1.0e-4
+                ? Math.signum(train.speed()) : Math.signum(train.targetSpeed());
+        if (direction == 0.0) {
+            direction = 1.0;
+        }
+        return 100.0 * forward.y / horizontal * direction;
+    }
+
+    static final double MONORAIL_TRACTION_BOOST = 3.0;    static final double MONORAIL_TRACTION_BOOST = 3.0;
 
     public static boolean isMonorail(SableTrain train) {
         return train.car().carriage() != null && train.car().carriage().isOnMonorail();

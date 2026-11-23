@@ -1612,5 +1612,15 @@
   "block.loconautics.triple_valve.tooltip.summary": "Applies car brakes proportionally when _brake pipe pressure_ drops. _Shift-click_ when uncoupled to bleed air.",
   "block.loconautics.brake_hose_connector.tooltip.summary": "Connects _Brake Hoses_ between cars. Click to toggle the angle cock.",
   "item.loconautics.brake_hose.tooltip.summary": "Links two _Brake Hose Adapters_ on adjacent cars into a shared brake pipe.",
-  "block.loconautics.emergency_brake.tooltip.summary": "Vents the _brake pipe_ to _0 bar_ when pulled, triggering emergency braking across all coupled cars."
+  "block.loconautics.emergency_brake.tooltip.summary": "Vents the _brake pipe_ to _0 bar_ when pulled, triggering emergency braking across all coupled cars.",
+  "loconautics.gui.goggles.knuckle_stats": "Coupler condition",
+  "loconautics.gui.goggles.knuckle_load": "Last coupler load: %s m/s²",
+  "loconautics.gui.goggles.knuckle_fatigue": "Fatigue: %s%%",
+  "loconautics.gui.goggles.knuckle_broken": "Overload failure — use a wrench to repair",
+  "loconautics.gui.goggles.speedometer_train": "Train dynamics",
+  "loconautics.gui.goggles.speedometer_mass": "Consist mass: %s",
+  "loconautics.gui.goggles.speedometer_grade": "Track grade: %s%%",
+  "loconautics.gui.goggles.speedometer_adhesion": "Adhesion limit: %s m/s²",
+  "loconautics.gui.goggles.speedometer_slip": "Powered axle slip: %s%%",
+  "loconautics.gui.goggles.speedometer_brake": "Brake demand: %s%%"
 }

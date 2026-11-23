@@ -18,6 +18,9 @@ public final class WheelSlip {
     private static final double STALL_SPEED = 0.01;
 
     private static final double STALL_COMMAND = 0.02;
+    private static final double SLIP_SPEED_THRESHOLD = 0.04;
+    private static final double SLIP_RATIO_THRESHOLD = 0.25;
+    private static final int SPIN_DELAY_TICKS = 3;
 
     private static final double SLIP_FRACTION = 0.05;
 
@@ -66,13 +69,19 @@ public final class WheelSlip {
         // commanded is the shafts rpm, a computer holding the train at 0 overrides the speed but never the shaft
         boolean computerIdle = CcControl.held(train.id()) && !CcControl.isDriving(train.id());
         boolean gaining = train.gainingSpeed(train.level().getGameTime(), carSpeed);
+        double wheelSpeed = Math.abs(commanded);
+        double groundSpeed = Math.abs(carSpeed);
+        boolean wheelspin = !locked && !computerIdle && wheelSpeed > STALL_COMMAND
+                && wheelSpeed - groundSpeed > Math.max(SLIP_SPEED_THRESHOLD, wheelSpeed * SLIP_RATIO_THRESHOLD);
         boolean stuck = !locked && !computerIdle && !gaining
-                && Math.abs(commanded) > STALL_COMMAND && Math.abs(carSpeed) < STALL_SPEED;
+                && wheelSpeed > STALL_COMMAND && groundSpeed < STALL_SPEED;
         int was = train.wheelStall().getOrDefault(bogeyLocal, 0);
+        boolean losingGrip = wheelspin || stuck;
         int stall = locked || computerIdle ? 0
-                : stuck ? Math.min(was + 1, STALL_DELAY_TICKS + RELEASE_TICKS) : Math.max(was - 1, 0);
+                : losingGrip ? Math.min(was + 1, STALL_DELAY_TICKS + RELEASE_TICKS) : Math.max(was - 1, 0);
         train.wheelStall().put(bogeyLocal, stall);
-        boolean slipping = stall >= STALL_DELAY_TICKS || stall > 0 && train.slippingBogeys().contains(bogeyLocal);
+        int threshold = wheelspin ? SPIN_DELAY_TICKS : STALL_DELAY_TICKS;
+        boolean slipping = stall >= threshold || stall > 0 && train.slippingBogeys().contains(bogeyLocal);
         if (slipping != train.slippingBogeys().contains(bogeyLocal)) {
             LoconauticsConstants.LOGGER.info("[slipdbg] car {} bogey {} slipping {} stall {} commanded {} carSpeed {} trainSpeed {} locked {} computerIdle {}",
                     train.id().toString().substring(0, 8), bogeyLocal.toShortString(), slipping, stall, commanded,

@@ -2,6 +2,10 @@ package com.lycoris.loconautics.content.speedometer;
 
 import com.lycoris.loconautics.common.sable.SubLevelData;
 import com.lycoris.loconautics.foundation.LoconauticsLang;
+import com.lycoris.loconautics.trainphysics.SableTrain;
+import com.lycoris.loconautics.trainphysics.drive.ConsistPower;
+import com.lycoris.loconautics.trainphysics.drive.TrainPropulsion;
+import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -150,6 +154,29 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         LoconauticsLang.builder()
                 .text(String.format(Locale.US, "%.2f km", tripMeters / 1000.0))
                 .style(ChatFormatting.GOLD).forGoggles(tooltip, 1);
+
+        SubLevel containing = Sable.HELPER.getContaining(this);
+        SableTrain train = containing == null ? null : SableTrainRegistry.bySubLevel(containing.getUniqueId());
+        if (train != null && !train.isGhost()) {
+            ConsistPower.Result consist = ConsistPower.resultFor(train);
+            double mass = consist == null ? 0.0 : consist.totalMass();
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_train")
+                    .withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_mass",
+                    String.format(Locale.US, "%.0f", mass)).withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_grade",
+                    String.format(Locale.US, "%+.1f", TrainPropulsion.gradePercent(train)))
+                    .withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_adhesion",
+                    String.format(Locale.US, "%.2f", TrainPropulsion.adhesionAccelLimitMps2(train)))
+                    .withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_slip",
+                    String.format(Locale.US, "%.0f", TrainPropulsion.poweredAxleSlipRatio(train) * 100.0))
+                    .withStyle(ChatFormatting.YELLOW));
+            tooltip.add(Component.translatable("loconautics.gui.goggles.speedometer_brake",
+                    String.format(Locale.US, "%.0f", train.brakeScale() * 100.0))
+                    .withStyle(ChatFormatting.RED));
+        }
         return true;
     }
 
