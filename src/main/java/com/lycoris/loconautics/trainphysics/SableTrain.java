@@ -808,6 +808,14 @@ public final class SableTrain {
         if (kinematic) {
             speed += com.lycoris.loconautics.trainphysics.drive.TrainPropulsion
                     .kinematicTrackAccelerationBpt2(this);
+
+            // Grade acceleration must still respect the same derail-safe/axle speed ceiling
+            // used by the rigid-body path.
+            double capBpt = com.lycoris.loconautics.trainphysics.drive.TrainPropulsion
+                    .bodySpeedCapMps(this) / 20.0;
+            if (capBpt > 0.0 && Math.abs(speed) > capBpt) {
+                speed = Math.copySign(capBpt, speed);
+            }
         }
         measuredAccel = speed - before;
     }
