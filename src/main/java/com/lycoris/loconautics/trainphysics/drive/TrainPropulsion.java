@@ -17,6 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
+import org.joml.Vector3d;
 
 import java.util.UUID;
 
@@ -49,12 +51,95 @@ public final class TrainPropulsion {
     }
 
     static boolean isBraking(double target, double current) {
-        return Math.abs(target) < Math.abs(current) || target * current < 0.0;
+        // A lower speed target is not itself a brake command: let rolling resistance
+        // and gravity change the speed naturally. A direction reversal is braking.
+        return target * current < 0.0;
     }
 
     static double brakeLimit(SableTrain train, double target, double current) {
         boolean countering = ConsistPower.isManual(train) && target * current < 0.0;
-        return brakeDecelLimit() * (countering ? ManualDrive.COUNTER_BRAKE : 1.0);
+        return brakeDecelLimit() * brakingMassFactor(train, LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get())
+                * (countering ? ManualDrive.COUNTER_BRAKE : 1.0);
+    }
+
+    /**
+     * A fixed brake force slows a heavier consist less. The square-root curve keeps the
+     * difference visible without making long trains almost impossible to stop.
+     */
+    public static double brakingMassFactor(SableTrain train, double fallbackMass) {
+        double referenceMass = Math.max(1.0, LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get());
+        double consistMass = ConsistPower.consistMass(train,
+                fallbackMass > 0.0 ? fallbackMass : referenceMass);
+        double ratio = Math.sqrt(referenceMass / Math.max(1.0, consistMass));
+        return Math.max(0.25, Math.min(2.0, ratio));
+    }
+
+    /**
+     * Whether this carriage advances from the train's kinematic speed rather than
+     * from the Sable rigid-body/rail constraint.
+     */
+    public static boolean usesKinematicRailMotion(SableTrain train) {
+        return train != null && train.car() != null && !train.isPoseSettling()
+                && !SableTrainDriver.useForceGlue(train, train.car());
+    }
+
+    /**
+     * Gravity projected onto the track direction, expressed in blocks per tick squared.
+     * Physical rail-glued carriages get this from Sable's world gravity and must not
+     * receive a second, manually integrated copy.
+     */
+    public static double slopeAccelerationBpt2(SableTrain train) {
+        if (!LoconauticsConfig.SLOPE_EFFECTS_ENABLED.get() || !usesKinematicRailMotion(train)
+                || train.car().carriage() == null || train.level() == null) {
+            return 0.0;
+        }
+        Vec3 forward = train.car().carriage().forward();
+        double length = forward.length();
+        if (length < 1.0e-9) {
+            return 0.0;
+        }
+        Vector3d tangent = new Vector3d(forward.x, forward.y, forward.z).div(length);
+        return DimensionPhysicsData.getGravity(train.level()).dot(tangent) * MPS2_TO_BPT2;
+    }
+
+    /**
+     * Net along-track acceleration for the kinematic fallback. Static resistance
+     * keeps a train on a shallow grade at rest; once gravity exceeds it, the train
+     * starts rolling. Brake force is reduced by total consist mass.
+     */
+    public static double kinematicTrackAccelerationBpt2(SableTrain train) {
+        if (!usesKinematicRailMotion(train) || train.car().carriage() == null) {
+            return 0.0;
+        }
+        double referenceMass = Math.max(1.0, LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get());
+        double consistMass = ConsistPower.consistMass(train, referenceMass);
+        double rollingWeight = Math.max(0.25, Math.min(4.0, consistMass / referenceMass));
+        boolean pulling = train.isPowered() && Math.abs(train.targetSpeed()) > 1.0e-4
+                && train.speed() * train.targetSpeed() >= 0.0
+                && Math.abs(train.speed()) < Math.abs(train.targetSpeed());
+        double rollingResistance = pulling ? 0.0
+                : LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() * rollingWeight;
+
+        double brakeDeceleration = 0.0;
+        if (train.brakeHold()) {
+            brakeDeceleration = TrainBrakes.BRAKE_DECEL;
+        } else if (train.isBraked()) {
+            brakeDeceleration = TrainBrakes.BRAKE_DECEL * train.brakeScale();
+        } else if (train.servoBrake()) {
+            brakeDeceleration = TrainBrakes.BRAKE_DECEL;
+        }
+        brakeDeceleration *= brakingMassFactor(train, referenceMass);
+
+        double gravity = slopeAccelerationBpt2(train) / MPS2_TO_BPT2;
+        double resistance = rollingResistance + brakeDeceleration;
+        double net;
+        if (Math.abs(train.speed()) <= STANDSTILL_SPEED) {
+            net = Math.abs(gravity) <= resistance ? 0.0
+                    : gravity - Math.signum(gravity) * resistance;
+        } else {
+            net = gravity - Math.signum(train.speed()) * resistance;
+        }
+        return net * MPS2_TO_BPT2;
     }
 
     static double inclineDegrees(SableTrain train) {
@@ -131,7 +216,9 @@ public final class TrainPropulsion {
             return;
         }
         boolean braking = isBraking(train.targetSpeed(), train.speed());
-        double limitMps2 = train.brakeHold() ? TrainBrakes.BRAKE_DECEL
+        double limitMps2 = train.brakeHold() || train.isBraked() || train.servoBrake()
+                ? TrainBrakes.BRAKE_DECEL * brakingMassFactor(train,
+                        LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get())
                 : braking ? brakeLimit(train, train.targetSpeed(), train.speed())
                 : tractionAccelLimit(train, ConsistPower.tractionMass(train, 1.0));
         train.setAccel(limitMps2 * MPS2_TO_BPT2);
