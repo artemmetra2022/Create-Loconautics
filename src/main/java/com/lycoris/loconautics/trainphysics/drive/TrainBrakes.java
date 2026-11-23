@@ -207,8 +207,9 @@ public final class TrainBrakes {
         if (activelyPulling || train.isDerailed() || train.isFollowing()) {
             return 0.0;
         }
-        return Math.min(1.0,
-                LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() * rollingWeight(sub) / BRAKE_DECEL);
+        // Rolling resistance force grows with axle load, but so does the car's mass:
+        // its resulting deceleration is therefore approximately independent of load.
+        return Math.min(1.0, LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() / BRAKE_DECEL);
     }
 
     private static double rollingWeight(ServerSubLevel sub) {
