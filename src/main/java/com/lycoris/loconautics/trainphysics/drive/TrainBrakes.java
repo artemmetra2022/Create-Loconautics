@@ -201,7 +201,10 @@ public final class TrainBrakes {
 
     // weighted, because resistance the same for every car makes a loaded one coast as far as an empty one and
     public static double rollingScale(SableTrain train, ServerSubLevel sub) {
-        if (train.isPowered() || train.isDerailed() || train.isFollowing()) {
+        boolean activelyPulling = train.isPowered() && Math.abs(train.targetSpeed()) > 1.0e-4
+                && train.speed() * train.targetSpeed() >= 0.0
+                && Math.abs(train.speed()) < Math.abs(train.targetSpeed());
+        if (activelyPulling || train.isDerailed() || train.isFollowing()) {
             return 0.0;
         }
         return Math.min(1.0,
@@ -221,19 +224,18 @@ public final class TrainBrakes {
         return mass / LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get();
     }
 
-    private static final double SLOPE_RELIEF_DOWNHILL_SPEED = 0.05;
-
     public static void relieveSlopeGravity(ServerSubLevel sub, Vector3d railPoint, Vector3d tangent, double dt) {
+        // Sable already applies world gravity to the rigid body. Do not cancel its
+        // component along the rails when grade physics is enabled.
+        if (LoconauticsConfig.SLOPE_EFFECTS_ENABLED.get()) {
+            return;
+        }
         RigidBodyHandle handle = RigidBodyHandle.of(sub);
         if (handle == null) {
             return;
         }
         double along = DimensionPhysicsData.getGravity(sub.getLevel()).dot(tangent);
         if (Math.abs(along) < 1.0e-6) {
-            return;
-        }
-        double rolling = handle.getLinearVelocity(new Vector3d()).dot(tangent);
-        if (rolling * along > SLOPE_RELIEF_DOWNHILL_SPEED) {
             return;
         }
         MassData md = sub.getMassTracker();
@@ -245,11 +247,13 @@ public final class TrainBrakes {
         forces.applyLinearImpulse(localImpulse);
         handle.applyForcesAndReset(forces);
         ForceTrace.impulse(sub, ForceSource.SLOPE_RELIEF, worldImpulse, railPoint,
-                "along rail gravity " + fmt(along) + " mass=" + fmt(mass));
+                "slope effects disabled, cancelling along-rail gravity " + fmt(along)
+                        + " mass=" + fmt(mass));
     }
 
-    public static void applyResistance(ServerSubLevel sub, ServerSubLevel trackSub, Vector3d railPoint,
-                                       Vector3d tangent, double dt, double scale, ForceSource source) {
+    public static void applyResistance(SableTrain train, ServerSubLevel sub, ServerSubLevel trackSub,
+                                       Vector3d railPoint, Vector3d tangent, double dt, double scale,
+                                       ForceSource source) {
         RigidBodyHandle handle = RigidBodyHandle.of(sub);
         if (handle == null) {
             return;
@@ -266,7 +270,9 @@ public final class TrainBrakes {
         }
         MassData md = sub.getMassTracker();
         double mass = (md != null && !md.isInvalid()) ? md.getMass() : 1.0;
-        double decel = Math.min(BRAKE_DECEL * scale, Math.abs(vTan) / dt);
+        double brakeMassFactor = source == ForceSource.BRAKE
+                ? TrainPropulsion.brakingMassFactor(train, mass) : 1.0;
+        double decel = Math.min(BRAKE_DECEL * scale * brakeMassFactor, Math.abs(vTan) / dt);
         if (!Double.isNaN(retarderLimit) && Math.abs(vTan) > retarderLimit) {
             // never brake past the limit, so a train that is already slow is left alone
             double excess = (Math.abs(vTan) - retarderLimit) / dt;
