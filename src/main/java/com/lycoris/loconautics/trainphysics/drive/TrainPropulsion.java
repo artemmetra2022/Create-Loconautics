@@ -123,8 +123,9 @@ public final class TrainPropulsion {
             brakeDeceleration = TrainBrakes.BRAKE_DECEL;
         } else if (train.isBraked()) {
             brakeDeceleration = TrainBrakes.BRAKE_DECEL * train.brakeScale();
-        } else if (train.servoBrake()) {
-            brakeDeceleration = TrainBrakes.BRAKE_DECEL;
+        } else if (train.servoBrake()
+                && Math.abs(train.targetSpeed()) < Math.max(STANDSTILL_SPEED, Math.abs(train.speed()))) {
+            brakeDeceleration = brakeDecelLimit();
         }
         brakeDeceleration *= brakingMassFactor(train, referenceMass);
 
@@ -213,8 +214,9 @@ public final class TrainPropulsion {
         if (train.isDerailed() || train.isPhysics()) {
             return;
         }
-        boolean braking = isBraking(train.targetSpeed(), train.speed());
-        double limitMps2 = train.brakeHold() || train.isBraked() || train.servoBrake()
+        boolean braking = isBraking(train.targetSpeed(), train.speed())
+                || train.servoBrake() && Math.abs(train.targetSpeed()) < Math.abs(train.speed());
+        double limitMps2 = train.brakeHold() || train.isBraked()
                 ? TrainBrakes.BRAKE_DECEL * brakingMassFactor(train,
                         LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get())
                 : braking ? brakeLimit(train, train.targetSpeed(), train.speed())
