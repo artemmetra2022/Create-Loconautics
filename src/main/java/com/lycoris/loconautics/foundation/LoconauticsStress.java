@@ -18,6 +18,8 @@ public final class LoconauticsStress {
                 LoconauticsConfig.BRAKE_CONTROLLER_SU_IMPACT::get);
         BlockStressValues.IMPACTS.register(LoconauticsRegistries.TURNTABLE_BEARING.get(),
                 LoconauticsConfig.TURNTABLE_SU_IMPACT::get);
+        BlockStressValues.IMPACTS.register(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR.get(),
+                LoconauticsConfig.AIR_COMPRESSOR_SU_IMPACT::get);
 
         SmallEngineBlocks.ENGINES.values().forEach(engine -> {
             BlockStressValues.CAPACITIES.register(engine.get(), () -> SmallEngineTuning.SU_PER_RPM);

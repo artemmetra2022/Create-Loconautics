@@ -48,7 +48,8 @@ public class ValveBlockItem extends PanelBlockItem {
         BlockState state = level.getBlockState(pos);
 
         if (state.getBlock() instanceof SafetyValveBlock || state.getBlock() instanceof SteamTakeoffBlock
-                || state.getBlock() instanceof SmallEngineBlock) {
+                || state.getBlock() instanceof SmallEngineBlock
+                || state.getBlock() instanceof com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlock) {
             if (!level.isClientSide) {
                 context.getItemInHand().set(LoconauticsRegistries.VALVE_TARGET.get(), pos);
                 announceBound(context.getItemInHand(), context.getPlayer(), state);

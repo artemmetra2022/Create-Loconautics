@@ -57,6 +57,34 @@ public class TrainPonderPlugin implements PonderPlugin {
                 .addStoryBoard("train/train", TrainScenes::controls)
                 .addStoryBoard("train/train", TrainScenes::assembly);
 
+        helper.forComponents(
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR.getId(),
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_RESERVOIR.getId())
+                .addStoryBoard("air_brake/compressor", AirBrakeScenes::compressorSupply)
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::cabControls);
+
+        helper.forComponents(
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.DRIVER_BRAKE_VALVE.getId())
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::cabControls)
+                .addStoryBoard("air_brake/double_cab", AirBrakeScenes::doubleCab)
+                .addStoryBoard("air_brake/compressor", AirBrakeScenes::compressorSupply);
+
+        helper.forComponents(
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.TRIPLE_VALVE.getId())
+                .addStoryBoard("air_brake/triple_valve", AirBrakeScenes::tripleValve)
+                .addStoryBoard("air_brake/consist", AirBrakeScenes::consistHoses);
+
+        helper.forComponents(
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR.getId(),
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.getId())
+                .addStoryBoard("air_brake/consist", AirBrakeScenes::consistHoses)
+                .addStoryBoard("air_brake/triple_valve", AirBrakeScenes::tripleValve);
+
+        helper.forComponents(
+                        com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.EMERGENCY_BRAKE.getId())
+                .addStoryBoard("air_brake/emergency", AirBrakeScenes::emergencyBrake)
+                .addStoryBoard("air_brake/consist", AirBrakeScenes::consistHoses);
+
         registerCasing(helper);
     }
 

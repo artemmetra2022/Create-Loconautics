@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector"
+    },
+    "facing=north,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open"
+    },
+    "facing=south,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector",
+      "y": 180
+    },
+    "facing=south,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open",
+      "y": 180
+    },
+    "facing=west,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector",
+      "y": 270
+    },
+    "facing=west,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open",
+      "y": 270
+    },
+    "facing=east,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector",
+      "y": 90
+    },
+    "facing=east,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open",
+      "y": 90
+    },
+    "facing=up,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector",
+      "x": 270
+    },
+    "facing=up,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open",
+      "x": 270
+    },
+    "facing=down,open=false": {
+      "model": "loconautics:block/airbrake/brake_hose_connector",
+      "x": 90
+    },
+    "facing=down,open=true": {
+      "model": "loconautics:block/airbrake/brake_hose_connector_open",
+      "x": 90
+    }
+  }
+}

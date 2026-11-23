@@ -35,6 +35,11 @@ public class PanelDriveBus {
         return Math.max(bid.current, bid.previous);
     }
 
+    public static boolean isDriven(Level level, BlockPos pos) {
+        Bid bid = BIDS.get(new Target(level.dimension(), pos));
+        return bid != null && level.getGameTime() - bid.tick <= 2;
+    }
+
     public static void release(Level level, BlockPos pos) {
         BIDS.remove(new Target(level.dimension(), pos));
     }

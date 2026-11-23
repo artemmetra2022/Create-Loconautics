@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "loconautics:block/airbrake/air_compressor"
+    },
+    "axis=x": {
+      "model": "loconautics:block/airbrake/air_compressor",
+      "y": 90
+    },
+    "axis=y": {
+      "model": "loconautics:block/airbrake/air_compressor",
+      "x": 90
+    }
+  }
+}

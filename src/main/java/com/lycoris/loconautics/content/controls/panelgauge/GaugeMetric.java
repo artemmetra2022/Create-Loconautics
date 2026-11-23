@@ -4,6 +4,10 @@ import com.lycoris.loconautics.compat.gauge.AeronauticsGauges;
 import com.lycoris.loconautics.compat.gauge.DieselGauges;
 import com.lycoris.loconautics.compat.gauge.PropulsionGauges;
 import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
+import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
+import com.lycoris.loconautics.content.airbrake.AirReservoirBlockEntity;
+import com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineTuning;
@@ -254,7 +258,25 @@ public enum GaugeMetric implements StringRepresentable {
     SAFETY_SPEED_LIMIT(SafetyBlockEntity.class,
             be -> String.format(Locale.US, "%d km/h", be.speedLimit()),
             be -> over(be.speedLimit(), SafetyBlockEntity.MAX_SPEED_LIMIT),
-            ChatFormatting.AQUA, 22);
+            ChatFormatting.AQUA, 22),
+
+    // air brakes: appended last on purpose, the network codec writes enum ordinals
+    MAIN_RESERVOIR_PRESSURE(AirReservoirBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPressureBar()),
+            be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.AQUA, 21),
+    BRAKE_PIPE_PRESSURE(DriverBrakeValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPipePressure()),
+            be -> over(be.getPipePressure(), AirBrakeTuning.WORKING_PIPE_BAR),
+            ChatFormatting.AQUA, 21),
+    BRAKE_CYLINDER_PRESSURE(TripleValveBlockEntity.class,
+            be -> pct(be.getCylinderFraction()),
+            TripleValveBlockEntity::getCylinderFraction,
+            ChatFormatting.GOLD, 22),
+    DRIVER_MAIN_PRESSURE(DriverBrakeValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getMainPressure()),
+            be -> over(be.getMainPressure(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.DARK_AQUA, 21);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -277,7 +299,10 @@ public enum GaugeMetric implements StringRepresentable {
         HOT_AIR_BURNER("aeronautics", "Create: Aeronautics", "Hot Air Burner", AeronauticsGauges::hotAirSources),
         STEAM_VENT("aeronautics", "Create: Aeronautics", "Steam Vent", AeronauticsGauges::steamSources),
         BRAKE_CONTROLLER("loconautics", "Loconautics", "Brake Controller", BrakeControllerBlockEntity.class),
-        SAFETY_UNIT("loconautics", "Loconautics", "Safety Unit", SafetyBlockEntity.class);
+        SAFETY_UNIT("loconautics", "Loconautics", "Safety Unit", SafetyBlockEntity.class),
+        AIR_RESERVOIR("loconautics", "Loconautics", "Air Reservoir", AirReservoirBlockEntity.class),
+        DRIVER_BRAKE_VALVE("loconautics", "Loconautics", "Driver's Brake Valve", DriverBrakeValveBlockEntity.class),
+        TRIPLE_VALVE("loconautics", "Loconautics", "Triple Valve", TripleValveBlockEntity.class);
 
         private final String modId;
         private final String modName;

@@ -43,7 +43,15 @@ public enum ExperimentalFeature {
             CeriseneBlocks.CERISENE_BLOCK_ITEM.get(),
             CeriseneBlocks.CERISENE_BUCKET.get())),
     SCREW_LINK("screwLink", () -> List.of(LoconauticsRegistries.SCREW_LINK_ITEM.get())),
-    HANDBRAKE("handbrake", () -> List.of(LoconauticsRegistries.HANDBRAKE_ITEM.get()));
+    HANDBRAKE("handbrake", () -> List.of(LoconauticsRegistries.HANDBRAKE_ITEM.get())),
+    AIR_BRAKES("airBrakes", () -> List.of(
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR_ITEM.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_RESERVOIR_ITEM.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.DRIVER_BRAKE_VALVE_ITEM.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.TRIPLE_VALVE_ITEM.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR_ITEM.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.get(),
+            com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.EMERGENCY_BRAKE_ITEM.get()));
 
     private static Map<Item, ExperimentalFeature> byItem;
 

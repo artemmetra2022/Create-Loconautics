@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,powered=false": {
+      "model": "loconautics:block/airbrake/emergency_brake"
+    },
+    "facing=north,powered=true": {
+      "model": "loconautics:block/airbrake/emergency_brake_pulled"
+    },
+    "facing=south,powered=false": {
+      "model": "loconautics:block/airbrake/emergency_brake",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "loconautics:block/airbrake/emergency_brake_pulled",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "loconautics:block/airbrake/emergency_brake",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "loconautics:block/airbrake/emergency_brake_pulled",
+      "y": 270
+    },
+    "facing=east,powered=false": {
+      "model": "loconautics:block/airbrake/emergency_brake",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "loconautics:block/airbrake/emergency_brake_pulled",
+      "y": 90
+    }
+  }
+}

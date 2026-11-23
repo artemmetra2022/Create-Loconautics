@@ -3,6 +3,9 @@ package com.lycoris.loconautics.trainphysics.drive;
 import com.lycoris.loconautics.trainphysics.debug.force.ForceSource;
 import com.lycoris.loconautics.trainphysics.debug.force.ForceTrace;
 import com.lycoris.loconautics.config.LoconauticsConfig;
+import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlock;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlock;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.brakes.HandbrakeBlock;
@@ -68,14 +71,16 @@ public final class TrainBrakes {
         ConsistBrake.Demand consist = ConsistBrake.demandFor(train);
         double pipe = Math.min(1.0, consist.decel() / BRAKE_DECEL);
         // a schedule hold must not full brake here or an arrived train never pulls away
+        double air = airBrakeScale(sub);
+        boolean airEmergency = airEmergency(sub);
         double soft = Math.max(pipe, train.brakePulseActive() ? 1.0 : 0.0);
-        double scale = Math.max(handScale, soft);
+        double scale = Math.max(handScale, Math.max(soft, air));
 
         train.setBrakeScale(scale);
         train.setBraked(scale > 0.0);
         // the handbrake never cuts drive, the engine pulls against it and its drag shows up as axle stress instead
-        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub));
-        train.setBrakeHard(locked);
+        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub) || airEmergency);
+        train.setBrakeHard(locked || airEmergency);
     }
 
     static final double WHEEL_GRIP_DECEL = 30.0;
@@ -100,9 +105,19 @@ public final class TrainBrakes {
 
     // set by handbrakeStrength, true while a Safety Unit on the carriage holds the emergency brake
     private static final Map<ServerSubLevel, Boolean> SAFETY_STOPS = new WeakHashMap<>();
+    private static final Map<ServerSubLevel, Double> AIR_BRAKE_SCALES = new WeakHashMap<>();
+    private static final Map<ServerSubLevel, Boolean> AIR_EMERGENCY_STOPS = new WeakHashMap<>();
 
     private static boolean safetyStop(ServerSubLevel sub) {
         return Boolean.TRUE.equals(SAFETY_STOPS.get(sub));
+    }
+
+    private static double airBrakeScale(ServerSubLevel sub) {
+        return AIR_BRAKE_SCALES.getOrDefault(sub, 0.0);
+    }
+
+    private static boolean airEmergency(ServerSubLevel sub) {
+        return Boolean.TRUE.equals(AIR_EMERGENCY_STOPS.get(sub));
     }
 
     public static double handbrakeStrength(ServerSubLevel sub) {
@@ -113,7 +128,7 @@ public final class TrainBrakes {
             List<BlockPos> found = new ArrayList<>();
             SubLevelBlocks.forEachBlock(sub, (pos, state) -> {
                 if (state.getBlock() instanceof HandbrakeBlock || state.getBlock() instanceof BrakeControllerBlock
-                        || state.getBlock() instanceof SafetyBlock) {
+                        || state.getBlock() instanceof SafetyBlock || state.getBlock() instanceof TripleValveBlock) {
                     found.add(pos.immutable());
                 }
                 return true;
@@ -125,6 +140,8 @@ public final class TrainBrakes {
         int bestHandbrake = 0;
         int bestController = 0;
         boolean emergency = false;
+        double bestAir = 0.0;
+        boolean airEmergency = false;
         for (BlockPos pos : scan.positions()) {
             BlockState state = subLevel.getBlockState(pos);
             if (state.getBlock() instanceof HandbrakeBlock && state.getValue(HandbrakeBlock.POWERED)) {
@@ -140,12 +157,19 @@ public final class TrainBrakes {
                 // a tripped Safety Unit brakes like the emergency switch and also cuts the drive
                 emergency = true;
                 safetyStop = true;
-            }
-            if (bestHandbrake >= 15 && bestController >= 15 && emergency) {
-                break;
+            } else if (state.getBlock() instanceof TripleValveBlock
+                    && subLevel.getBlockEntity(pos) instanceof TripleValveBlockEntity valve) {
+                if (valve.isEmergency()) {
+                    airEmergency = true;
+                    bestAir = 1.0;
+                } else {
+                    bestAir = Math.max(bestAir, valve.getCylinderFraction() * AirBrakeTuning.SERVICE_BRAKE_MAX_SCALE);
+                }
             }
         }
         SAFETY_STOPS.put(sub, safetyStop);
+        AIR_BRAKE_SCALES.put(sub, bestAir);
+        AIR_EMERGENCY_STOPS.put(sub, airEmergency);
         double handbrakeFraction = bestHandbrake / 15.0;
         double handbrakeStrength = handbrakeFraction * handbrakeFraction;
 

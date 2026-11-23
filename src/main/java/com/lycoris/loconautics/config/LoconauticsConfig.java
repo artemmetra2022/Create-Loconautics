@@ -82,6 +82,9 @@ public final class LoconauticsConfig {
 
     public static ModConfigSpec.DoubleValue BRAKE_CONTROLLER_SU_IMPACT;
     public static ModConfigSpec.DoubleValue TURNTABLE_SU_IMPACT;
+    public static ModConfigSpec.DoubleValue AIR_COMPRESSOR_SU_IMPACT;
+    public static ModConfigSpec.DoubleValue AIR_COMPRESSOR_CHARGE_RATE;
+    public static ModConfigSpec.DoubleValue AIR_BRAKE_LEAK_RATE;
 
     public static ModConfigSpec.DoubleValue STEEL_CABLE_MAX_RANGE;
 
@@ -445,6 +448,29 @@ public final class LoconauticsConfig {
                         "A turntable driven above its input speed is billed for the speed it turns at, not the speed it is fed.")
                 .translation(TRANSLATION_PREFIX + "blocks.turntable_bearing.suImpact")
                 .defineInRange("suImpact", 4.0, 0.0, 100.0);
+
+        BUILDER.pop();
+
+        BUILDER.translation(TRANSLATION_PREFIX + "blocks.air_compressor").push("air_compressor");
+
+        AIR_COMPRESSOR_SU_IMPACT = BUILDER
+                .comment("Stress the Air Compressor adds per RPM while pumping air.")
+                .translation(TRANSLATION_PREFIX + "blocks.air_compressor.suImpact")
+                .defineInRange("suImpact", 6.0, 0.0, 100.0);
+
+        AIR_COMPRESSOR_CHARGE_RATE = BUILDER
+                .comment("Air pressure in bar pumped per tick at 64 RPM.")
+                .translation(TRANSLATION_PREFIX + "blocks.air_compressor.chargeRate")
+                .defineInRange("chargeRate", 0.04, 0.001, 2.0);
+
+        BUILDER.pop();
+
+        BUILDER.translation(TRANSLATION_PREFIX + "blocks.air_brake").push("air_brake");
+
+        AIR_BRAKE_LEAK_RATE = BUILDER
+                .comment("Passive brake pipe pressure leak in bar per tick.")
+                .translation(TRANSLATION_PREFIX + "blocks.air_brake.leakRate")
+                .defineInRange("leakRate", 0.0005, 0.0, 0.1);
 
         BUILDER.pop();
 

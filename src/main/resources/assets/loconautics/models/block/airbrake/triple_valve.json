@@ -1,0 +1,41 @@
+{
+  "textures": {
+    "body": "create:block/industrial_iron_block",
+    "valve": "create:block/copper_block",
+    "particle": "create:block/industrial_iron_block"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#valve"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    }
+  ]
+}

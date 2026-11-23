@@ -34,6 +34,14 @@ public record SteelCableType(
             StrandKind.HOSE_LINK,
             true));
 
+    public static final SteelCableType BRAKE_HOSE = register(new SteelCableType(
+            LoconauticsConstants.id("brake_hose"),
+            12,
+            10.0f,
+            35.0f,
+            StrandKind.HOSE_LINK,
+            false));
+
     public static SteelCableType register(SteelCableType type) {
         REGISTRY.put(type.id(), type);
         return type;

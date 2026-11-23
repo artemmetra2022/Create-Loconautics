@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "airBrakes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " L ",
+    "BGB",
+    " P "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lever"
+    },
+    "B": {
+      "item": "create:brass_ingot"
+    },
+    "G": {
+      "item": "create:precision_mechanism"
+    },
+    "P": {
+      "item": "create:fluid_pipe"
+    }
+  },
+  "result": {
+    "id": "loconautics:driver_brake_valve",
+    "count": 1
+  }
+}

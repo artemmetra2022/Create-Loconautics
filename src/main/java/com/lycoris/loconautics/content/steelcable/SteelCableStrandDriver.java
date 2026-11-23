@@ -214,6 +214,9 @@ public final class SteelCableStrandDriver {
     }
 
     private static ItemStack itemFor(SteelCableStrand strand) {
+        if (strand.type == SteelCableType.BRAKE_HOSE) {
+            return new ItemStack(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.get());
+        }
         return new ItemStack(strand.type.carriesFluid()
                 ? LoconauticsRegistries.HOSE.get() : LoconauticsRegistries.STEEL_CABLE.get());
     }

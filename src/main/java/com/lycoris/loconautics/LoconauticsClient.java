@@ -260,6 +260,11 @@ public final class LoconauticsClient {
                 .factory(com.lycoris.loconautics.content.turntablebearing.TurntableBearingVisual::new)
                 .apply();
 
+        SimpleBlockEntityVisualizer
+                .builder(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR_BE.get())
+                .factory(com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual::shaft)
+                .apply();
+
         ItemDescription.useKey(LoconauticsRegistries.STEEL_CABLE.get(), "item.loconautics.steel_cable");
         TooltipModifier.REGISTRY.register(LoconauticsRegistries.STEEL_CABLE.get(),
                 new ItemDescription.Modifier(LoconauticsRegistries.STEEL_CABLE.get(),
@@ -288,6 +293,20 @@ public final class LoconauticsClient {
                         "tooltip.stress.bearing_axle_note"));
         registerTooltip(LoconauticsRegistries.TRANSMISSION_ITEM.get(), "block.loconautics.transmission");
         registerTooltip(LoconauticsRegistries.BRAKE_CONTROLLER_ITEM.get(), "block.loconautics.brake_controller");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR_ITEM.get(),
+                "block.loconautics.air_compressor");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_RESERVOIR_ITEM.get(),
+                "block.loconautics.air_reservoir");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.DRIVER_BRAKE_VALVE_ITEM.get(),
+                "block.loconautics.driver_brake_valve");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.TRIPLE_VALVE_ITEM.get(),
+                "block.loconautics.triple_valve");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR_ITEM.get(),
+                "block.loconautics.brake_hose_connector");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.get(),
+                "item.loconautics.brake_hose");
+        registerTooltip(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.EMERGENCY_BRAKE_ITEM.get(),
+                "block.loconautics.emergency_brake");
         registerTooltip(LoconauticsRegistries.SPEEDOMETER_ITEM.get(), "block.loconautics.speedometer");
         registerTooltip(LoconauticsRegistries.TYPHON_ITEM.get(), "block.loconautics.typhon");
         registerTooltip(LoconauticsRegistries.TURNTABLE_BEARING_ITEM.get(), "block.loconautics.turntable_bearing");
@@ -385,6 +404,10 @@ public final class LoconauticsClient {
         event.registerBlockEntityRenderer(
                 LoconauticsRegistries.TRANSMISSION_BE.get(),
                 SplitShaftRenderer::new
+        );
+        event.registerBlockEntityRenderer(
+                com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.AIR_COMPRESSOR_BE.get(),
+                com.simibubi.create.content.kinetics.base.ShaftRenderer::new
         );
         event.registerBlockEntityRenderer(
                 com.lycoris.loconautics.content.industrial.IndustrialBlocks.TANK_BE.get(),

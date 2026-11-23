@@ -110,6 +110,12 @@
     "loconautics:green_buffer",
     "loconautics:red_buffer",
     "loconautics:black_buffer",
-    "loconautics:typhon"
+    "loconautics:typhon",
+    "loconautics:air_compressor",
+    "loconautics:air_reservoir",
+    "loconautics:driver_brake_valve",
+    "loconautics:triple_valve",
+    "loconautics:brake_hose_connector",
+    "loconautics:emergency_brake"
   ]
 }

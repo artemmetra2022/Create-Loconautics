@@ -101,6 +101,11 @@ public record ValvePart(float degrees, @Nullable BlockPos safetyValve, int wheel
             valve.setOpening(PanelDriveBus.report(level, safetyValve, fraction()));
         } else if (level.getBlockEntity(safetyValve) instanceof SteamTakeoffBlockEntity takeoff) {
             takeoff.setRegulator(PanelDriveBus.report(level, safetyValve, fraction()));
+        } else if (level.getBlockEntity(safetyValve) instanceof com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity driverValve) {
+            float f = PanelDriveBus.report(level, safetyValve, fraction());
+            if (!driverValve.isIsolated()) {
+                driverValve.setNotch(Math.round(f * com.lycoris.loconautics.content.airbrake.AirBrakeTuning.MAX_NOTCH));
+            }
         } else if (level.isLoaded(safetyValve)) {
             PanelDriveBus.release(level, safetyValve);
             panel.replacePart(slot, new ValvePart(degrees, null, wheelColor));
@@ -114,6 +119,7 @@ public record ValvePart(float degrees, @Nullable BlockPos safetyValve, int wheel
         PanelDriveBus.release(level, safetyValve);
         if (level.getBlockEntity(safetyValve) instanceof SafetyValveBlockEntity valve) valve.setOpening(0f);
         if (level.getBlockEntity(safetyValve) instanceof SteamTakeoffBlockEntity takeoff) takeoff.setRegulator(1f);
+        if (level.getBlockEntity(safetyValve) instanceof com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity driverValve) driverValve.setNotch(0);
     }
 
     @Override
