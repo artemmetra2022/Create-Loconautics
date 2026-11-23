@@ -2,7 +2,9 @@
   "render_type": "minecraft:cutout",
   "textures": {
     "wire": "minecraft:block/iron_block",
-    "particle": "minecraft:block/iron_block"
+    "particle": "minecraft:block/iron_block",
+    "messenger": "minecraft:block/cut_copper",
+    "dropper": "minecraft:block/iron_bars"
   },
   "elements": [
     {
@@ -34,6 +36,116 @@
         },
         "down": {
           "texture": "#wire"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        0
+      ],
+      "to": [
+        9,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#messenger"
+        },
+        "south": {
+          "texture": "#messenger"
+        },
+        "east": {
+          "texture": "#messenger"
+        },
+        "west": {
+          "texture": "#messenger"
+        },
+        "up": {
+          "texture": "#messenger"
+        },
+        "down": {
+          "texture": "#messenger"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        10,
+        2
+      ],
+      "to": [
+        8.75,
+        14,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        10,
+        7
+      ],
+      "to": [
+        8.75,
+        14,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        10,
+        13
+      ],
+      "to": [
+        8.75,
+        14,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
         }
       }
     }

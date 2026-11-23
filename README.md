@@ -61,3 +61,10 @@ Partial translations are fine. Any text that is missing will be shown in English
 ## License
 
 The code is MIT. The art, including the icon above, is all rights reserved. Both are spelled out in `LICENSE`.
+
+## Overhead electrification (experimental)
+
+- Place a short, standard or tall catenary mast kit on the ground. Each kit builds a complete six-, seven- or eight-block mast; face along the track-side when placing so the cantilever points back toward the railway.
+- Run overhead contact wire segments from mast to mast. The wire follows the horizontal direction you are facing when placing it; keep every segment at the same height as the mast head.
+- Place a pantograph on the roof of a carriage. On a Sable train it checks the world-space wire position, raises to one of three extension stages and outputs a full redstone signal while touching the contact wire.
+- The pantograph contact currently provides contact detection and a redstone output for automation. A dedicated electric traction motor and full electrical power-distribution model are not part of this first catenary implementation yet.
