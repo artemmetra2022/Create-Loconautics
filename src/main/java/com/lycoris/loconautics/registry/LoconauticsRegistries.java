@@ -523,6 +523,45 @@ public final class LoconauticsRegistries {
             ITEMS.register("speed_sign", () ->
                     new BlockItem(SPEED_SIGN.get(), new Item.Properties().stacksTo(64)));
 
+    private static DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock> railSign(String name) {
+        return BLOCKS.register(name, () ->
+                new com.lycoris.loconautics.content.railsign.RailSignBlock(
+                        BlockBehaviour.Properties.of()
+                                .mapColor(MapColor.METAL)
+                                .strength(2.0f)
+                                .sound(SoundType.NETHERITE_BLOCK)
+                                .noOcclusion()
+                                .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
+                                .requiresCorrectToolForDrops()
+                ));
+    }
+
+    private static DeferredHolder<Item, BlockItem> railSignItem(
+            String name, DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock> block) {
+        return ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().stacksTo(64)));
+    }
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock>
+            CLEARANCE_SIGN = railSign("clearance_sign");
+    public static final DeferredHolder<Item, BlockItem> CLEARANCE_SIGN_ITEM = railSignItem("clearance_sign", CLEARANCE_SIGN);
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock>
+            WHISTLE_SIGN = railSign("whistle_sign");
+    public static final DeferredHolder<Item, BlockItem> WHISTLE_SIGN_ITEM = railSignItem("whistle_sign", WHISTLE_SIGN);
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock>
+            DEAD_END_SIGN = railSign("dead_end_sign");
+    public static final DeferredHolder<Item, BlockItem> DEAD_END_SIGN_ITEM = railSignItem("dead_end_sign", DEAD_END_SIGN);
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock>
+            GRADIENT_SIGN = railSign("gradient_sign");
+    public static final DeferredHolder<Item, BlockItem> GRADIENT_SIGN_ITEM = railSignItem("gradient_sign", GRADIENT_SIGN);
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsign.RailSignBlock>
+            STATION_BORDER_SIGN = railSign("station_border_sign");
+    public static final DeferredHolder<Item, BlockItem> STATION_BORDER_SIGN_ITEM = railSignItem("station_border_sign", STATION_BORDER_SIGN);
+
+
     public static final DeferredHolder<Item, SteelCableItem> STEEL_CABLE =
             ITEMS.register("steel_cable", () -> new SteelCableItem(new Item.Properties().stacksTo(16)));
 
@@ -704,6 +743,11 @@ public final class LoconauticsRegistries {
                         output.accept(SAFETY_ITEM.get());
                         output.accept(TYPHON_ITEM.get());
                         output.accept(SPEED_SIGN_ITEM.get());
+                        output.accept(CLEARANCE_SIGN_ITEM.get());
+                        output.accept(WHISTLE_SIGN_ITEM.get());
+                        output.accept(DEAD_END_SIGN_ITEM.get());
+                        output.accept(GRADIENT_SIGN_ITEM.get());
+                        output.accept(STATION_BORDER_SIGN_ITEM.get());
 
                         com.lycoris.loconautics.content.dashboard.DashboardBlocks.DASHBOARD_ITEMS
                                 .forEach((color, item) -> output.accept(new net.minecraft.world.item.ItemStack(item.get()),

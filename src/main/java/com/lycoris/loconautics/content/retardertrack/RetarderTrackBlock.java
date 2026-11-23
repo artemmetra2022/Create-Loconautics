@@ -26,7 +26,8 @@ import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
  * <p>
  * It is a normal Create track block (same shapes, same graph, same bezier curves) that only differs by a block
  * state, so it can be swapped for a plain track with the variant picker. On curves only the end blocks of the
- * curve carry the block, the middle of a bezier is not a block.
+ * curve carry the block, the middle of a bezier is not a block, so {@link RetarderTracks} also brakes along the
+ * whole connection that leaves a powered retarder block.
  */
 public class RetarderTrackBlock extends TrackBlock {
 

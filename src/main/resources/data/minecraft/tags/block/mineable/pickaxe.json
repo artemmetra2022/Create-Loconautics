@@ -116,6 +116,11 @@
     "loconautics:driver_brake_valve",
     "loconautics:triple_valve",
     "loconautics:brake_hose_connector",
-    "loconautics:emergency_brake"
+    "loconautics:emergency_brake",
+    "loconautics:clearance_sign",
+    "loconautics:whistle_sign",
+    "loconautics:dead_end_sign",
+    "loconautics:gradient_sign",
+    "loconautics:station_border_sign"
   ]
 }
