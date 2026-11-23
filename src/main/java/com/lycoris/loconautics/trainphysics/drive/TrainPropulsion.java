@@ -113,12 +113,11 @@ public final class TrainPropulsion {
         }
         double referenceMass = Math.max(1.0, LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get());
         double consistMass = ConsistPower.consistMass(train, referenceMass);
-        double rollingWeight = Math.max(0.25, Math.min(4.0, consistMass / referenceMass));
         boolean pulling = train.isPowered() && Math.abs(train.targetSpeed()) > 1.0e-4
                 && train.speed() * train.targetSpeed() >= 0.0
                 && Math.abs(train.speed()) < Math.abs(train.targetSpeed());
         double rollingResistance = pulling ? 0.0
-                : LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() * rollingWeight;
+                : LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get();
 
         double brakeDeceleration = 0.0;
         if (train.brakeHold()) {
