@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.content.overhead;
 
 import com.simibubi.create.foundation.block.IBE;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -25,6 +26,11 @@ public class PantographBlock extends HorizontalDirectionalBlock implements IBE<P
             Block.box(1, 0, 2, 15, 3, 14),
             Block.box(3, 3, 4, 5, 7, 6),
             Block.box(11, 3, 10, 13, 7, 12));
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(PantographBlock::new);
+    }
 
     public PantographBlock(Properties properties) {
         super(properties);
