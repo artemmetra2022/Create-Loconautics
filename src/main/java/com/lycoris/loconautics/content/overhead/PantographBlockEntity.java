@@ -1,5 +1,6 @@
 package com.lycoris.loconautics.content.overhead;
 
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.Sable;
@@ -17,7 +18,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public class PantographBlockEntity extends SmartBlockEntity {
+public class PantographBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
     private static final int CHECK_INTERVAL = 4;
 
