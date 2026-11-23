@@ -112,7 +112,6 @@ public final class TrainPropulsion {
             return 0.0;
         }
         double referenceMass = Math.max(1.0, LoconauticsConfig.DYNAMICS_REFERENCE_MASS.get());
-        double consistMass = ConsistPower.consistMass(train, referenceMass);
         boolean pulling = train.isPowered() && Math.abs(train.targetSpeed()) > 1.0e-4
                 && train.speed() * train.targetSpeed() >= 0.0
                 && Math.abs(train.speed()) < Math.abs(train.targetSpeed());
