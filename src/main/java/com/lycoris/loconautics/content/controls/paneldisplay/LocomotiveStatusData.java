@@ -73,7 +73,7 @@ public record LocomotiveStatusData(
                 engine == null ? 0f : engine.getOutputSu(),
                 engine == null || engine.getFuelCapacity() <= 0 ? 0f
                         : 100f * engine.getFuelAmount() / engine.getFuelCapacity(),
-                engine == null ? 0f : engine.getHeatFraction(),
+                engine == null ? 0f : engine.getHeatFraction() * 100f,
                 alarm, emergency);
     }
 
