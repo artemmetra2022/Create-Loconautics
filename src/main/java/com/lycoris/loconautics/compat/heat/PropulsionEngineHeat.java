@@ -28,6 +28,10 @@ public final class PropulsionEngineHeat {
         return PER_TICK;
     }
 
+    public static float heatFraction(BlockEntityBehaviour behavior) {
+        return !loaded() || behavior == null ? 0f : PropulsionHeatImpl.heatFraction(behavior);
+    }
+
     public static void tick(BlockEntityBehaviour behavior, Level level, BlockPos pos, float generation) {
         PropulsionHeatImpl.tick(behavior, level, pos, generation);
     }

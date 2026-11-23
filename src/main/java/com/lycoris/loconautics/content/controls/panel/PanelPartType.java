@@ -22,7 +22,8 @@ public enum PanelPartType implements StringRepresentable {
     SWITCH(com.lycoris.loconautics.content.controls.panelswitch.SwitchPart::read,
             new double[]{2, 0, 1, 6, 2, 7}),
     REVERSER(com.lycoris.loconautics.content.controls.panelreverser.ReverserPart::read,
-            new double[]{2, 0, 1, 6, 2, 7});
+            new double[]{2, 0, 1, 6, 2, 7}),
+    SIGNAL_LAMP(com.lycoris.loconautics.content.controls.panellamp.SignalLampPart::read, PanelBlock.FLAT_SLOT_BOX);
 
     public static final int PALETTE_COLORS = 35;
 

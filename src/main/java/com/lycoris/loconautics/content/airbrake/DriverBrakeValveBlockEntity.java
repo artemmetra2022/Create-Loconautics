@@ -32,6 +32,7 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
     private float pipePressure;
     private float mainPressure;
     private float syncedPipe;
+    private float syncedMain;
     private boolean restoredToBus;
 
     public DriverBrakeValveBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -111,8 +112,10 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
 
         if (isolated) {
             pipePressure = current;
-            if (Math.abs(pipePressure - syncedPipe) >= SYNC_STEP) {
+            if (Math.abs(pipePressure - syncedPipe) >= SYNC_STEP
+                    || Math.abs(mainPressure - syncedMain) >= SYNC_STEP) {
                 syncedPipe = pipePressure;
+                syncedMain = mainPressure;
                 setChanged();
                 sendData();
             }
@@ -152,8 +155,10 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
         AirPipeBus.writePipePressure(this, current);
         pipePressure = AirPipeBus.readPipePressure(this);
 
-        if (Math.abs(pipePressure - syncedPipe) >= SYNC_STEP) {
+        if (Math.abs(pipePressure - syncedPipe) >= SYNC_STEP
+                || Math.abs(mainPressure - syncedMain) >= SYNC_STEP) {
             syncedPipe = pipePressure;
+            syncedMain = mainPressure;
             setChanged();
             sendData();
         }
@@ -242,5 +247,6 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
         pipePressure = Mth.clamp(tag.getFloat("PipePressure"), 0f, AirBrakeTuning.WORKING_PIPE_BAR);
         mainPressure = Mth.clamp(tag.getFloat("MainPressure"), 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
         syncedPipe = pipePressure;
+        syncedMain = mainPressure;
     }
 }

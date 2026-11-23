@@ -31,6 +31,11 @@ final class PropulsionHeatImpl {
         }
     }
 
+    static float heatFraction(BlockEntityBehaviour behavior) {
+        if (!(behavior instanceof HeatSourceBehavior source)) return 0f;
+        return Math.max(0f, Math.min(1f, source.getHeatSource().getHeatStored() / PropulsionEngineHeat.CAPACITY));
+    }
+
     private static float offer(IHeatSource buffer, Level level, BlockPos pos) {
         BlockEntity above = level.getBlockEntity(pos.above());
         if (!(above instanceof IHeatConsumer consumer) || !consumer.isActive()) return 0f;

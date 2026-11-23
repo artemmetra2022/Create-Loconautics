@@ -10,6 +10,7 @@ import com.lycoris.loconautics.content.controls.panelgauge.GaugeBlockEntity.Gaug
 import com.lycoris.loconautics.content.controls.panellever.LeverPart;
 import com.lycoris.loconautics.content.controls.panelswitch.SwitchPart;
 import com.lycoris.loconautics.content.controls.panelvalve.ValvePart;
+import com.lycoris.loconautics.content.controls.panellamp.SignalLampPart;
 import com.lycoris.loconautics.content.dashboard.DashboardBlock;
 import com.lycoris.loconautics.content.dashboard.DashboardRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -115,6 +116,7 @@ public class PanelVisual extends AbstractBlockEntityVisual<PanelBlockEntity> imp
                     new ReverserPartVisual(context, reverser);
             case ButtonPart button -> new ButtonPartVisual(context, button);
             case ValvePart valve -> new ValvePartVisual(context, valve);
+            case SignalLampPart lamp -> new SignalLampPartVisual(context, lamp);
             default -> null;
         };
     }

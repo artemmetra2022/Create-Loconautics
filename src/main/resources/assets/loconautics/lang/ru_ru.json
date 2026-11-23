@@ -1622,5 +1622,21 @@
   "loconautics.gui.goggles.gauge_track_grade": "Уклон пути",
   "loconautics.gui.goggles.gauge_adhesion_limit": "Предел сцепления колёс",
   "loconautics.gui.goggles.gauge_powered_axle_slip": "Пробуксовка ведущих осей",
-  "loconautics.gui.goggles.gauge_train_brake_demand": "Тормозное усилие состава"
+  "loconautics.gui.goggles.gauge_train_brake_demand": "Тормозное усилие состава",
+  "item.loconautics.signal_lamp": "Сигнальная лампа",
+  "item.loconautics.signal_lamp.tooltip": "СИГНАЛЬНАЯ ЛАМПА",
+  "item.loconautics.signal_lamp.tooltip.summary": "Предупредительная лампа для _локомотивной панели_. Привяжите её к системе поезда, чтобы видеть аварийные состояния.",
+  "item.loconautics.signal_lamp.tooltip.condition1": "При использовании на кране машиниста, двигателе, спидометре или блоке безопасности",
+  "item.loconautics.signal_lamp.tooltip.behaviour1": "Показывает низкое давление воздуха, перегрев двигателя (Create Propulsion), пробуксовку, тревогу безопасности или экстренное торможение. Shift + ПКМ по воздуху сбрасывает привязку.",
+  "gui.loconautics.signal_lamp.cleared": "Привязка сигнальной лампы сброшена",
+  "gui.loconautics.signal_lamp.bind_first": "Сначала привяжите лампу к поддерживаемому блоку поезда",
+  "gui.goggles.signal_lamp_stats": "Сигнальная лампа:",
+  "gui.goggles.signal_lamp.low_air": "Низкое давление в главном резервуаре",
+  "gui.goggles.signal_lamp.engine_overheat": "Перегрев двигателя",
+  "gui.goggles.signal_lamp.wheel_slip": "Пробуксовка ведущих осей",
+  "gui.goggles.signal_lamp.safety_alarm": "Тревога системы безопасности",
+  "gui.goggles.signal_lamp.emergency_brake": "Экстренное торможение",
+  "gui.goggles.signal_lamp.active": "ТРЕВОГА АКТИВНА",
+  "gui.goggles.signal_lamp.normal": "Норма",
+  "gui.goggles.signal_lamp.disconnected": "Источник недоступен"
 }

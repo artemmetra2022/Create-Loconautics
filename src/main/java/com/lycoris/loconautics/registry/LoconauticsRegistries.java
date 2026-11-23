@@ -128,6 +128,20 @@ public final class LoconauticsRegistries {
                             .build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>>
+            SIGNAL_LAMP_TARGET = DATA_COMPONENTS.register("signal_lamp_target", () ->
+                    DataComponentType.<BlockPos>builder()
+                            .persistent(BlockPos.CODEC)
+                            .networkSynchronized(BlockPos.STREAM_CODEC)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>>
+            SIGNAL_LAMP_MODE = DATA_COMPONENTS.register("signal_lamp_mode", () ->
+                    DataComponentType.<String>builder()
+                            .persistent(com.mojang.serialization.Codec.STRING)
+                            .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.STRING_UTF8)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>>
             TURNTABLE_SIGNAL_TARGET = DATA_COMPONENTS.register("turntable_signal_target", () ->
                     DataComponentType.<BlockPos>builder()
                             .persistent(BlockPos.CODEC)
@@ -756,6 +770,7 @@ public final class LoconauticsRegistries {
                                                 : net.minecraft.world.item.CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
 
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_GAUGE_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.SIGNAL_LAMP_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.VALVE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_BUTTON_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_LEVER_ITEM.get());

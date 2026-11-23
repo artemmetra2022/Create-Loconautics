@@ -150,6 +150,11 @@ public class SmallEngineBlockEntity extends GeneratingKineticBlockEntity impleme
         return controlSignal;
     }
 
+    /** Fraction of the optional Create Propulsion heat buffer (0..1). */
+    public float getHeatFraction() {
+        return !PropulsionEngineHeat.loaded() || heat == null ? 0f : PropulsionEngineHeat.heatFraction(heat);
+    }
+
     public int getFuelAmount() {
         if (level == null || poolRate <= 0f) return poolAmount;
         float left = poolAmount - poolRate * Math.max(0L, level.getGameTime() - poolStamp);

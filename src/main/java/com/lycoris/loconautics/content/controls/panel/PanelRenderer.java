@@ -7,6 +7,10 @@ import com.lycoris.loconautics.content.controls.panelgauge.GaugePartRenderer;
 import com.lycoris.loconautics.content.controls.panellever.LeverPart;
 import com.lycoris.loconautics.content.controls.panellever.LeverPartRenderer;
 import com.lycoris.loconautics.content.controls.panelvalve.ValvePart;
+import com.lycoris.loconautics.content.controls.panellamp.SignalLampPart;
+import com.lycoris.loconautics.client.LoconauticsPartialModels;
+import com.lycoris.loconautics.content.controls.panel.style.PanelBulbRenderer;
+import net.minecraft.client.renderer.RenderType;
 import com.lycoris.loconautics.content.controls.panelvalve.ValvePartRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -47,6 +51,13 @@ public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRen
                         ms, buffers, packedLight, state);
                 case ValvePart valve -> ValvePartRenderer.render(animation, ms, buffers, packedLight, state,
                         valve.wheelColor());
+                case SignalLampPart lamp -> {
+                    PanelBodyRenderer.renderSlimBody(ms, buffers.getBuffer(RenderType.cutout()), packedLight,
+                            state, lamp.body());
+                    PanelBulbRenderer.render(ms, buffers, packedLight, state,
+                            PanelBulbRenderer.glowFor(panel.bulbGlow(slot, partialTick)),
+                            LoconauticsPartialModels.SWITCH_BULB, lamp.tint(panel));
+                }
                 case ButtonPart button -> ButtonPartRenderer.render(animation, ms, buffers, packedLight, state,
                         button.body(), button.capColor(), button.style(), button.shownOptions(), panel.bulbGlow(slot, partialTick));
                 case LeverPart lever -> LeverPartRenderer.render(animation, ms, buffers, packedLight, state,

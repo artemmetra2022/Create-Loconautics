@@ -31,17 +31,26 @@ public final class PanelBulbRenderer {
 
     public static void render(PoseStack ms, MultiBufferSource buffers, int light, BlockState state,
                               float glow, PartialModel bulb) {
+        render(ms, buffers, light, state, glow, bulb, 0xFFFFFF);
+    }
+
+    public static void render(PoseStack ms, MultiBufferSource buffers, int light, BlockState state,
+                              float glow, PartialModel bulb, int tint) {
         boolean lit = isLit(glow);
+        int red = tint >> 16 & 0xFF;
+        int green = tint >> 8 & 0xFF;
+        int blue = tint & 0xFF;
 
         CachedBuffers.partial(bulb, state)
                 .light(lit ? LightTexture.FULL_BRIGHT : light)
+                .color(red, green, blue, 255)
                 .renderInto(ms, buffers.getBuffer(RenderType.translucent()));
 
         if (lit) {
-            int color = additiveLevel(glow);
+            int level = Mth.clamp(additiveLevel(glow), 0, 255);
             CachedBuffers.partial(bulb, state)
                     .light(LightTexture.FULL_BRIGHT)
-                    .color(color, color, color, 255)
+                    .color(red * level / 255, green * level / 255, blue * level / 255, 255)
                     .renderInto(ms, buffers.getBuffer(RenderTypes.additive()));
         }
     }
