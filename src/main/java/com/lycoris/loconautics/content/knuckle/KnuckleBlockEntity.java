@@ -451,8 +451,8 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
         if (level == null || partnerSubLevelId == null || partnerLocalPos == null) {
             return;
         }
-        ServerSubLevelContainer container = SubLevelContainer.getContainer(level);
-        if (container == null
+        var genericContainer = SubLevelContainer.getContainer(level);
+        if (!(genericContainer instanceof ServerSubLevelContainer container)
                 || !(container.getSubLevel(partnerSubLevelId) instanceof ServerSubLevel partnerSub)
                 || partnerSub.isRemoved()
                 || !(partnerSub.getLevel().getBlockEntity(partnerLocalPos) instanceof KnuckleBlockEntity partner)) {
@@ -479,8 +479,8 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
         sendData();
 
         KnuckleBlockEntity mate = null;
-        ServerSubLevelContainer container = SubLevelContainer.getContainer(level);
-        if (container != null && mateId != null && matePos != null
+        var genericContainer = SubLevelContainer.getContainer(level);
+        if (genericContainer instanceof ServerSubLevelContainer container && mateId != null && matePos != null
                 && container.getSubLevel(mateId) instanceof ServerSubLevel mateSub
                 && !mateSub.isRemoved()
                 && mateSub.getLevel().getBlockEntity(matePos) instanceof KnuckleBlockEntity found) {
