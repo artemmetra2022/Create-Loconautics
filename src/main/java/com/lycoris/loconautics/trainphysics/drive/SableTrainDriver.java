@@ -561,10 +561,10 @@ public final class SableTrainDriver {
         Vector3d vel = handle.getLinearVelocity(new Vector3d());
         Vector3d relVel = new Vector3d(vel).sub(
                 TrackHostMotion.railVelocity(sub.getLevel(), trackSub, railPoint, new Vector3d()));
-        double vTarget = (train.servoBrake() ? 0.0 : train.targetSpeed()) * 20.0;
+        double vTarget = train.targetSpeed() * 20.0;
         double vCurrent = relVel.dot(tangent);
         boolean reversing = vTarget * vCurrent < 0.0;
-        boolean braking = train.servoBrake() || reversing;
+        boolean braking = reversing || train.servoBrake() && Math.abs(vTarget) < Math.abs(vCurrent);
 
         // The pneumatic/hand brake path applies its own force. Do not counteract it
         // with the traction servo, and do not turn a lower wheel-speed target into braking.
