@@ -1617,5 +1617,10 @@
   "loconautics.gui.goggles.speedometer_grade": "Уклон пути: %s%%",
   "loconautics.gui.goggles.speedometer_adhesion": "Предел сцепления: %s м/с²",
   "loconautics.gui.goggles.speedometer_slip": "Буксование ведущих осей: %s%%",
-  "loconautics.gui.goggles.speedometer_brake": "Тормозное усилие: %s%%"
+  "loconautics.gui.goggles.speedometer_brake": "Тормозное усилие: %s%%",
+  "loconautics.gui.goggles.gauge_train_mass": "Масса состава",
+  "loconautics.gui.goggles.gauge_track_grade": "Уклон пути",
+  "loconautics.gui.goggles.gauge_adhesion_limit": "Предел сцепления колёс",
+  "loconautics.gui.goggles.gauge_powered_axle_slip": "Пробуксовка ведущих осей",
+  "loconautics.gui.goggles.gauge_train_brake_demand": "Тормозное усилие состава"
 }

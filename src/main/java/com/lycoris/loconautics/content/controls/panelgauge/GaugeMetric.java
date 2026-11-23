@@ -276,7 +276,25 @@ public enum GaugeMetric implements StringRepresentable {
     DRIVER_MAIN_PRESSURE(DriverBrakeValveBlockEntity.class,
             be -> String.format(Locale.US, "%.2f bar", be.getMainPressure()),
             be -> over(be.getMainPressure(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
-            ChatFormatting.DARK_AQUA, 21);
+            ChatFormatting.DARK_AQUA, 21),
+
+    // Appended to preserve existing gauge metric ordinals used by saved panels and packets.
+    TRAIN_MASS(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f", be.getConsistMass()),
+            be -> over(be.getConsistMass(), 3000f), ChatFormatting.GOLD, 3),
+    TRACK_GRADE(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%+.1f%%", be.getTrackGrade()),
+            be -> (float) (0.5 + Mth.clamp(be.getTrackGrade(), -10f, 10f) / 20f),
+            ChatFormatting.AQUA, 21),
+    ADHESION_LIMIT(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f m/s²", be.getAdhesionLimit()),
+            be -> over(be.getAdhesionLimit(), 5f), ChatFormatting.GREEN, 17),
+    POWERED_AXLE_SLIP(SpeedometerBlockEntity.class,
+            be -> pct(be.getPoweredAxleSlip()),
+            SpeedometerBlockEntity::getPoweredAxleSlip, ChatFormatting.YELLOW, 22),
+    TRAIN_BRAKE_DEMAND(SpeedometerBlockEntity.class,
+            be -> pct(be.getBrakeDemand()),
+            SpeedometerBlockEntity::getBrakeDemand, ChatFormatting.RED, 22);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),

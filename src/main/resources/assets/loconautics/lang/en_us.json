@@ -1622,5 +1622,10 @@
   "loconautics.gui.goggles.speedometer_grade": "Track grade: %s%%",
   "loconautics.gui.goggles.speedometer_adhesion": "Adhesion limit: %s m/s²",
   "loconautics.gui.goggles.speedometer_slip": "Powered axle slip: %s%%",
-  "loconautics.gui.goggles.speedometer_brake": "Brake demand: %s%%"
+  "loconautics.gui.goggles.speedometer_brake": "Brake demand: %s%%",
+  "loconautics.gui.goggles.gauge_train_mass": "Train Mass",
+  "loconautics.gui.goggles.gauge_track_grade": "Track Grade",
+  "loconautics.gui.goggles.gauge_adhesion_limit": "Traction Adhesion Limit",
+  "loconautics.gui.goggles.gauge_powered_axle_slip": "Powered Axle Slip",
+  "loconautics.gui.goggles.gauge_train_brake_demand": "Train Brake Demand"
 }

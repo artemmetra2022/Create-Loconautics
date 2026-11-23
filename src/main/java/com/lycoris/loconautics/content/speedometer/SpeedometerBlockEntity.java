@@ -47,6 +47,13 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     private float syncedAcceleration;
     private int signal;
 
+    // Train telemetry is sampled on the server and synced for the cab gauges.
+    private float consistMass;
+    private float trackGrade;
+    private float adhesionLimit;
+    private float poweredAxleSlip;
+    private float brakeDemand;
+
     // meters driven, saved with the block, the trip counter can be reset by hand
     private double totalMeters;
     private double tripMeters;
@@ -73,6 +80,12 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
     public int getSignal() {
         return signal;
     }
+
+    public float getConsistMass() { return consistMass; }
+    public float getTrackGrade() { return trackGrade; }
+    public float getAdhesionLimit() { return adhesionLimit; }
+    public float getPoweredAxleSlip() { return poweredAxleSlip; }
+    public float getBrakeDemand() { return brakeDemand; }
 
     public double getTotalMeters() {
         return totalMeters;
@@ -107,9 +120,11 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         float instantAccel = (speed - previousSpeed) / (SAMPLE_TICKS / 20f);
         acceleration += (instantAccel - acceleration) * ACCELERATION_SMOOTHING;
 
+        boolean telemetryChanged = updateTrainTelemetry();
         if (Math.abs(speed - syncedSpeed) >= SYNC_STEP
                 || Math.abs(totalMeters - syncedMeters) >= DISTANCE_SYNC_STEP
-                || Math.abs(acceleration - syncedAcceleration) >= ACCELERATION_SYNC_STEP) {
+                || Math.abs(acceleration - syncedAcceleration) >= ACCELERATION_SYNC_STEP
+                || telemetryChanged) {
             syncedSpeed = speed;
             syncedMeters = totalMeters;
             syncedAcceleration = acceleration;
@@ -123,6 +138,43 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
             setChanged();
             level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         }
+    }
+
+    /**
+     * Cache consist telemetry on the speedometer so panel gauges can read it on the
+     * client without resolving server-side train physics state.
+     */
+    private boolean updateTrainTelemetry() {
+        SubLevel containing = Sable.HELPER.getContaining(this);
+        SableTrain train = containing == null ? null : SableTrainRegistry.bySubLevel(containing.getUniqueId());
+
+        float mass = 0f;
+        float grade = 0f;
+        float adhesion = 0f;
+        float slip = 0f;
+        float brake = 0f;
+        if (train != null && !train.isGhost()) {
+            ConsistPower.Result consist = ConsistPower.resultFor(train);
+            mass = consist == null ? 0f : (float) consist.totalMass();
+            grade = (float) TrainPropulsion.gradePercent(train);
+            adhesion = (float) TrainPropulsion.adhesionAccelLimitMps2(train);
+            slip = (float) TrainPropulsion.poweredAxleSlipRatio(train);
+            brake = (float) Mth.clamp(train.brakeScale(), 0.0, 1.0);
+        }
+
+        boolean changed = Math.abs(mass - consistMass) >= Math.max(1f, consistMass * 0.01f)
+                || Math.abs(grade - trackGrade) >= 0.1f
+                || Math.abs(adhesion - adhesionLimit) >= 0.05f
+                || Math.abs(slip - poweredAxleSlip) >= 0.01f
+                || Math.abs(brake - brakeDemand) >= 0.01f;
+        if (changed) {
+            consistMass = mass;
+            trackGrade = grade;
+            adhesionLimit = adhesion;
+            poweredAxleSlip = slip;
+            brakeDemand = brake;
+        }
+        return changed;
     }
 
     // a speedometer standing in the world and not on a carriage reads zero
@@ -186,6 +238,11 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         tag.putFloat("Speed", speed);
         tag.putFloat("Acceleration", acceleration);
         tag.putInt("Signal", signal);
+        tag.putFloat("ConsistMass", consistMass);
+        tag.putFloat("TrackGrade", trackGrade);
+        tag.putFloat("AdhesionLimit", adhesionLimit);
+        tag.putFloat("PoweredAxleSlip", poweredAxleSlip);
+        tag.putFloat("BrakeDemand", brakeDemand);
         tag.putDouble("TotalMeters", totalMeters);
         tag.putDouble("TripMeters", tripMeters);
     }
@@ -196,6 +253,11 @@ public class SpeedometerBlockEntity extends SmartBlockEntity implements IHaveGog
         speed = tag.getFloat("Speed");
         acceleration = tag.getFloat("Acceleration");
         signal = tag.getInt("Signal");
+        consistMass = tag.getFloat("ConsistMass");
+        trackGrade = tag.getFloat("TrackGrade");
+        adhesionLimit = tag.getFloat("AdhesionLimit");
+        poweredAxleSlip = tag.getFloat("PoweredAxleSlip");
+        brakeDemand = tag.getFloat("BrakeDemand");
         syncedSpeed = speed;
         syncedAcceleration = acceleration;
         totalMeters = tag.getDouble("TotalMeters");
