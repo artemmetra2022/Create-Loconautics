@@ -23,12 +23,31 @@ public final class AirReservoirScanner {
 
     private static final int SCAN_INTERVAL_TICKS = 10;
 
-    private record Scan(long tick, List<BlockPos> reservoirs, List<BlockPos> compressors) {
+    private record Scan(long tick, List<BlockPos> reservoirs, List<BlockPos> compressors, List<BlockPos> distributors) {
     }
 
     private static final Map<ServerSubLevel, Scan> SCANS = new WeakHashMap<>();
 
     private AirReservoirScanner() {
+    }
+
+
+    public static boolean hasRequiredCompressorTargets(BlockEntity origin) {
+        if (!(origin.getLevel() instanceof ServerLevel level)) return false;
+        SubLevel sub = Sable.HELPER.getContaining(origin);
+        if (sub instanceof ServerSubLevel serverSub && !serverSub.isRemoved()) {
+            Scan scan = scan(serverSub);
+            return !scan.reservoirs().isEmpty() && !scan.distributors().isEmpty();
+        }
+        BlockPos pos = origin.getBlockPos();
+        boolean reservoir = false;
+        boolean distributor = false;
+        for (Direction dir : Direction.values()) {
+            BlockEntity adjacent = level.getBlockEntity(pos.relative(dir));
+            reservoir |= adjacent instanceof AirReservoirBlockEntity;
+            distributor |= adjacent instanceof TripleValveBlockEntity;
+        }
+        return reservoir && distributor;
     }
 
     public static List<AirReservoirBlockEntity> findReservoirs(BlockEntity origin) {
@@ -92,15 +111,18 @@ public final class AirReservoirScanner {
         }
         List<BlockPos> reservoirs = new ArrayList<>();
         List<BlockPos> compressors = new ArrayList<>();
+        List<BlockPos> distributors = new ArrayList<>();
         SubLevelBlocks.forEachBlock(sub, (pos, state) -> {
             if (state.getBlock() instanceof AirReservoirBlock) {
                 reservoirs.add(pos.immutable());
             } else if (state.getBlock() instanceof AirCompressorBlock) {
                 compressors.add(pos.immutable());
+            } else if (state.getBlock() instanceof TripleValveBlock) {
+                distributors.add(pos.immutable());
             }
             return true;
         });
-        Scan fresh = new Scan(now, reservoirs, compressors);
+        Scan fresh = new Scan(now, reservoirs, compressors, distributors);
         SCANS.put(sub, fresh);
         return fresh;
     }
