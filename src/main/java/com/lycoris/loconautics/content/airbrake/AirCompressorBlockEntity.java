@@ -75,6 +75,12 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         boolean hasReservoir = !targets.isEmpty();
         boolean hasDistributor = AirReservoirScanner.hasRequiredCompressorTargets(this);
         boolean hasTargets = hasReservoir && hasDistributor;
+        if (!hasTargets && internalPressure > 0.0f) {
+            internalPressure = 0.0f;
+            syncedPressure = 0.0f;
+            setChanged();
+            sendData();
+        }
         boolean needsCharge = internalPressure < AirBrakeTuning.COMPRESSOR_RESUME_BAR;
         boolean allFull = internalPressure >= AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR - 0.001f;
 
