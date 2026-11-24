@@ -3,6 +3,7 @@ package com.lycoris.loconautics.trainphysics.wheels;
 import com.lycoris.loconautics.LoconauticsConstants;
 import com.lycoris.loconautics.compat.computercraft.CcControl;
 import com.lycoris.loconautics.trainphysics.SableTrain;
+import com.lycoris.loconautics.content.sand.SandStorageBlockEntity;
 import com.lycoris.loconautics.trainphysics.drive.ExternalForceDerail;
 import com.lycoris.loconautics.trainphysics.signal.TrainSignalAccessor;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -69,18 +70,23 @@ public final class WheelSlip {
         // commanded is the shafts rpm, a computer holding the train at 0 overrides the speed but never the shaft
         boolean computerIdle = CcControl.held(train.id()) && !CcControl.isDriving(train.id());
         boolean gaining = train.gainingSpeed(train.level().getGameTime(), carSpeed);
+        boolean sanding = SandStorageBlockEntity.hasActiveSanding(sub);
         double wheelSpeed = Math.abs(commanded);
         double groundSpeed = Math.abs(carSpeed);
+        double slipSpeedThreshold = sanding ? SLIP_SPEED_THRESHOLD * 1.5 : SLIP_SPEED_THRESHOLD;
+        double slipRatioThreshold = sanding ? Math.min(0.8, SLIP_RATIO_THRESHOLD * 2.0) : SLIP_RATIO_THRESHOLD;
+        int sandingDelay = sanding ? 2 : 0;
         boolean wheelspin = !locked && !computerIdle && wheelSpeed > STALL_COMMAND
-                && wheelSpeed - groundSpeed > Math.max(SLIP_SPEED_THRESHOLD, wheelSpeed * SLIP_RATIO_THRESHOLD);
+                && wheelSpeed - groundSpeed > Math.max(slipSpeedThreshold, wheelSpeed * slipRatioThreshold);
         boolean stuck = !locked && !computerIdle && !gaining
                 && wheelSpeed > STALL_COMMAND && groundSpeed < STALL_SPEED;
         int was = train.wheelStall().getOrDefault(bogeyLocal, 0);
         boolean losingGrip = wheelspin || stuck;
         int stall = locked || computerIdle ? 0
-                : losingGrip ? Math.min(was + 1, STALL_DELAY_TICKS + RELEASE_TICKS) : Math.max(was - 1, 0);
+                : losingGrip ? Math.min(was + 1, STALL_DELAY_TICKS + RELEASE_TICKS + sandingDelay)
+                : Math.max(was - (sanding && !losingGrip ? 2 : 1), 0);
         train.wheelStall().put(bogeyLocal, stall);
-        int threshold = wheelspin ? SPIN_DELAY_TICKS : STALL_DELAY_TICKS;
+        int threshold = wheelspin ? SPIN_DELAY_TICKS + sandingDelay : STALL_DELAY_TICKS + sandingDelay;
         boolean slipping = stall >= threshold || stall > 0 && train.slippingBogeys().contains(bogeyLocal);
         if (slipping != train.slippingBogeys().contains(bogeyLocal)) {
             LoconauticsConstants.LOGGER.info("[slipdbg] car {} bogey {} slipping {} stall {} commanded {} carSpeed {} trainSpeed {} locked {} computerIdle {}",
@@ -96,8 +102,9 @@ public final class WheelSlip {
         } else {
             train.slippingBogeys().remove(bogeyLocal);
         }
-        double w = slipping ? Math.copySign(Math.min(Math.abs(commanded) * SLIP_FRACTION, SLIP_MAX_SPIN), commanded)
-                : carSpeed;
+        double sandingSpinScale = sanding ? 0.5 : 1.0;
+        double w = slipping ? Math.copySign(Math.min(Math.abs(commanded) * SLIP_FRACTION * sandingSpinScale,
+                SLIP_MAX_SPIN * sandingSpinScale), commanded) : carSpeed;
         train.wheelSurface().put(bogeyLocal, w);
         return w;
     }
