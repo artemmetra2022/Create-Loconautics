@@ -1998,5 +1998,9 @@
   "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Enable brake pad wear",
   "loconautics.configuration.train.dynamics.brakePadWearRate": "Brake pad wear rate",
   "gui.loconautics.status_display.pad_wear": "Pad wear",
-  "gui.loconautics.status_display.pad_temp": "Pad temp"
+  "gui.loconautics.status_display.pad_temp": "Pad temp",
+  "loconautics.air_compressor.goggles.reservoir_detected": "Air reservoir: detected",
+  "loconautics.air_compressor.goggles.reservoir_missing": "Air reservoir not detected — no place to pump air",
+  "loconautics.air_compressor.goggles.distributor_detected": "Air distributor: detected",
+  "loconautics.air_compressor.goggles.distributor_missing": "Air distributor not detected"
 }
