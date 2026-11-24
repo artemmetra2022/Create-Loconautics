@@ -72,7 +72,9 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
 
         List<AirReservoirBlockEntity> targets = AirReservoirScanner.findReservoirs(this);
         float rpm = Math.abs(getSpeed());
-        boolean hasTargets = !targets.isEmpty();
+        boolean hasReservoir = !targets.isEmpty();
+        boolean hasDistributor = AirReservoirScanner.hasRequiredCompressorTargets(this);
+        boolean hasTargets = hasReservoir && hasDistributor;
         boolean needsCharge = internalPressure < AirBrakeTuning.COMPRESSOR_RESUME_BAR;
         boolean allFull = internalPressure >= AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR - 0.001f;
 
@@ -87,7 +89,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         }
 
         boolean nextPumping;
-        if (rpm <= 0.01f) {
+        if (!hasTargets || rpm <= 0.01f) {
             nextPumping = false;
         } else if (pumping) {
             nextPumping = !allFull;
@@ -116,7 +118,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
             }
         }
 
-        if (pumping && rpm > 0.01f) {
+        if (pumping && hasTargets && rpm > 0.01f) {
             float chargePerTick = LoconauticsConfig.AIR_COMPRESSOR_CHARGE_RATE.get().floatValue() * (rpm / 64.0f);
             if (hasTargets) {
                 float remaining = chargePerTick;
@@ -153,10 +155,23 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("loconautics.air_compressor.goggles.header")
                 .withStyle(ChatFormatting.GRAY));
+        boolean hasReservoir = !AirReservoirScanner.findReservoirs(this).isEmpty();
+        boolean hasDistributor = AirReservoirScanner.hasRequiredCompressorTargets(this)
+                && hasReservoir;
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable(
                         pumping ? "loconautics.air_compressor.goggles.pumping" : "loconautics.air_compressor.goggles.idle"))
                 .withStyle(pumping ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable(hasReservoir
+                        ? "loconautics.air_compressor.goggles.reservoir_detected"
+                        : "loconautics.air_compressor.goggles.reservoir_missing"))
+                .withStyle(hasReservoir ? ChatFormatting.GREEN : ChatFormatting.RED));
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable(hasDistributor
+                        ? "loconautics.air_compressor.goggles.distributor_detected"
+                        : "loconautics.air_compressor.goggles.distributor_missing"))
+                .withStyle(hasDistributor ? ChatFormatting.GREEN : ChatFormatting.RED));
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable("loconautics.air_brake.goggles.pressure",
                         String.format(Locale.ROOT, "%.2f", internalPressure)))
