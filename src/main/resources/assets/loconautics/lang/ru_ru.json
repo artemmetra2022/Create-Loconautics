@@ -1985,5 +1985,9 @@
   "loconautics.brake_pads.wear": "Износ колодок: %s%%",
   "loconautics.brake_pads.temperature": "Температура колодок: %s °C",
   "loconautics.brake_pads.repair_moving": "Нельзя менять колодки на движущемся вагоне!",
-  "loconautics.brake_pads.repaired": "Тормозные колодки полностью заменены."
+  "loconautics.brake_pads.repaired": "Тормозные колодки полностью заменены.",
+  "loconautics.brake_pads.warning.wear": "Тормозные колодки изношены. Скоро потребуется обслуживание.",
+  "loconautics.brake_pads.warning.critical": "Колодки критически изношены. Эффективность торможения снижена!",
+  "loconautics.brake_pads.warning.overheating": "Перегрев тормозов! Из-за нагрева тормозная сила снижается.",
+  "loconautics.brake_pads.warning.failed": "Отказ тормозных колодок! У этого вагона нет фрикционного торможения."
 }
