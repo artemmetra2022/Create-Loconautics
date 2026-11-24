@@ -32,6 +32,9 @@ public final class AirPipeBus {
 
     private static final Map<ServerSubLevel, PipeNode> SUB_LEVEL_NODES = new WeakHashMap<>();
     private static final Map<ServerLevel, Map<BlockPos, PipeNode>> WORLD_NODES = new WeakHashMap<>();
+    // Exact-position cache avoids rescanning every world pipe cluster for repeated BE lookups.
+    // Entries share the same weak ServerLevel lifetime as WORLD_NODES and preserve cluster membership.
+    private static final Map<ServerLevel, Map<BlockPos, PipeNode>> WORLD_NODE_LOOKUPS = new WeakHashMap<>();
 
     private AirPipeBus() {
     }
@@ -47,14 +50,23 @@ public final class AirPipeBus {
             return SUB_LEVEL_NODES.computeIfAbsent(serverSub, k -> new PipeNode());
         }
         Map<BlockPos, PipeNode> worldMap = WORLD_NODES.computeIfAbsent(serverLevel, k -> new HashMap<>());
+        Map<BlockPos, PipeNode> lookup = WORLD_NODE_LOOKUPS.computeIfAbsent(serverLevel, k -> new HashMap<>());
         BlockPos pos = be.getBlockPos();
+        PipeNode cached = lookup.get(pos);
+        if (cached != null) {
+            return cached;
+        }
         for (Map.Entry<BlockPos, PipeNode> entry : worldMap.entrySet()) {
             if (entry.getKey().distSqr(pos) <= WORLD_CLUSTER_RADIUS_SQ) {
-                return entry.getValue();
+                PipeNode matched = entry.getValue();
+                lookup.put(pos.immutable(), matched);
+                return matched;
             }
         }
         PipeNode created = new PipeNode();
-        worldMap.put(pos.immutable(), created);
+        BlockPos key = pos.immutable();
+        worldMap.put(key, created);
+        lookup.put(key, created);
         return created;
     }
 
