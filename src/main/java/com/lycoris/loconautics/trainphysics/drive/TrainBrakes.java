@@ -75,6 +75,11 @@ public final class TrainBrakes {
         boolean airEmergency = airEmergency(sub);
         double soft = Math.max(pipe, train.brakePulseActive() ? 1.0 : 0.0);
         double scale = Math.max(handScale, Math.max(soft, air));
+        TripleValveBlockEntity padValve = brakePadValve(sub);
+        if (padValve != null) {
+            padValve.tickBrakePadCondition(Math.abs(train.speed()), scale);
+            scale *= padValve.getBrakePadEfficiency();
+        }
 
         train.setBrakeScale(scale);
         train.setBraked(scale > 0.0);
@@ -191,6 +196,15 @@ public final class TrainBrakes {
         }
 
         return Math.max(handbrakeStrength, controllerStrength);
+    }
+
+    private static TripleValveBlockEntity brakePadValve(ServerSubLevel sub) {
+        BrakeScan scan = BRAKE_SCANS.get(sub);
+        if (scan == null) return null;
+        for (BlockPos pos : scan.positions()) {
+            if (sub.getLevel().getBlockEntity(pos) instanceof TripleValveBlockEntity valve) return valve;
+        }
+        return null;
     }
 
     // the Brake Controller lever reaches full wheel braking strength only at this position, the same
