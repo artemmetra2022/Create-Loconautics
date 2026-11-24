@@ -87,14 +87,13 @@ public class SafetyScreen extends Screen {
             }).bounds(left + SWITCH_X, y, SWITCH_W, 20).build());
             toggle.active = device.implemented();
 
-            addRenderableWidget(Button.builder(
+            Button link = addRenderableWidget(Button.builder(
                     Component.translatable(bound ? "gui.loconautics.safety.rebind" : "gui.loconautics.safety.bind"),
                     button -> send(i, SafetyConfigurePacket.ACTION_BIND))
                     .bounds(left + LINK_X, y, LINK_W, 20)
                     .tooltip(Tooltip.create(Component.translatable("gui.loconautics.safety.bind.tooltip")))
                     .build());
             // Placeholder safety modes remain visible for clarity, but cannot be enabled or bound.
-            Button link = (Button) children().get(children().size() - 1);
             link.active = device.implemented();
 
             Button clear = Button.builder(Component.literal("x"),
