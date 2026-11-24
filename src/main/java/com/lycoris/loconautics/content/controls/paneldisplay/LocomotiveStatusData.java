@@ -3,6 +3,7 @@ package com.lycoris.loconautics.content.controls.paneldisplay;
 import com.lycoris.loconautics.common.sable.SubLevelBlocks;
 import com.lycoris.loconautics.content.airbrake.AirReservoirBlockEntity;
 import com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
@@ -19,7 +20,7 @@ public record LocomotiveStatusData(
         boolean trainPresent, boolean enginePresent, boolean brakePresent,
         float speedKmh, float acceleration, float consistMass, float gradePercent,
         float adhesionLimit, float wheelSlipPercent, float brakeDemandPercent,
-        float mainAirBar, float brakePipeBar, float engineRpm, float engineOutputSu,
+        float brakePadWearPercent, float brakePadTemperatureC, float mainAirBar, float brakePipeBar, float engineRpm, float engineOutputSu,
         float fuelPercent, float engineHeatPercent, int safetyAlarm, boolean emergency) {
 
     public static LocomotiveStatusData sample(PanelBlockEntity panel) {
@@ -32,6 +33,7 @@ public record LocomotiveStatusData(
         BrakeControllerBlockEntity brakeController = null;
         AirReservoirBlockEntity reservoir = null;
         SafetyBlockEntity safety = null;
+        TripleValveBlockEntity padValve = null;
 
         for (BlockEntity be : SubLevelBlocks.blockEntities(sub)) {
             if (be instanceof SpeedometerBlockEntity candidate) {
@@ -46,12 +48,15 @@ public record LocomotiveStatusData(
                 if (reservoir == null || candidate.getPressureBar() > reservoir.getPressureBar()) reservoir = candidate;
             } else if (be instanceof SafetyBlockEntity candidate) {
                 if (safety == null || candidate.alarmState() > safety.alarmState()) safety = candidate;
+            } else if (be instanceof TripleValveBlockEntity candidate) {
+                if (padValve == null || candidate.getBrakePadWear() > padValve.getBrakePadWear()
+                        || candidate.getBrakePadTemperatureC() > padValve.getBrakePadTemperatureC()) padValve = candidate;
             }
         }
 
         boolean train = SableTrainRegistry.bySubLevel(sub.getUniqueId()) != null;
         boolean hasEngine = engine != null;
-        boolean hasBrakes = brakeValve != null || reservoir != null;
+        boolean hasBrakes = brakeValve != null || reservoir != null || padValve != null;
         float mainAir = brakeValve != null ? brakeValve.getMainPressure()
                 : reservoir == null ? 0f : reservoir.getPressureBar();
         float pipeAir = brakeValve == null ? 0f : brakeValve.getPipePressure();
@@ -68,6 +73,8 @@ public record LocomotiveStatusData(
                 speedometer == null ? 0f : speedometer.getAdhesionLimit(),
                 speedometer == null ? 0f : speedometer.getPoweredAxleSlip() * 100f,
                 speedometer == null ? 0f : speedometer.getBrakeDemand() * 100f,
+                padValve == null ? 0f : padValve.getBrakePadWear() * 100f,
+                padValve == null ? 20f : padValve.getBrakePadTemperatureC(),
                 mainAir, pipeAir,
                 engine == null ? 0f : engine.getOutputRpm(),
                 engine == null ? 0f : engine.getOutputSu(),
@@ -78,14 +85,15 @@ public record LocomotiveStatusData(
     }
 
     public static LocomotiveStatusData empty() {
-        return new LocomotiveStatusData(false, false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        return new LocomotiveStatusData(false, false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 SafetyBlockEntity.ALARM_NONE, false);
     }
 
     public int severity() {
         if (emergency || safetyAlarm >= SafetyBlockEntity.ALARM_ANTI_ROLLBACK) return 2;
         if (safetyAlarm != SafetyBlockEntity.ALARM_NONE || wheelSlipPercent >= 20f
-                || (brakePresent && mainAirBar < 6f) || engineHeatPercent >= 85f) return 1;
+                || (brakePresent && mainAirBar < 6f) || engineHeatPercent >= 85f
+                || brakePadWearPercent >= 90f || brakePadTemperatureC >= 550f) return 1;
         return 0;
     }
 
@@ -100,6 +108,8 @@ public record LocomotiveStatusData(
         buf.writeFloat(adhesionLimit);
         buf.writeFloat(wheelSlipPercent);
         buf.writeFloat(brakeDemandPercent);
+        buf.writeFloat(brakePadWearPercent);
+        buf.writeFloat(brakePadTemperatureC);
         buf.writeFloat(mainAirBar);
         buf.writeFloat(brakePipeBar);
         buf.writeFloat(engineRpm);
