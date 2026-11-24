@@ -139,6 +139,6 @@ public record LocomotiveStatusData(
                 buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
                 buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
                 buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
-                buf.readVarInt(), buf.readBoolean());
+                buf.readFloat(), buf.readVarInt(), buf.readBoolean());
     }
 }
