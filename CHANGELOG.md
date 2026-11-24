@@ -1,5 +1,16 @@
 # Loconautics Changelog
 
+## Ver 0.1.5BETA
+
+### Added
+- Brake pad wear and temperature for air-braked carriages. Wear builds only while a moving carriage is braking; heat causes thermal fade, and fully worn pads provide no friction braking.
+- Brake pad repair kit. Use it on a carriage's air distributor while the train is stopped to replace the complete pad set for that carriage.
+- Brake pad wear and temperature are saved with the air distributor and survive world reloads. Server config can disable the system without erasing stored condition.
+- Brake pad condition and temperature are shown in Engineer's Goggles.
+
+### Changed
+- Pneumatic cylinder pressure remains independent; pad condition scales only the resulting braking force.
+
 ## Ver 0.1.4BETA
 
 ### Bug Fixes
