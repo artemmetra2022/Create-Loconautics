@@ -1958,5 +1958,19 @@
   "loconautics.ponder.train_casing.text_9": "Присядьте и нажмите ПКМ гаечным ключом, чтобы снять вал.",
   "loconautics.ponder.train_casing.text_10": "Без вала вращение не передаётся через тележку.",
   "loconautics.ponder.train_casing.train_casing_bogeys.header": "Сборка поездов с помощью корпусов",
-  "loconautics.ponder.train_casing.train_casing_shaft.header": "Передача вращения через тележки"
+  "loconautics.ponder.train_casing.train_casing_shaft.header": "Передача вращения через тележки",
+  "loconautics.gui.goggles.gauge_main_reservoir_fill": "Заполнение главного резервуара",
+  "loconautics.gui.goggles.gauge_driver_brake_notch": "Позиция крана машиниста",
+  "loconautics.gui.goggles.gauge_air_compressor_pressure": "Давление компрессора",
+  "loconautics.gui.goggles.gauge_air_compressor_fill": "Давление компрессора (%)",
+  "loconautics.gui.goggles.gauge_air_compressor_state": "Состояние компрессора",
+  "loconautics.gui.goggles.gauge_air_compressor_pumping": "Накачивает",
+  "loconautics.gui.goggles.gauge_air_compressor_idle": "Ожидание",
+  "loconautics.gui.goggles.gauge_triple_valve_pipe_pressure": "Давление тормозной магистрали",
+  "loconautics.gui.goggles.gauge_triple_valve_aux_pressure": "Давление запасного резервуара",
+  "loconautics.gui.goggles.gauge_triple_valve_emergency_reservoir_pressure": "Давление резервуара экстренного торможения",
+  "loconautics.gui.goggles.gauge_brake_hose_pipe_pressure": "Давление в тормозном шланге",
+  "loconautics.gui.goggles.gauge_brake_hose_cock_state": "Положение концевого крана",
+  "loconautics.gui.goggles.gauge_brake_hose_open": "Кран открыт",
+  "loconautics.gui.goggles.gauge_brake_hose_closed": "Кран закрыт"
 }
