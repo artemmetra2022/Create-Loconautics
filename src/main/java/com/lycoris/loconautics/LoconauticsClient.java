@@ -187,6 +187,7 @@ public final class LoconauticsClient {
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
+        registerAllBlockItemTooltips();
         com.lycoris.loconautics.content.controls.panellever.LeverHoldInteraction.registered();
         LoconauticsConstants.LOGGER.info("Loconautics client setup");
         LoconauticsPartialModels.init();
@@ -339,6 +340,44 @@ public final class LoconauticsClient {
                 "block.loconautics.industrial_fluid_tank");
         registerTooltip(com.lycoris.loconautics.content.industrial.IndustrialBlocks.PUMP_ITEM.get(),
                 "block.loconautics.industrial_pump");
+    }
+
+
+    /**
+     * Gives every Loconautics block item the standard Create description tooltip.
+     * Specific tooltips registered later in onClientSetup override this generic
+     * registration and retain their extra kinetic/stat information.
+     */
+    private static void registerAllBlockItemTooltips() {
+        for (net.minecraft.world.item.Item item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
+            if (!(item instanceof net.minecraft.world.item.BlockItem blockItem)) {
+                continue;
+            }
+            net.minecraft.resources.ResourceLocation blockId =
+                    net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(blockItem.getBlock());
+            if (!LoconauticsConstants.MOD_ID.equals(blockId.getNamespace())) {
+                continue;
+            }
+
+            String path = blockId.getPath();
+            String descriptionPath = path;
+            if (path.endsWith("_boiler_body")) {
+                descriptionPath = "boiler_body";
+            } else if (path.endsWith("_analog_controller")) {
+                descriptionPath = "analog_controller";
+            } else if (path.endsWith("_dashboard")) {
+                descriptionPath = "dashboard";
+            } else if (path.endsWith("_buffer")) {
+                descriptionPath = "buffer";
+            } else if (path.endsWith("_small_combustion_engine")) {
+                descriptionPath = "small_combustion_engine";
+            }
+
+            String descriptionKey = "block." + blockId.getNamespace() + "." + descriptionPath;
+            ItemDescription.useKey(item, descriptionKey);
+            TooltipModifier.REGISTRY.register(item,
+                    new ItemDescription.Modifier(item, net.createmod.catnip.lang.FontHelper.Palette.STANDARD_CREATE));
+        }
     }
 
     private static void registerTooltip(net.minecraft.world.item.Item item, String key) {
