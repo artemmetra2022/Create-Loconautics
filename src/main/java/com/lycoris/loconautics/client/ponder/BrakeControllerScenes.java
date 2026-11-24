@@ -29,12 +29,12 @@ public class BrakeControllerScenes {
     private static final BlockPos OUTPUT_SHAFT = new BlockPos(2, 1, 0);
 
     public static void single(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "brake_controller_single", "Braking the drive shaft");
+        CreateSceneBuilder scene = open(builder, "brake_controller_single", tr("loconautics.ponder.brake_controller.brake_controller_single.header"));
 
         scene.world().showSection(util.select().position(BRAKE), Direction.DOWN);
         scene.idle(15);
         scene.overlay().showText(70)
-                .text("The Brake Controller passes rotation straight through, from one end to the other")
+                .text(tr("loconautics.ponder.brake_controller.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(BRAKE));
@@ -46,7 +46,7 @@ public class BrakeControllerScenes {
         scene.world().setKineticSpeed(transmission(util), INPUT_RPM);
         scene.idle(15);
         scene.overlay().showText(80)
-                .text("It only fits between an engine and a Transmission, all on the same shaft line")
+                .text(tr("loconautics.ponder.brake_controller.text_2"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
@@ -54,7 +54,7 @@ public class BrakeControllerScenes {
         scene.idle(90);
 
         scene.overlay().showText(60)
-                .text("With the brake released the shaft keeps its full speed")
+                .text(tr("loconautics.ponder.brake_controller.text_3"))
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(OUTPUT_SHAFT));
         scene.effects().rotationSpeedIndicator(OUTPUT_SHAFT);
@@ -63,7 +63,7 @@ public class BrakeControllerScenes {
         brake(scene, util, 8);
         scene.effects().rotationSpeedIndicator(OUTPUT_SHAFT);
         scene.overlay().showText(70)
-                .text("Pulling the brake slows the output side, the harder the slower")
+                .text(tr("loconautics.ponder.brake_controller.text_4"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(OUTPUT_SHAFT));
@@ -71,7 +71,7 @@ public class BrakeControllerScenes {
 
         brake(scene, util, 15);
         scene.overlay().showText(70)
-                .text("At full brake the output slows to a quarter of its speed")
+                .text(tr("loconautics.ponder.brake_controller.text_5"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(BRAKE));
@@ -79,7 +79,7 @@ public class BrakeControllerScenes {
     }
 
     public static void frequency(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "brake_controller_frequency", "Binding the Brake Controller");
+        CreateSceneBuilder scene = open(builder, "brake_controller_frequency", tr("loconautics.ponder.brake_controller.brake_controller_frequency.header"));
 
         scene.world().showSection(util.select().position(BRAKE), Direction.DOWN);
         scene.world().showSection(transmission(util), Direction.SOUTH);
@@ -95,7 +95,7 @@ public class BrakeControllerScenes {
         scene.overlay().showControls(util.vector().topOf(BRAKE), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Right click it with empty hands to open its Interface")
+                .text(tr("loconautics.ponder.brake_controller.text_6"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(BRAKE));
@@ -105,7 +105,7 @@ public class BrakeControllerScenes {
         scene.idle(20);
         panel.mark(scene, 0);
         scene.overlay().showText(80)
-                .text("The Brake row is the frequency that sets the brake, the lever position is the strength")
+                .text(tr("loconautics.ponder.brake_controller.text_7"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -116,7 +116,7 @@ public class BrakeControllerScenes {
 
         panel.mark(scene, 1);
         scene.overlay().showText(80)
-                .text("The Emergency row is a second frequency, while it has a signal the brake bites at full force")
+                .text(tr("loconautics.ponder.brake_controller.text_8"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -127,7 +127,7 @@ public class BrakeControllerScenes {
 
         panel.mark(scene, -1);
         scene.overlay().showText(80)
-                .text("Sneak and right click an Analog Controller with the item in hand to copy its frequency")
+                .text(tr("loconautics.ponder.brake_controller.text_9"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget();
@@ -155,6 +155,10 @@ public class BrakeControllerScenes {
         float coefficient = 1f - BrakeControllerBlockEntity.MAX_SPEED_REDUCTION
                 * signal / (float) BrakeControllerBlockEntity.MAX_SIGNAL;
         scene.world().setKineticSpeed(transmission(util), INPUT_RPM * coefficient);
+    }
+
+    private static String tr(String key) {
+        return net.minecraft.network.chat.Component.translatable(key).getString();
     }
 
     private static CreateSceneBuilder open(SceneBuilder builder, String id, String title) {
