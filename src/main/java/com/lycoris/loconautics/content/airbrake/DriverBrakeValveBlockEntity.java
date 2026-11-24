@@ -223,6 +223,13 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
                 .append(Component.translatable("loconautics.driver_brake_valve.goggles.pipe",
                         String.format(Locale.ROOT, "%.2f", pipePressure)))
                 .withStyle(ChatFormatting.AQUA));
+        String modeKey = notch >= AirBrakeTuning.EMERGENCY_NOTCH ? "emergency"
+                : notch > 0 ? "service" : "charge";
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable("loconautics.driver_brake_valve.goggles.mode",
+                        Component.translatable("loconautics.driver_brake_valve.mode." + modeKey)))
+                .withStyle(notch >= AirBrakeTuning.EMERGENCY_NOTCH ? ChatFormatting.RED
+                        : notch > 0 ? ChatFormatting.GOLD : ChatFormatting.GREEN));
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable("loconautics.driver_brake_valve.goggles.main",
                         String.format(Locale.ROOT, "%.2f", mainPressure)))

@@ -79,7 +79,9 @@ public final class TrainBrakes {
         train.setBrakeScale(scale);
         train.setBraked(scale > 0.0);
         // the handbrake never cuts drive, the engine pulls against it and its drag shows up as axle stress instead
-        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub) || airEmergency);
+        // Pneumatic emergency braking must follow the cylinder pressure ramp. A brake hold here
+        // would replace that ramp with the full mechanical stop force and make notch 15 instant.
+        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub));
         train.setBrakeHard(locked || airEmergency);
     }
 
@@ -161,12 +163,15 @@ public final class TrainBrakes {
                     && subLevel.getBlockEntity(pos) instanceof TripleValveBlockEntity valve) {
                 double cylinderFraction = valve.getCylinderFraction();
                 if (valve.isEmergency()) {
-                    // The emergency command does not create instant braking force:
-                    // force follows the pressure that has actually built in the cylinder.
+                    // Emergency braking is stronger, but still follows the pressure actually
+                    // built in this car's cylinder rather than forcing an immediate stop.
                     airEmergency |= cylinderFraction > 0.03;
-                    bestAir = Math.max(bestAir, cylinderFraction);
+                    bestAir = Math.max(bestAir, cylinderFraction
+                            * AirBrakeTuning.EMERGENCY_BRAKE_MAX_DECEL_MPS2 / BRAKE_DECEL);
                 } else {
-                    bestAir = Math.max(bestAir, cylinderFraction * AirBrakeTuning.SERVICE_BRAKE_MAX_SCALE);
+                    // Service braking is deliberately limited to a realistic, graduated deceleration.
+                    bestAir = Math.max(bestAir, cylinderFraction
+                            * AirBrakeTuning.SERVICE_BRAKE_MAX_DECEL_MPS2 / BRAKE_DECEL);
                 }
             }
         }

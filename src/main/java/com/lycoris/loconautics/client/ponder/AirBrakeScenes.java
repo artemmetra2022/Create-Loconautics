@@ -11,6 +11,7 @@ import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class AirBrakeScenes {
@@ -19,7 +20,7 @@ public final class AirBrakeScenes {
     }
 
     public static void compressorSupply(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_compressor", "Air Compressor & Reservoirs", 5);
+        CreateSceneBuilder scene = open(builder, "air_brake_compressor", "loconautics.ponder.air_brake.compressor.header", 5);
 
         BlockPos shaft = new BlockPos(1, 2, 2);
         BlockPos compressor = new BlockPos(2, 2, 2);
@@ -33,7 +34,7 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(75)
-                .text("The Air Compressor pumps compressed air when driven by rotational force")
+                .text(tr("loconautics.ponder.air_brake.compressor.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(compressor));
@@ -43,7 +44,7 @@ public final class AirBrakeScenes {
         scene.world().showSection(util.select().fromTo(3, 2, 2, 3, 2, 3), Direction.WEST);
         scene.idle(15);
         scene.overlay().showText(80)
-                .text("Adjacent Air Reservoirs equalize pressure with each other and store up to 8.5 bar")
+                .text(tr("loconautics.ponder.air_brake.compressor.text_2"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
@@ -51,7 +52,7 @@ public final class AirBrakeScenes {
         scene.idle(90);
 
         scene.overlay().showText(75)
-                .text("Once reservoirs reach 8.5 bar, the compressor unloads to idle until pressure drops below 7.0 bar")
+                .text(tr("loconautics.ponder.air_brake.compressor.text_3"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(res2));
@@ -59,7 +60,7 @@ public final class AirBrakeScenes {
     }
 
     public static void cabControls(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_cab", "Cab Controls & Gauges", 5);
+        CreateSceneBuilder scene = open(builder, "air_brake_cab", "loconautics.ponder.air_brake.cab.header", 5);
 
         BlockPos reservoir = new BlockPos(1, 2, 2);
         BlockPos valve = new BlockPos(3, 2, 2);
@@ -70,7 +71,7 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(80)
-                .text("On a locomotive, the Driver's Brake Valve automatically draws air from reservoirs anywhere on the same car")
+                .text(tr("loconautics.ponder.air_brake.cab.text_1"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
@@ -80,7 +81,7 @@ public final class AirBrakeScenes {
         scene.overlay().showControls(util.vector().topOf(valve), Pointing.DOWN, 35).rightClick();
         scene.idle(10);
         scene.overlay().showText(75)
-                .text("Right click to step up braking (1-14 service, 15 emergency), or Shift-click to release back to 5.0 bar")
+                .text(tr("loconautics.ponder.air_brake.cab.text_2"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(valve));
@@ -91,7 +92,7 @@ public final class AirBrakeScenes {
                 .withItem(new ItemStack(BoilerBlocks.VALVE_ITEM.get()));
         scene.idle(10);
         scene.overlay().showText(80)
-                .text("Bind a Panel Valve or Locomotive Gauge to the Driver's Brake Valve to control and monitor both pressures from the cab")
+                .text(tr("loconautics.ponder.air_brake.cab.text_3"))
                 .attachKeyFrame()
                 .colored(PonderPalette.GREEN)
                 .placeNearTarget()
@@ -100,7 +101,7 @@ public final class AirBrakeScenes {
     }
 
     public static void doubleCab(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_double_cab", "Double-Cab Locomotives", 7);
+        CreateSceneBuilder scene = open(builder, "air_brake_double_cab", "loconautics.ponder.air_brake.double_cab.header", 7);
 
         BlockPos frontValve = new BlockPos(1, 2, 2);
         BlockPos rearValve = new BlockPos(5, 2, 2);
@@ -110,7 +111,7 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(75)
-                .text("When a locomotive has two cabs or two engines are coupled together, active valves would fight each other")
+                .text(tr("loconautics.ponder.air_brake.double_cab.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(frontValve));
@@ -119,7 +120,7 @@ public final class AirBrakeScenes {
         scene.overlay().showControls(util.vector().topOf(rearValve), Pointing.DOWN, 35).whileSneaking().rightClick();
         scene.idle(10);
         scene.overlay().showText(80)
-                .text("Shift-right click an inactive valve at notch 0 to isolate it (Cut-Out) so only the lead cab controls the brake pipe")
+                .text(tr("loconautics.ponder.air_brake.double_cab.text_2"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
@@ -128,7 +129,7 @@ public final class AirBrakeScenes {
     }
 
     public static void consistHoses(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_consist", "Connecting Cars with Brake Hoses", 9);
+        CreateSceneBuilder scene = open(builder, "air_brake_consist", "loconautics.ponder.air_brake.consist.header", 9);
 
         BlockPos adapterA = new BlockPos(3, 2, 2);
         BlockPos adapterB = new BlockPos(5, 2, 2);
@@ -140,7 +141,7 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(75)
-                .text("Mount Brake Hose Adapters on the ends of adjacent cars")
+                .text(tr("loconautics.ponder.air_brake.consist.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(adapterA));
@@ -160,7 +161,7 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(80)
-                .text("Connecting a Brake Hose automatically opens both adapters and equalizes pipe pressure along the consist")
+                .text(tr("loconautics.ponder.air_brake.consist.text_2"))
                 .attachKeyFrame()
                 .colored(PonderPalette.GREEN)
                 .placeNearTarget()
@@ -168,7 +169,7 @@ public final class AirBrakeScenes {
         scene.idle(90);
 
         scene.overlay().showText(85)
-                .text("Close adapters by clicking before uncoupling! A snapped hose with open adapters vents the pipe and triggers emergency braking")
+                .text(tr("loconautics.ponder.air_brake.consist.text_3"))
                 .attachKeyFrame()
                 .colored(PonderPalette.RED)
                 .placeNearTarget()
@@ -177,7 +178,7 @@ public final class AirBrakeScenes {
     }
 
     public static void tripleValve(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_triple_valve", "Triple Valve & Manual Release", 5);
+        CreateSceneBuilder scene = open(builder, "air_brake_triple_valve", "loconautics.ponder.air_brake.triple_valve.header", 5);
 
         BlockPos triple = new BlockPos(2, 2, 2);
 
@@ -186,14 +187,14 @@ public final class AirBrakeScenes {
         scene.idle(15);
 
         scene.overlay().showText(80)
-                .text("Every braked car needs a Triple Valve. It charges its auxiliary reservoir from the brake pipe")
+                .text(tr("loconautics.ponder.air_brake.triple_valve.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(triple));
         scene.idle(90);
 
         scene.overlay().showText(80)
-                .text("When brake pipe pressure drops, the Triple Valve applies proportional braking to that car")
+                .text(tr("loconautics.ponder.air_brake.triple_valve.text_2"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget()
@@ -203,7 +204,7 @@ public final class AirBrakeScenes {
         scene.overlay().showControls(util.vector().topOf(triple), Pointing.DOWN, 35).whileSneaking().rightClick();
         scene.idle(10);
         scene.overlay().showText(75)
-                .text("Shift-right click an uncoupled car's Triple Valve to bleed its air and release the brakes for shunting")
+                .text(tr("loconautics.ponder.air_brake.triple_valve.text_3"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(triple));
@@ -211,7 +212,7 @@ public final class AirBrakeScenes {
     }
 
     public static void emergencyBrake(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "air_brake_emergency", "Passenger Emergency Brake", 5);
+        CreateSceneBuilder scene = open(builder, "air_brake_emergency", "loconautics.ponder.air_brake.emergency.header", 5);
 
         BlockPos handle = new BlockPos(2, 2, 1);
 
@@ -226,7 +227,7 @@ public final class AirBrakeScenes {
         scene.effects().indicateRedstone(handle);
 
         scene.overlay().showText(80)
-                .text("Pulling the Emergency Brake vents the brake pipe to 0 bar, stopping the entire coupled train")
+                .text(tr("loconautics.ponder.air_brake.emergency.text_1"))
                 .attachKeyFrame()
                 .colored(PonderPalette.RED)
                 .placeNearTarget()
@@ -238,15 +239,94 @@ public final class AirBrakeScenes {
         scene.world().modifyBlocks(util.select().position(handle),
                 s -> s.setValue(EmergencyBrakeBlock.POWERED, false), false);
         scene.overlay().showText(65)
-                .text("Click it again to reset the handle so the locomotive can recharge the pipe")
+                .text(tr("loconautics.ponder.air_brake.emergency.text_2"))
                 .placeNearTarget()
                 .pointAt(util.vector().centerOf(handle));
         scene.idle(75);
     }
 
-    private static CreateSceneBuilder open(SceneBuilder builder, String id, String title, int width) {
+    public static void brakingPractice(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = open(builder, "air_brake_braking_practice",
+                "loconautics.ponder.air_brake.braking_practice.header", 7);
+
+        BlockPos valve = new BlockPos(3, 2, 2);
+        BlockPos leadingTriple = new BlockPos(4, 2, 2);
+        BlockPos rearTriple = new BlockPos(6, 2, 2);
+
+        // A simple two-car diagram makes the delay along the brake pipe visible.
+        scene.world().setBlock(leadingTriple,
+                AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().setBlock(rearTriple,
+                AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().showSection(util.select().fromTo(0, 1, 0, 6, 2, 4), Direction.DOWN);
+        scene.idle(15);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_1"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_2"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showControls(util.vector().topOf(valve), Pointing.DOWN, 35).rightClick();
+        scene.effects().indicateRedstone(valve);
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_3"))
+                .attachKeyFrame().colored(PonderPalette.BLUE).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_4"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(leadingTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_5"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(rearTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(95)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_6"))
+                .attachKeyFrame().colored(PonderPalette.YELLOW).placeNearTarget()
+                .pointAt(util.vector().topOf(rearTriple));
+        scene.idle(105);
+
+        scene.overlay().showText(95)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_7"))
+                .attachKeyFrame().colored(PonderPalette.GREEN).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(105);
+
+        scene.overlay().showText(95)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_8"))
+                .attachKeyFrame().colored(PonderPalette.RED).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(105);
+
+        scene.overlay().showControls(util.vector().topOf(valve), Pointing.DOWN, 35)
+                .whileSneaking().rightClick();
+        scene.overlay().showText(90)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_9"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(100);
+
+        scene.overlay().showText(90)
+                .text(tr("loconautics.ponder.air_brake.braking_practice.text_10"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(leadingTriple));
+        scene.idle(100);
+    }
+
+    private static String tr(String key) {
+        return Component.translatable(key).getString();
+    }
+
+    private static CreateSceneBuilder open(SceneBuilder builder, String id, String titleKey, int width) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        scene.title(id, title);
+        scene.title(id, tr(titleKey));
         scene.configureBasePlate(0, 0, width);
         scene.showBasePlate();
         scene.idle(5);

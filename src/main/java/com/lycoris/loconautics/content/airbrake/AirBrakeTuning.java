@@ -13,12 +13,16 @@ public final class AirBrakeTuning {
 
     public static final float MAX_AUX_RESERVOIR_BAR = 5.0f;
 
-    public static final int MAX_NOTCH = 15;
+    public static final int MAX_NOTCH = EMERGENCY_NOTCH;
 
-    /**
-     * Service air brakes cap below full wheel-lock decel; emergency uses full BRAKE_DECEL.
-     */
-    public static final double SERVICE_BRAKE_MAX_SCALE = 0.65;
+    /** Peak pneumatic service-brake deceleration at the reference consist mass, in m/s². */
+    public static final double SERVICE_BRAKE_MAX_DECEL_MPS2 = 0.9;
+
+    /** Peak pneumatic emergency-brake deceleration at the reference consist mass, in m/s². */
+    public static final double EMERGENCY_BRAKE_MAX_DECEL_MPS2 = 1.6;
+
+    public static final int LAST_SERVICE_NOTCH = 14;
+    public static final int EMERGENCY_NOTCH = 15;
 
     private AirBrakeTuning() {
     }
@@ -28,7 +32,7 @@ public final class AirBrakeTuning {
         if (clamped == 0) {
             return WORKING_PIPE_BAR;
         }
-        if (clamped >= MAX_NOTCH) {
+        if (clamped >= EMERGENCY_NOTCH) {
             return 0.0f;
         }
         float t = (clamped - 1) / (float) (MAX_NOTCH - 2);
