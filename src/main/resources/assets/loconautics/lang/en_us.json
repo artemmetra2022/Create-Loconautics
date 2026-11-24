@@ -1853,5 +1853,21 @@
   "loconautics.ponder.overhead.motor.header": "Driving a train with the electric traction motor",
   "loconautics.ponder.overhead.motor.text_1": "Install the electric traction motor on the carriage sublevel and connect its shaft to the drivetrain in the correct direction.",
   "loconautics.ponder.overhead.motor.text_2": "A redstone level from 1 to 15 controls motor speed, up to 256 RPM. Start with a low signal and increase it gradually.",
-  "loconautics.ponder.overhead.motor.text_3": "Feed pantograph contact into the throttle circuit as a safety interlock. If contact is lost, remove the drive signal; the motor itself does not create overhead power."
+  "loconautics.ponder.overhead.motor.text_3": "Feed pantograph contact into the throttle circuit as a safety interlock. If contact is lost, remove the drive signal; the motor itself does not create overhead power.",
+  "loconautics.ponder.air_brake.pre_departure.header": "Pre-Departure Brake Test",
+  "loconautics.ponder.air_brake.pre_departure.text_1": "Start with the Driver's Brake Valve at 0. Confirm that the main reservoirs are charged and the brake pipe has reached its normal operating pressure before moving.",
+  "loconautics.ponder.air_brake.pre_departure.text_2": "Walk the consist in Engineer's Goggles. Every car that must brake needs a Triple Valve and an auxiliary reservoir; check that none is missing.",
+  "loconautics.ponder.air_brake.pre_departure.text_3": "Inspect every hose connection between cars. The hose must be connected and both angle cocks must be open so air can pass through the whole train.",
+  "loconautics.ponder.air_brake.pre_departure.text_4": "At low speed or while safely secured, apply a small service step. Do not use the emergency notch as a routine test.",
+  "loconautics.ponder.air_brake.pre_departure.text_5": "Check the front, middle and rear cars. Their cylinders should begin to charge as the pressure reduction reaches each Triple Valve; the rear may respond later.",
+  "loconautics.ponder.air_brake.pre_departure.text_6": "Return the Driver's Valve to 0 and wait for the pipe and reservoirs to recharge and the cylinders to release. Confirm the train is free to roll before departure.",
+  "loconautics.ponder.air_brake.pre_departure.text_7": "If any car does not respond, do not depart. Find the missing Triple Valve, closed angle cock, disconnected hose or isolated cab before trying again.",
+  "loconautics.ponder.air_brake.fault_finding.header": "Brake Faults: Diagnosis and Recovery",
+  "loconautics.ponder.air_brake.fault_finding.text_1": "If the train does not brake, first check that the Driver's Valve is not isolated and that you moved it above notch 0. Verify that the main reservoirs contain air.",
+  "loconautics.ponder.air_brake.fault_finding.text_2": "If only one car fails to brake, inspect that car's Triple Valve and auxiliary reservoir. A car without a working Triple Valve cannot apply its pneumatic brake.",
+  "loconautics.ponder.air_brake.fault_finding.text_3": "If the front brakes but the rear does not, inspect every inter-car hose and angle cock between them. One closed cock or disconnected hose can interrupt the brake pipe.",
+  "loconautics.ponder.air_brake.fault_finding.text_4": "If the brakes release slowly, allow time for pressure to propagate and the reservoirs to recharge. Long consists naturally take longer to respond.",
+  "loconautics.ponder.air_brake.fault_finding.text_5": "If the pipe vents after uncoupling, stop and secure the train. Close both angle cocks before separating the cars; reconnect the hose and recharge the system.",
+  "loconautics.ponder.air_brake.fault_finding.text_6": "For a detached car that must be moved, use Shift + right-click on its Triple Valve for manual release. Do not use manual release as a substitute for normal train release.",
+  "loconautics.ponder.air_brake.fault_finding.text_7": "After an emergency stop, reset the passenger emergency handle if used, return the Driver's Valve to 0 and wait until pressure is restored before moving again."
 }
