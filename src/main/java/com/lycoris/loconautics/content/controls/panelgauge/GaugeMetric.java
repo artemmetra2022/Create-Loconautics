@@ -6,8 +6,6 @@ import com.lycoris.loconautics.compat.gauge.PropulsionGauges;
 import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
 import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
 import com.lycoris.loconautics.content.airbrake.AirCompressorBlockEntity;
-import com.lycoris.loconautics.content.airbrake.AirPipeBus;
-import com.lycoris.loconautics.content.airbrake.BrakeHoseConnectorBlockEntity;
 import com.lycoris.loconautics.content.airbrake.AirReservoirBlockEntity;
 import com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity;
 import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
@@ -300,7 +298,7 @@ public enum GaugeMetric implements StringRepresentable {
             SpeedometerBlockEntity::getBrakeDemand, ChatFormatting.RED, 22),
 
     // Pneumatic system metrics are appended to keep all existing saved metric ordinals stable.
-    MAIN_RESERVOIR_FILL(AirReservoirBlockEntity.class,
+    MAIN_RESERVOIR_PRESSURE_PERCENT(AirReservoirBlockEntity.class,
             be -> pct(over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR)),
             be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
             ChatFormatting.GREEN, 17),
@@ -332,16 +330,7 @@ public enum GaugeMetric implements StringRepresentable {
     TRIPLE_VALVE_EMERGENCY_RESERVOIR_PRESSURE(TripleValveBlockEntity.class,
             be -> String.format(Locale.US, "%.2f bar", be.getEmergencyReservoirPressure()),
             be -> over(be.getEmergencyReservoirPressure(), AirBrakeTuning.MAX_AUX_RESERVOIR_BAR),
-            ChatFormatting.GOLD, 21),
-    BRAKE_HOSE_PIPE_PRESSURE(BrakeHoseConnectorBlockEntity.class,
-            be -> String.format(Locale.US, "%.2f bar", AirPipeBus.readPipePressure(be)),
-            be -> over(AirPipeBus.readPipePressure(be), AirBrakeTuning.WORKING_PIPE_BAR),
-            ChatFormatting.AQUA, 21),
-    BRAKE_HOSE_COCK_STATE(BrakeHoseConnectorBlockEntity.class,
-            be -> Component.translatable(be.isCockOpen()
-                    ? "loconautics.gui.goggles.gauge_brake_hose_open"
-                    : "loconautics.gui.goggles.gauge_brake_hose_closed").getString(),
-            be -> be.isCockOpen() ? 1f : 0f, ChatFormatting.GREEN, 22);
+            ChatFormatting.GOLD, 21);
 
     public enum Group {
         FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
@@ -368,9 +357,7 @@ public enum GaugeMetric implements StringRepresentable {
         AIR_RESERVOIR("loconautics", "Loconautics", "Air Reservoir", AirReservoirBlockEntity.class),
         DRIVER_BRAKE_VALVE("loconautics", "Loconautics", "Driver's Brake Valve", DriverBrakeValveBlockEntity.class),
         TRIPLE_VALVE("loconautics", "Loconautics", "Triple Valve", TripleValveBlockEntity.class),
-        AIR_COMPRESSOR("loconautics", "Loconautics", "Air Compressor", AirCompressorBlockEntity.class),
-        BRAKE_HOSE("loconautics", "Loconautics", "Brake Hose Connector",
-                BrakeHoseConnectorBlockEntity.class);
+        AIR_COMPRESSOR("loconautics", "Loconautics", "Air Compressor", AirCompressorBlockEntity.class);
 
         private final String modId;
         private final String modName;
