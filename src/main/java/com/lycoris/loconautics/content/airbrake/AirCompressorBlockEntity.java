@@ -73,7 +73,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         List<AirReservoirBlockEntity> targets = AirReservoirScanner.findReservoirs(this);
         float rpm = Math.abs(getSpeed());
         boolean hasReservoir = !targets.isEmpty();
-        boolean hasDistributor = AirReservoirScanner.hasRequiredCompressorTargets(this);
+        boolean hasDistributor = AirReservoirScanner.hasDistributor(this);
         boolean hasTargets = hasReservoir && hasDistributor;
         if (!hasTargets && internalPressure > 0.0f) {
             internalPressure = 0.0f;
@@ -126,19 +126,15 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
 
         if (pumping && hasTargets && rpm > 0.01f) {
             float chargePerTick = LoconauticsConfig.AIR_COMPRESSOR_CHARGE_RATE.get().floatValue() * (rpm / 64.0f);
-            if (hasTargets) {
-                float remaining = chargePerTick;
-                for (AirReservoirBlockEntity reservoir : targets) {
-                    remaining -= reservoir.addAir(remaining);
-                    if (remaining <= 0.0001f) {
-                        break;
-                    }
+            float remaining = chargePerTick;
+            for (AirReservoirBlockEntity reservoir : targets) {
+                remaining -= reservoir.addAir(remaining);
+                if (remaining <= 0.0001f) {
+                    break;
                 }
-                if (remaining > 0.0001f) {
-                    internalPressure = Mth.clamp(internalPressure + remaining, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
-                }
-            } else {
-                internalPressure = Mth.clamp(internalPressure + chargePerTick, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
+            }
+            if (remaining > 0.0001f) {
+                internalPressure = Mth.clamp(internalPressure + remaining, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
             }
         }
 
