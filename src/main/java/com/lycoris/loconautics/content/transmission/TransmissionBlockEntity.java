@@ -204,9 +204,8 @@ public class TransmissionBlockEntity extends SplitShaftBlockEntity implements Me
         panelDirectionSourceTick = level.getGameTime();
     }
 
-    public void releasePanelDirectionSource(BlockPos panelPos, int slot) {
-        if (panelDirectionSource == null || !panelDirectionSource.equals(panelPos)
-                || panelDirectionSourceSlot != slot) return;
+    public void releasePanelDirectionSource(BlockPos panelPos) {
+        if (panelDirectionSource == null || !panelDirectionSource.equals(panelPos)) return;
         panelDirectionSource = null;
         panelDirectionSourceSlot = -1;
         panelDirectionSourceTick = -PANEL_HOLD_TICKS - 1;
