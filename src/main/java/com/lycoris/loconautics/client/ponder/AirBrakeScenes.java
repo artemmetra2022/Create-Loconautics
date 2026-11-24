@@ -291,7 +291,7 @@ public final class AirBrakeScenes {
 
         scene.overlay().showText(95)
                 .text(tr("loconautics.ponder.air_brake.braking_practice.text_6"))
-                .attachKeyFrame().colored(PonderPalette.YELLOW).placeNearTarget()
+                .attachKeyFrame().colored(PonderPalette.BLUE).placeNearTarget()
                 .pointAt(util.vector().topOf(rearTriple));
         scene.idle(105);
 
