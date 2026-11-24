@@ -37,6 +37,11 @@ public interface RedstoneLinkedPart extends PanelPart {
         transmission.driveSpeedFromPanel(signal);
     }
 
+    default void driveTransmission(PanelBlockEntity panel, PanelSlot slot,
+                                   TransmissionBlockEntity transmission, int signal) {
+        driveTransmission(transmission, signal);
+    }
+
     default void driveLink(PanelBlockEntity panel, PanelSlot slot, Level level, BlockPos link,
                            PanelPart unlinked, int signal) {
         SmallEngineBlockEntity engine = SmallEngineBlockEntity.resolve(level, link);
@@ -45,7 +50,7 @@ public interface RedstoneLinkedPart extends PanelPart {
             return;
         }
         if (level.isLoaded(link) && level.getBlockEntity(link) instanceof TransmissionBlockEntity transmission) {
-            driveTransmission(transmission, panel.outputSignal(slot, signal));
+            driveTransmission(panel, slot, transmission, panel.outputSignal(slot, signal));
             return;
         }
         RedstoneTarget target = level.isLoaded(link) ? RedstoneTargets.of(level.getBlockState(link)) : null;
