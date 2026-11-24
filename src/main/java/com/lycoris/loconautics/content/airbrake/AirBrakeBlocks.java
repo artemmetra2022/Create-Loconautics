@@ -95,6 +95,10 @@ public final class AirBrakeBlocks {
                             TRIPLE_VALVE.get()
                     ).build(null));
 
+    public static final DeferredHolder<Item, BrakePadRepairKitItem> BRAKE_PAD_REPAIR_KIT =
+            LoconauticsRegistries.ITEMS.register("brake_pad_repair_kit", () ->
+                    new BrakePadRepairKitItem(new Item.Properties().stacksTo(16)));
+
     public static final DeferredHolder<net.minecraft.world.level.block.Block, BrakeHoseConnectorBlock> BRAKE_HOSE_CONNECTOR =
             LoconauticsRegistries.BLOCKS.register("brake_hose_connector", () -> new BrakeHoseConnectorBlock(
                     BlockBehaviour.Properties.of()
