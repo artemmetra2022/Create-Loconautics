@@ -280,6 +280,7 @@ public class AnalogControllerBlockEntity extends SmartBlockEntity implements Men
     }
 
     private void connectUser(Player player) {
+        releaseOtherCabSessions(player.getUUID());
         currentUser    = player.getUUID();
         lastKeyTick    = level.getGameTime();
         raisingSignal  = false;
@@ -294,6 +295,20 @@ public class AnalogControllerBlockEntity extends SmartBlockEntity implements Men
             sp.displayClientMessage(
                     Component.translatable("block.loconautics.analog_controller.start"), true);
             com.lycoris.loconautics.network.LoconauticsNetwork.sendMount(sp, true, worldPosition);
+        }
+    }
+
+    private void releaseOtherCabSessions(UUID user) {
+        if (level == null || level.isClientSide
+                || !(Sable.HELPER.getContaining(level, worldPosition) instanceof ServerSubLevel sub)
+                || sub.isRemoved()) {
+            return;
+        }
+        for (AnalogControllerBlockEntity other
+                : com.lycoris.loconautics.common.sable.SubLevelBlocks.findAll(sub, AnalogControllerBlockEntity.class)) {
+            if (other != this && user.equals(other.currentUser)) {
+                other.disconnectUser(level);
+            }
         }
     }
 
