@@ -54,7 +54,7 @@ public class TrainScenes {
     private static final BlockPos STATION_FAR = new BlockPos(48, 1, 1);
 
     public static void wheels(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "locomotive_wheels", "Setting up Bearing Axles");
+        CreateSceneBuilder scene = open(builder, "locomotive_wheels", tr("loconautics.ponder.train.locomotive_wheels.header"));
         showTrack(scene, util);
 
         centered(scene, util, util.select().position(BOGEY));
@@ -66,7 +66,7 @@ public class TrainScenes {
         centered(scene, util, util.select().position(AXLE));
         scene.idle(10);
         scene.overlay().showText(70)
-                .text("Bearing Axles drive the wheels of the bogey they sit beside")
+                .text(tr("loconautics.ponder.train.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE).add(SHIFT, 0, 0));
@@ -74,14 +74,14 @@ public class TrainScenes {
 
         scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, "bogey", new AABB(BOGEY).move(SHIFT, 0, 0), 60);
         scene.overlay().showText(70)
-                .text("They have to touch the bogey on its rail line, never above or below")
+                .text(tr("loconautics.ponder.train.text_2"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().centerOf(BOGEY).add(SHIFT, 0, 0));
         scene.idle(80);
 
         scene.overlay().showText(60)
-                .text("A bogey can only be driven by one Bearing Axle")
+                .text(tr("loconautics.ponder.train.text_3"))
                 .attachKeyFrame()
                 .colored(PonderPalette.RED)
                 .placeNearTarget()
@@ -93,7 +93,7 @@ public class TrainScenes {
                 .withItem(AllItems.GOGGLES.asStack());
         scene.idle(25);
         scene.overlay().showText(70)
-                .text("Engineer's Goggles show whether an axle is valid")
+                .text(tr("loconautics.ponder.train.text_4"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE).add(SHIFT, 0, 0));
@@ -101,13 +101,13 @@ public class TrainScenes {
     }
 
     public static void front(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "locomotive_front", "Setting the Front of a Locomotive");
+        CreateSceneBuilder scene = open(builder, "locomotive_front", tr("loconautics.ponder.train.locomotive_front.header"));
         showTrack(scene, util);
 
         centered(scene, util, util.select().fromTo(BOGEY, AXLE));
         scene.idle(20);
         scene.overlay().showText(70)
-                .text("Bearing Axles mark the front of a locomotive")
+                .text(tr("loconautics.ponder.train.text_5"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE).add(SHIFT, 0, 0));
@@ -115,7 +115,7 @@ public class TrainScenes {
 
         scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, "front", new AABB(BOGEY).move(SHIFT, 0, 0), 70);
         scene.overlay().showText(70)
-                .text("The front is the side of the axle that touches the bogey")
+                .text(tr("loconautics.ponder.train.text_6"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().centerOf(BOGEY).add(SHIFT, 0, 0));
@@ -123,7 +123,7 @@ public class TrainScenes {
 
         scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, "rear", new AABB(TRANSMISSION).move(SHIFT, 0, 0), 70);
         scene.overlay().showText(70)
-                .text("The shaft end of the axle is always the rear")
+                .text(tr("loconautics.ponder.train.text_7"))
                 .attachKeyFrame()
                 .colored(PonderPalette.RED)
                 .placeNearTarget()
@@ -131,7 +131,7 @@ public class TrainScenes {
         scene.idle(80);
 
         scene.overlay().showText(80)
-                .text("Assembly and Stations use that end to tell which way the train faces")
+                .text(tr("loconautics.ponder.train.text_8"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().centerOf(BOGEY).add(SHIFT, 0, 0));
@@ -139,7 +139,7 @@ public class TrainScenes {
     }
 
     public static void drivetrain(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "locomotive_drive", "Powering Locomotives with Transmissions");
+        CreateSceneBuilder scene = open(builder, "locomotive_drive", tr("loconautics.ponder.train.locomotive_drive.header"));
         showTrack(scene, util);
 
         ElementLink<WorldSectionElement> pair = centered(scene, util, util.select().fromTo(BOGEY, AXLE));
@@ -152,7 +152,7 @@ public class TrainScenes {
         scene.world().showSection(util.select().position(TRANSMISSION), Direction.DOWN);
         scene.idle(10);
         scene.overlay().showText(70)
-                .text("A Transmission goes on the shaft end of the Bearing Axle")
+                .text(tr("loconautics.ponder.train.text_9"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(TRANSMISSION));
@@ -164,7 +164,7 @@ public class TrainScenes {
         scene.world().showSection(util.select().position(BOGEY_FAR), Direction.DOWN);
         scene.idle(10);
         scene.overlay().showText(70)
-                .text("A Portable Engine provides the Rotational Force on the other side")
+                .text(tr("loconautics.ponder.train.text_10"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(ENGINE));
@@ -175,14 +175,14 @@ public class TrainScenes {
         scene.idle(10);
         ignite(scene, util);
         scene.overlay().showText(70)
-                .text("Burning fuel in the engine starts the rotation")
+                .text(tr("loconautics.ponder.train.text_11"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(ENGINE));
         scene.idle(80);
 
         scene.overlay().showText(70)
-                .text("The Portable Engine is only a demonstration, any Rotational Force works")
+                .text(tr("loconautics.ponder.train.text_12"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(ENGINE));
@@ -190,7 +190,7 @@ public class TrainScenes {
 
         swapSource(scene, util, AllBlocks.CREATIVE_MOTOR.getDefaultState().setValue(DirectionalKineticBlock.FACING, Direction.EAST));
         scene.overlay().showText(60)
-                .text("A Creative Motor can power the Transmission as well")
+                .text(tr("loconautics.ponder.train.text_13"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(ENGINE));
@@ -198,7 +198,7 @@ public class TrainScenes {
 
         swapSource(scene, util, AllBlocks.WATER_WHEEL.getDefaultState().setValue(DirectionalKineticBlock.FACING, Direction.EAST));
         scene.overlay().showText(60)
-                .text("And so can a spinning Water Wheel")
+                .text(tr("loconautics.ponder.train.text_14"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(ENGINE));
@@ -212,7 +212,7 @@ public class TrainScenes {
         scene.world().setKineticSpeed(util.select().position(AXLE), AXLE_RPM);
         scene.effects().rotationSpeedIndicator(AXLE);
         scene.overlay().showText(70)
-                .text("A Speed signal decides how fast the Bearing Axle turns")
+                .text(tr("loconautics.ponder.train.text_15"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE));
@@ -220,7 +220,7 @@ public class TrainScenes {
     }
 
     public static void frequency(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "locomotive_frequency", "Binding Bearing Axles to Redstone Links");
+        CreateSceneBuilder scene = open(builder, "locomotive_frequency", tr("loconautics.ponder.train.locomotive_frequency.header"));
         showTrack(scene, util);
 
         centered(scene, util, util.select().fromTo(BOGEY, AXLE));
@@ -233,7 +233,7 @@ public class TrainScenes {
         scene.overlay().showControls(util.vector().topOf(AXLE).add(SHIFT, 0, 0), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Right click it with empty hands to open its Interface")
+                .text(tr("loconautics.ponder.train.text_16"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE).add(SHIFT, 0, 0));
@@ -243,7 +243,7 @@ public class TrainScenes {
         scene.idle(20);
         panel.mark(scene, 0);
         scene.overlay().showText(80)
-                .text("The Left row is the frequency that steers the train left")
+                .text(tr("loconautics.ponder.train.text_17"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -254,7 +254,7 @@ public class TrainScenes {
 
         panel.mark(scene, 1);
         scene.overlay().showText(80)
-                .text("The Right row is the frequency that steers it right")
+                .text(tr("loconautics.ponder.train.text_18"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -265,7 +265,7 @@ public class TrainScenes {
 
         panel.mark(scene, -1);
         scene.overlay().showText(80)
-                .text("Each frequency is made of two Items, like a Redstone Link")
+                .text(tr("loconautics.ponder.train.text_19"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(90);
@@ -274,7 +274,7 @@ public class TrainScenes {
     }
 
     public static void controls(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "locomotive_controls", "Controlling Locomotives with Analog Controllers");
+        CreateSceneBuilder scene = open(builder, "locomotive_controls", tr("loconautics.ponder.train.locomotive_controls.header"));
         showTrack(scene, util);
 
         scene.world().showSection(util.select().position(BOGEY), Direction.DOWN);
@@ -294,7 +294,7 @@ public class TrainScenes {
                 Component.translatable(AnalogControllerMenu.RIGHT_KEY));
 
         scene.overlay().showText(70)
-                .text("Analog Controllers send the signals that drive a locomotive")
+                .text(tr("loconautics.ponder.train.text_20"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -305,7 +305,7 @@ public class TrainScenes {
                 .whileSneaking();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Sneak and Right click it to open its Interface")
+                .text(tr("loconautics.ponder.train.text_21"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -315,7 +315,7 @@ public class TrainScenes {
         scene.idle(20);
         panel.mark(scene, 0);
         scene.overlay().showText(80)
-                .text("Speed and Direction are the frequencies the Transmission listens to")
+                .text(tr("loconautics.ponder.train.text_22"))
                 .attachKeyFrame()
                 .colored(PonderPalette.INPUT)
                 .placeNearTarget();
@@ -330,7 +330,7 @@ public class TrainScenes {
 
         panel.mark(scene, 2);
         scene.overlay().showText(80)
-                .text("Left and Right are the frequencies the Bearing Axle listens to")
+                .text(tr("loconautics.ponder.train.text_23"))
                 .attachKeyFrame()
                 .colored(PonderPalette.OUTPUT)
                 .placeNearTarget();
@@ -355,7 +355,7 @@ public class TrainScenes {
         scene.effects().indicateSuccess(TRANSMISSION);
         scene.effects().indicateSuccess(AXLE);
         scene.overlay().showText(70)
-                .text("Right click a Controller while Sneaking to copy them onto a block")
+                .text(tr("loconautics.ponder.train.text_24"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -367,7 +367,7 @@ public class TrainScenes {
                 .withItem(new ItemStack(LoconauticsRegistries.TRANSMISSION_ITEM.get()));
         scene.idle(25);
         scene.overlay().showText(70)
-                .text("Sneak and Right click in the air to clear the copied frequencies")
+                .text(tr("loconautics.ponder.train.text_25"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER).add(0, 1, 0));
@@ -391,7 +391,7 @@ public class TrainScenes {
         scene.idle(15);
 
         scene.overlay().showText(70)
-                .text("A locomotive needs a Bearing Axle and a Transmission on its bogey")
+                .text(tr("loconautics.ponder.train.text_26"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE));
@@ -401,7 +401,7 @@ public class TrainScenes {
         scene.overlay().showControls(util.vector().topOf(STATION), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Right click the Station to open its Interface")
+                .text(tr("loconautics.ponder.train.text_27"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(STATION));
@@ -410,7 +410,7 @@ public class TrainScenes {
         gui.show(scene);
         scene.idle(20);
         scene.overlay().showText(70)
-                .text("The New Train button switches the Station to Assembly mode")
+                .text(tr("loconautics.ponder.train.text_28"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(30);
@@ -422,7 +422,7 @@ public class TrainScenes {
         scene.idle(50);
 
         scene.overlay().showText(70)
-                .text("Assemble as Sable Train builds the locomotive as a physics train")
+                .text(tr("loconautics.ponder.train.text_29"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(30);
@@ -447,7 +447,7 @@ public class TrainScenes {
         scene.world().animateTrainStation(STATION, false);
 
         scene.overlay().showText(70)
-                .text("Raising the Analog Controller output steps the train up to speed")
+                .text(tr("loconautics.ponder.train.text_30"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -465,7 +465,7 @@ public class TrainScenes {
         scene.world().hideIndependentSection(ground, null);
 
         scene.overlay().showText(70)
-                .text("Letting go steps the output and the train back down")
+                .text(tr("loconautics.ponder.train.text_31"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -477,7 +477,7 @@ public class TrainScenes {
         scene.idle(4);
 
         scene.overlay().showText(70)
-                .text("Hold Space near a Station to park the train on it")
+                .text(tr("loconautics.ponder.train.text_32"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -493,7 +493,7 @@ public class TrainScenes {
         scene.idle(15);
 
         scene.overlay().showText(70)
-                .text("A Physics Assembler can also turn a train back into blocks")
+                .text(tr("loconautics.ponder.train.text_33"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(parked));
@@ -584,6 +584,10 @@ public class TrainScenes {
             be.setCurrentBurnTime(SimItemService.INSTANCE.getBurnTime(Items.COAL.getDefaultInstance()));
             be.openHatchOverride = false;
         });
+    }
+
+    private static String tr(String key) {
+        return net.minecraft.network.chat.Component.translatable(key).getString();
     }
 
     private static CreateSceneBuilder open(SceneBuilder builder, String id, String title) {
