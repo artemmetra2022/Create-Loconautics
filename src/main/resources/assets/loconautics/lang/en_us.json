@@ -1964,7 +1964,7 @@
   "loconautics.ponder.train_casing.text_10": "Without the Shaft, rotation stops at the Bogey",
   "loconautics.ponder.train_casing.train_casing_bogeys.header": "Building Trains with Train Casing",
   "loconautics.ponder.train_casing.train_casing_shaft.header": "Passing Rotation through Bogeys",
-  "loconautics.gui.goggles.gauge_main_reservoir_fill": "Main Reservoir Pressure (%)",
+  "loconautics.gui.goggles.gauge_main_reservoir_pressure_percent": "Main Reservoir Pressure (%)",
   "loconautics.gui.goggles.gauge_driver_brake_notch": "Driver's Brake Valve Position",
   "loconautics.gui.goggles.gauge_air_compressor_pressure": "Compressor Buffer Pressure",
   "loconautics.gui.goggles.gauge_air_compressor_fill": "Compressor Buffer Pressure (%)",
