@@ -41,9 +41,10 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         SHORT=$(git rev-parse --short HEAD)
-        gh release delete indev-latest --cleanup-tag --yes || true
-        gh release create indev-latest build/libs/*.jar \
+        VERSION=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
+        TAG="indev-${VERSION}-${SHORT}"
+        gh release create "$TAG" build/libs/*.jar \
           --target "$GITHUB_SHA" \
           --prerelease \
-          --title "Indev build $SHORT" \
-          --notes "Automatic build of indev at $SHORT. Unstable, back up your worlds."
+          --title "Loconautics ${VERSION} (${SHORT})" \
+          --notes "Versioned indev build ${VERSION} at ${SHORT}. Previous releases are preserved. Unstable, back up your worlds."
