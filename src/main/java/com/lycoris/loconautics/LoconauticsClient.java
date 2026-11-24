@@ -187,7 +187,6 @@ public final class LoconauticsClient {
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
-        registerAllBlockItemTooltips();
         com.lycoris.loconautics.content.controls.panellever.LeverHoldInteraction.registered();
         LoconauticsConstants.LOGGER.info("Loconautics client setup");
         LoconauticsPartialModels.init();
@@ -340,6 +339,9 @@ public final class LoconauticsClient {
                 "block.loconautics.industrial_fluid_tank");
         registerTooltip(com.lycoris.loconautics.content.industrial.IndustrialBlocks.PUMP_ITEM.get(),
                 "block.loconautics.industrial_pump");
+
+        // Keep all hand-authored modifiers above; only fill in blocks without one.
+        registerAllBlockItemTooltips();
     }
 
     /**
@@ -354,7 +356,8 @@ public final class LoconauticsClient {
             }
             net.minecraft.resources.ResourceLocation blockId =
                     net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(blockItem.getBlock());
-            if (!LoconauticsConstants.MOD_ID.equals(blockId.getNamespace())) {
+            if (!LoconauticsConstants.MOD_ID.equals(blockId.getNamespace())
+                    || TooltipModifier.REGISTRY.get(item) != null) {
                 continue;
             }
 
