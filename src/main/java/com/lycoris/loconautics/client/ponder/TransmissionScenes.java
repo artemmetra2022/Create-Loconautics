@@ -36,12 +36,12 @@ public class TransmissionScenes {
     private static final BlockPos PANEL = new BlockPos(4, 2, 2);
 
     public static void single(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "transmission_single", "Relaying rotational force using Transmissions");
+        CreateSceneBuilder scene = open(builder, "transmission_single", tr("loconautics.ponder.transmission.transmission_single.header"));
 
         scene.world().showSection(util.select().position(TRANSMISSION), Direction.DOWN);
         scene.idle(15);
         scene.overlay().showText(70)
-                .text("Transmissions relay Rotational Force and set its speed from a signal")
+                .text(tr("loconautics.ponder.transmission.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(TRANSMISSION));
@@ -52,7 +52,7 @@ public class TransmissionScenes {
         scene.world().setKineticSpeed(util.select().position(TRANSMISSION).add(input(util)), INPUT_RPM);
         scene.idle(10);
         scene.overlay().showText(60)
-                .text("Rotational Force enters through the shaft on one end")
+                .text(tr("loconautics.ponder.transmission.text_2"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(new BlockPos(2, 1, 4)));
@@ -61,7 +61,7 @@ public class TransmissionScenes {
         scene.world().showSection(output(util), Direction.SOUTH);
         scene.idle(10);
         scene.overlay().showText(60)
-                .text("With no signal the output stays still")
+                .text(tr("loconautics.ponder.transmission.text_3"))
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(new BlockPos(2, 1, 1)));
         scene.idle(70);
@@ -69,7 +69,7 @@ public class TransmissionScenes {
         scene.world().showSection(util.select().position(SPEED_LEVER), Direction.EAST);
         scene.idle(10);
         scene.overlay().showText(70)
-                .text("A Redstone signal on one side sets the output speed")
+                .text(tr("loconautics.ponder.transmission.text_4"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(SPEED_LEVER));
@@ -78,7 +78,7 @@ public class TransmissionScenes {
         speed(scene, util, 4);
         scene.effects().rotationSpeedIndicator(new BlockPos(2, 1, 1));
         scene.overlay().showText(60)
-                .text("The output grows with the strength of the signal")
+                .text(tr("loconautics.ponder.transmission.text_5"))
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(new BlockPos(2, 1, 1)));
         scene.idle(70);
@@ -86,7 +86,7 @@ public class TransmissionScenes {
         speed(scene, util, 15);
         scene.effects().rotationSpeedIndicator(new BlockPos(2, 1, 1));
         scene.overlay().showText(60)
-                .text("At full strength it turns at 256 RPM")
+                .text(tr("loconautics.ponder.transmission.text_6"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(new BlockPos(2, 1, 1)));
@@ -94,7 +94,7 @@ public class TransmissionScenes {
     }
 
     public static void direction(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "transmission_direction", "Reversing rotational force using Transmissions");
+        CreateSceneBuilder scene = open(builder, "transmission_direction", tr("loconautics.ponder.transmission.transmission_direction.header"));
 
         scene.world().showSection(util.select().position(TRANSMISSION), Direction.DOWN);
         scene.world().showSection(input(util), Direction.NORTH);
@@ -110,7 +110,7 @@ public class TransmissionScenes {
         scene.world().showSection(util.select().position(DIRECTION_LEVER), Direction.WEST);
         scene.idle(10);
         scene.overlay().showText(70)
-                .text("A signal on the opposite side reverses the output")
+                .text(tr("loconautics.ponder.transmission.text_7"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(DIRECTION_LEVER));
@@ -125,14 +125,14 @@ public class TransmissionScenes {
         drive(scene, util, 8, true);
         scene.effects().rotationDirectionIndicator(new BlockPos(2, 1, 1));
         scene.overlay().showText(60)
-                .text("The speed stays the same while the direction flips")
+                .text(tr("loconautics.ponder.transmission.text_8"))
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(new BlockPos(2, 1, 1)));
         scene.idle(70);
     }
 
     public static void frequency(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "transmission_frequency", "Binding Transmissions to Redstone Links");
+        CreateSceneBuilder scene = open(builder, "transmission_frequency", tr("loconautics.ponder.transmission.transmission_frequency.header"));
 
         scene.world().showSection(util.select().position(TRANSMISSION), Direction.DOWN);
         scene.world().showSection(input(util), Direction.NORTH);
@@ -148,7 +148,7 @@ public class TransmissionScenes {
         scene.overlay().showControls(util.vector().topOf(TRANSMISSION), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Right click it with empty hands to open its Interface")
+                .text(tr("loconautics.ponder.transmission.text_9"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(TRANSMISSION));
@@ -158,7 +158,7 @@ public class TransmissionScenes {
         scene.idle(20);
         panel.mark(scene, 0);
         scene.overlay().showText(80)
-                .text("The Speed row is the frequency that sets the output speed")
+                .text(tr("loconautics.ponder.transmission.text_10"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -169,7 +169,7 @@ public class TransmissionScenes {
 
         panel.mark(scene, 1);
         scene.overlay().showText(80)
-                .text("The Direction row is the frequency that reverses it")
+                .text(tr("loconautics.ponder.transmission.text_11"))
                 .attachKeyFrame()
                 .placeNearTarget();
         scene.idle(20);
@@ -180,7 +180,7 @@ public class TransmissionScenes {
 
         panel.mark(scene, -1);
         scene.overlay().showText(80)
-                .text("Redstone Links on the same frequencies now control the Transmission")
+                .text(tr("loconautics.ponder.transmission.text_12"))
                 .attachKeyFrame()
                 .colored(PonderPalette.BLUE)
                 .placeNearTarget();
@@ -190,7 +190,7 @@ public class TransmissionScenes {
     }
 
     public static void panel(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "transmission_panel", "Driving Transmissions from Panels");
+        CreateSceneBuilder scene = open(builder, "transmission_panel", tr("loconautics.ponder.transmission.transmission_panel.header"));
 
         scene.world().showSection(util.select().position(TRANSMISSION), Direction.DOWN);
         scene.world().showSection(input(util), Direction.NORTH);
@@ -210,7 +210,7 @@ public class TransmissionScenes {
         scene.idle(25);
         put(scene, PanelSlot.TOP_LEFT, lever(0));
         scene.overlay().showText(70)
-                .text("Sneak and Right click a Transmission with a Gauge Lever to bind it")
+                .text(tr("loconautics.ponder.transmission.text_13"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(TRANSMISSION));
@@ -220,7 +220,7 @@ public class TransmissionScenes {
         drive(scene, util, 8, false);
         scene.effects().rotationSpeedIndicator(new BlockPos(2, 1, 1));
         scene.overlay().showText(60)
-                .text("Dragging the lever sets the speed of the Transmission")
+                .text(tr("loconautics.ponder.transmission.text_14"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().blockSurface(PANEL, Direction.NORTH));
@@ -233,7 +233,7 @@ public class TransmissionScenes {
         scene.idle(25);
         put(scene, PanelSlot.TOP_RIGHT, toggle(false));
         scene.overlay().showText(60)
-                .text("A Gauge Switch bound the same way sets the direction")
+                .text(tr("loconautics.ponder.transmission.text_15"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().blockSurface(PANEL, Direction.NORTH));
@@ -248,7 +248,7 @@ public class TransmissionScenes {
         scene.idle(30);
 
         scene.overlay().showText(70)
-                .text("Redstone signals are ignored while a panel drives it")
+                .text(tr("loconautics.ponder.transmission.text_16"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(TRANSMISSION));
@@ -306,6 +306,10 @@ public class TransmissionScenes {
                 be.putPart(slot, part);
             }
         });
+    }
+
+    private static String tr(String key) {
+        return net.minecraft.network.chat.Component.translatable(key).getString();
     }
 
     private static CreateSceneBuilder open(SceneBuilder builder, String id, String title) {
