@@ -33,6 +33,7 @@ public final class BrakePadRepairKitItem extends Item {
 
         BlockEntity blockEntity;
         SubLevel subLevel = Sable.HELPER.getContaining(level, Vec3.atCenterOf(pos));
+        // Resolve the block entity through Sable's loaded plot chunks, not the parent Level lookup.
         if (subLevel != null) {
             blockEntity = SubLevelBlocks.findAll(subLevel, TripleValveBlockEntity.class).stream()
                     .filter(candidate -> candidate.getBlockPos().equals(pos)).findFirst().orElse(null);
