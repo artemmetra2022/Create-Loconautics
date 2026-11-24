@@ -1989,5 +1989,7 @@
   "loconautics.brake_pads.warning.wear": "Тормозные колодки изношены. Скоро потребуется обслуживание.",
   "loconautics.brake_pads.warning.critical": "Колодки критически изношены. Эффективность торможения снижена!",
   "loconautics.brake_pads.warning.overheating": "Перегрев тормозов! Из-за нагрева тормозная сила снижается.",
-  "loconautics.brake_pads.warning.failed": "Отказ тормозных колодок! У этого вагона нет фрикционного торможения."
+  "loconautics.brake_pads.warning.failed": "Отказ тормозных колодок! У этого вагона нет фрикционного торможения.",
+  "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Износ тормозных колодок",
+  "loconautics.configuration.train.dynamics.brakePadWearRate": "Скорость износа колодок"
 }
