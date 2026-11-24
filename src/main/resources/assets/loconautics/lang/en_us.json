@@ -1697,5 +1697,13 @@
   "loconautics.gui.goggles.signal_lamp.emergency_brake": "Emergency brake",
   "loconautics.gui.goggles.signal_lamp.active": "WARNING ACTIVE",
   "loconautics.gui.goggles.signal_lamp.normal": "Normal",
-  "loconautics.gui.goggles.signal_lamp.disconnected": "Source unavailable"
+  "loconautics.gui.goggles.signal_lamp.disconnected": "Source unavailable",
+  "loconautics.triple_valve.goggles.emergency_reservoir": "Emergency reservoir: %s bar",
+  "loconautics.triple_valve.goggles.cylinder_detail": "Brake cylinder: %s bar (%s%%)",
+  "loconautics.triple_valve.goggles.mode": "Mode: %s",
+  "loconautics.triple_valve.mode.charge": "charging",
+  "loconautics.triple_valve.mode.service": "service braking",
+  "loconautics.triple_valve.mode.lap": "lap",
+  "loconautics.triple_valve.mode.release": "graduated release",
+  "loconautics.triple_valve.mode.emergency": "emergency braking"
 }

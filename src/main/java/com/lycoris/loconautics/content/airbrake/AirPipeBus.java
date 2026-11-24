@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -45,7 +46,7 @@ public final class AirPipeBus {
         if (sub instanceof ServerSubLevel serverSub) {
             return SUB_LEVEL_NODES.computeIfAbsent(serverSub, k -> new PipeNode());
         }
-        Map<BlockPos, PipeNode> worldMap = WORLD_NODES.computeIfAbsent(serverLevel, k -> new WeakHashMap<>());
+        Map<BlockPos, PipeNode> worldMap = WORLD_NODES.computeIfAbsent(serverLevel, k -> new HashMap<>());
         BlockPos pos = be.getBlockPos();
         for (Map.Entry<BlockPos, PipeNode> entry : worldMap.entrySet()) {
             if (entry.getKey().distSqr(pos) <= WORLD_CLUSTER_RADIUS_SQ) {

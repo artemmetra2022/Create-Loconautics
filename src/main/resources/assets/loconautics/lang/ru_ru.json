@@ -1692,5 +1692,13 @@
   "loconautics.gui.goggles.signal_lamp.emergency_brake": "Экстренное торможение",
   "loconautics.gui.goggles.signal_lamp.active": "ТРЕВОГА АКТИВНА",
   "loconautics.gui.goggles.signal_lamp.normal": "Норма",
-  "loconautics.gui.goggles.signal_lamp.disconnected": "Источник недоступен"
+  "loconautics.gui.goggles.signal_lamp.disconnected": "Источник недоступен",
+  "loconautics.triple_valve.goggles.emergency_reservoir": "Аварийный резервуар: %s бар",
+  "loconautics.triple_valve.goggles.cylinder_detail": "Тормозной цилиндр: %s бар (%s%%)",
+  "loconautics.triple_valve.goggles.mode": "Режим: %s",
+  "loconautics.triple_valve.mode.charge": "зарядка",
+  "loconautics.triple_valve.mode.service": "служебное торможение",
+  "loconautics.triple_valve.mode.lap": "перекрыша",
+  "loconautics.triple_valve.mode.release": "ступенчатый отпуск",
+  "loconautics.triple_valve.mode.emergency": "экстренное торможение"
 }

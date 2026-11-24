@@ -265,21 +265,27 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
                 .append(Component.translatable("loconautics.triple_valve.goggles.aux",
                         String.format(Locale.ROOT, "%.2f", auxPressure)))
                 .withStyle(ChatFormatting.AQUA));
-        tooltip.add(Component.literal(" Аварийный резервуар: "
-                        + String.format(Locale.ROOT, "%.2f бар", emergencyReservoirPressure))
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable("loconautics.triple_valve.goggles.emergency_reservoir",
+                        String.format(Locale.ROOT, "%.2f", emergencyReservoirPressure)))
                 .withStyle(ChatFormatting.DARK_AQUA));
-        tooltip.add(Component.literal(" Тормозной цилиндр: "
-                        + String.format(Locale.ROOT, "%.2f бар (%d%%)", brakeCylinderPressure,
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable("loconautics.triple_valve.goggles.cylinder_detail",
+                        String.format(Locale.ROOT, "%.2f", brakeCylinderPressure),
                         Math.round(getCylinderFraction() * 100f)))
                 .withStyle(emergency ? ChatFormatting.RED
                         : brakeCylinderPressure > 0f ? ChatFormatting.GOLD : ChatFormatting.GREEN));
-        tooltip.add(Component.literal(" Режим: " + switch (mode) {
-                    case CHARGE -> "зарядка";
-                    case SERVICE -> "служебное торможение";
-                    case LAP -> "перекрыша";
-                    case RELEASE -> "ступенчатый отпуск";
-                    case EMERGENCY -> "экстренное торможение";
-                }).withStyle(emergency ? ChatFormatting.RED : ChatFormatting.GRAY));
+        String modeKey = switch (mode) {
+            case CHARGE -> "charge";
+            case SERVICE -> "service";
+            case LAP -> "lap";
+            case RELEASE -> "release";
+            case EMERGENCY -> "emergency";
+        };
+        tooltip.add(Component.literal(" ")
+                .append(Component.translatable("loconautics.triple_valve.goggles.mode",
+                        Component.translatable("loconautics.triple_valve.mode." + modeKey)))
+                .withStyle(emergency ? ChatFormatting.RED : ChatFormatting.GRAY));
         return true;
     }
 
