@@ -1,3 +1,6 @@
 {
-  "parent": "loconautics:block/controls/panel/status_display"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "loconautics:item/locomotive_status_display"
+  }
 }

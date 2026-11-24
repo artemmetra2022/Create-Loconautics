@@ -1,16 +1,16 @@
 package com.lycoris.loconautics.content.controls.paneldisplay;
 
+import com.lycoris.loconautics.foundation.ui.NoBlurScreen;
 import com.lycoris.loconautics.network.packets.controls.StatusDisplayOpenPacket;
 import com.lycoris.loconautics.network.packets.controls.StatusDisplayRequestPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.Locale;
 
-public final class LocomotiveStatusScreen extends Screen {
+public final class LocomotiveStatusScreen extends NoBlurScreen {
     private static final int WIDTH = 380;
     private static final int HEIGHT = 232;
     private final BlockPos pos;
