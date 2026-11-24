@@ -860,6 +860,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.lycoris.loconautics.content.sand.SandStorageBlocks.SAND_STORAGE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.DRIVER_BRAKE_VALVE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.TRIPLE_VALVE_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_PAD_REPAIR_KIT.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE.get());
                         output.accept(com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.EMERGENCY_BRAKE_ITEM.get());
