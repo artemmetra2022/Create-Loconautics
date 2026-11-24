@@ -1993,5 +1993,9 @@
   "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Износ тормозных колодок",
   "loconautics.configuration.train.dynamics.brakePadWearRate": "Скорость износа колодок",
   "gui.loconautics.status_display.pad_wear": "Износ колодок",
-  "gui.loconautics.status_display.pad_temp": "Температура колодок"
+  "gui.loconautics.status_display.pad_temp": "Температура колодок",
+  "loconautics.air_compressor.goggles.reservoir_detected": "Воздушный резервуар: обнаружен",
+  "loconautics.air_compressor.goggles.reservoir_missing": "Не обнаружен воздушный резервуар — качать воздух некуда",
+  "loconautics.air_compressor.goggles.distributor_detected": "Воздухораспределитель: обнаружен",
+  "loconautics.air_compressor.goggles.distributor_missing": "Не обнаружен воздухораспределитель"
 }
