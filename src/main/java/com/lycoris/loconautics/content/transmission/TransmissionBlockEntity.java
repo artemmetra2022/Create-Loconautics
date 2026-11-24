@@ -57,6 +57,13 @@ public class TransmissionBlockEntity extends SplitShaftBlockEntity implements Me
 
     private long panelNeutralTick = -PANEL_HOLD_TICKS - 1;
 
+    // Only the reverser touched most recently owns the direction input. This prevents
+    // two opposite-facing cabs from continuously overwriting each other's commands.
+    @Nullable
+    private BlockPos panelDirectionSource;
+    private int panelDirectionSourceSlot = -1;
+    private long panelDirectionSourceTick = -PANEL_HOLD_TICKS - 1;
+
     public TransmissionBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -188,6 +195,40 @@ public class TransmissionBlockEntity extends SplitShaftBlockEntity implements Me
         panelReversed = panelDirectionTick == now ? panelReversed || reversed : reversed;
         panelDirectionTick = now;
         if (changed) kineticRefreshQueued = true;
+    }
+
+    public void selectPanelDirectionSource(BlockPos panelPos, int slot) {
+        if (level == null || level.isClientSide) return;
+        panelDirectionSource = panelPos.immutable();
+        panelDirectionSourceSlot = slot;
+        panelDirectionSourceTick = level.getGameTime();
+    }
+
+    public void releasePanelDirectionSource(BlockPos panelPos, int slot) {
+        if (panelDirectionSource == null || !panelDirectionSource.equals(panelPos)
+                || panelDirectionSourceSlot != slot) return;
+        panelDirectionSource = null;
+        panelDirectionSourceSlot = -1;
+        panelDirectionSourceTick = -PANEL_HOLD_TICKS - 1;
+    }
+
+    public boolean driveDirectionFromPanel(BlockPos panelPos, int slot, boolean reversed, boolean neutral) {
+        if (level == null || level.isClientSide) return false;
+        long now = level.getGameTime();
+        if (panelDirectionSource == null || now - panelDirectionSourceTick > PANEL_HOLD_TICKS + 1) {
+            panelDirectionSource = panelPos.immutable();
+            panelDirectionSourceSlot = slot;
+        }
+        if (!panelDirectionSource.equals(panelPos) || panelDirectionSourceSlot != slot) return false;
+
+        panelDirectionSourceTick = now;
+        boolean changed = isReversed() != reversed || isNeutral() != neutral;
+        panelReversed = reversed;
+        panelDirectionTick = now;
+        panelNeutral = neutral;
+        panelNeutralTick = now;
+        if (changed) kineticRefreshQueued = true;
+        return true;
     }
 
     public void driveNeutralFromPanel(boolean neutral) {
