@@ -1682,5 +1682,20 @@
   "block.loconautics.electric_traction_motor": "Electric Traction Motor",
   "gui.goggles.loconautics_electric_motor": "Electric traction motor",
   "gui.goggles.loconautics_electric_motor_running": "Running · %1$s RPM · redstone %2$s",
-  "gui.goggles.loconautics_electric_motor_stopped": "Stopped · redstone %2$s"
+  "gui.goggles.loconautics_electric_motor_stopped": "Stopped · redstone %2$s",
+  "loconautics.ponder.overhead_poles.header": "Building overhead line masts",
+  "loconautics.ponder.overhead_poles.text_1": "Choose a short, standard or tall pole kit to match the required clearance.",
+  "loconautics.ponder.overhead_poles.text_2": "The kit places the base, mast sections and cantilever head in one operation.",
+  "loconautics.ponder.overhead_poles.text_3": "Stand on the track side when placing it so the cantilever points over the rails.",
+  "loconautics.ponder.overhead_wire.header": "Installing the contact wire",
+  "loconautics.ponder.overhead_wire.text_1": "Connect the contact wire between cantilever heads at a consistent height.",
+  "loconautics.ponder.overhead_wire.text_2": "The wire has no collision and can be laid as straight horizontal segments.",
+  "loconautics.ponder.overhead_pantograph.header": "Collecting power with a pantograph",
+  "loconautics.ponder.overhead_pantograph.text_1": "Mount the pantograph on the carriage roof directly below the contact wire.",
+  "loconautics.ponder.overhead_pantograph.text_2": "As the train moves under the wire, the pantograph raises and detects contact.",
+  "loconautics.ponder.overhead_pantograph.text_3": "Contact outputs a redstone signal; without contact, the output is off.",
+  "loconautics.ponder.overhead_electric_motor.header": "Electric traction motor",
+  "loconautics.ponder.overhead_electric_motor.text_1": "Place the electric traction motor on the carriage sublevel.",
+  "loconautics.ponder.overhead_electric_motor.text_2": "A redstone level from 1 to 15 sets the motor speed up to 256 RPM.",
+  "loconautics.ponder.overhead_electric_motor.text_3": "Connect its output shaft to the drivetrain. Pantograph contact can gate the throttle."
 }

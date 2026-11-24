@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "down": "minecraft:block/iron_block",
-    "up": "minecraft:block/iron_block",
-    "north": "minecraft:block/iron_block",
-    "south": "minecraft:block/copper_block",
-    "west": "minecraft:block/iron_block",
-    "east": "minecraft:block/iron_block"
+    "particle": "loconautics:block/electric_traction_motor_side",
+    "down": "loconautics:block/electric_traction_motor_side",
+    "up": "loconautics:block/electric_traction_motor_top",
+    "north": "loconautics:block/electric_traction_motor_front",
+    "south": "loconautics:block/electric_traction_motor_back",
+    "west": "loconautics:block/electric_traction_motor_side",
+    "east": "loconautics:block/electric_traction_motor_side"
   }
 }

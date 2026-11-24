@@ -1677,5 +1677,20 @@
   "block.loconautics.electric_traction_motor": "Электрический тяговый двигатель",
   "gui.goggles.loconautics_electric_motor": "Электрический тяговый двигатель",
   "gui.goggles.loconautics_electric_motor_running": "Работает · %1$s об/мин · редстоун %2$s",
-  "gui.goggles.loconautics_electric_motor_stopped": "Остановлен · редстоун %2$s"
+  "gui.goggles.loconautics_electric_motor_stopped": "Остановлен · редстоун %2$s",
+  "loconautics.ponder.overhead_poles.header": "Монтаж опор контактной сети",
+  "loconautics.ponder.overhead_poles.text_1": "Выберите короткую, стандартную или высокую опору с учётом необходимого габарита.",
+  "loconautics.ponder.overhead_poles.text_2": "Комплект устанавливает основание, секции мачты и консоль одной операцией.",
+  "loconautics.ponder.overhead_poles.text_3": "При установке стойте со стороны пути: консоль будет направлена над рельсами.",
+  "loconautics.ponder.overhead_wire.header": "Прокладка контактного провода",
+  "loconautics.ponder.overhead_wire.text_1": "Соедините контактный провод между консолями опор на одинаковой высоте.",
+  "loconautics.ponder.overhead_wire.text_2": "Провод не имеет столкновений и прокладывается прямыми горизонтальными сегментами.",
+  "loconautics.ponder.overhead_pantograph.header": "Съём тока пантографом",
+  "loconautics.ponder.overhead_pantograph.text_1": "Установите пантограф на крыше вагона прямо под контактным проводом.",
+  "loconautics.ponder.overhead_pantograph.text_2": "При движении под проводом пантограф поднимается и обнаруживает контакт.",
+  "loconautics.ponder.overhead_pantograph.text_3": "При контакте появляется редстоун-сигнал. Без контакта сигнал отключён.",
+  "loconautics.ponder.overhead_electric_motor.header": "Электрический тяговый двигатель",
+  "loconautics.ponder.overhead_electric_motor.text_1": "Установите тяговый электродвигатель на подуровень вагона.",
+  "loconautics.ponder.overhead_electric_motor.text_2": "Уровень сигнала редстоуна от 1 до 15 задаёт скорость двигателя — до 256 об/мин.",
+  "loconautics.ponder.overhead_electric_motor.text_3": "Соедините выходной вал с трансмиссией. Подачу тяги можно разрешать сигналом от пантографа."
 }
