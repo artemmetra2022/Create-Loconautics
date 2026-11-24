@@ -4,6 +4,7 @@ import com.lycoris.loconautics.config.LoconauticsConfig;
 import com.lycoris.loconautics.content.bearingaxle.BearingAxleBlock;
 import com.lycoris.loconautics.content.bearingaxle.BearingAxleBlockEntity;
 import com.lycoris.loconautics.trainphysics.SableTrain;
+import com.lycoris.loconautics.content.sand.SandStorageBlockEntity;
 import com.lycoris.loconautics.trainphysics.SableTrain.Car;
 import com.lycoris.loconautics.common.sable.SubLevelData;
 import com.lycoris.loconautics.trainphysics.TrainConsist;
@@ -74,12 +75,14 @@ public final class TrainPropulsion {
         }
 
         double drivenMass = 0.0;
+        boolean sanding = false;
         for (UUID id : drivenCars) {
             ServerSubLevel sub = SubLevelData.resolve(train.level(), id);
             MassData mass = sub == null ? null : sub.getMassTracker();
             if (mass != null && !mass.isInvalid()) {
                 drivenMass += Math.max(0.0, mass.getMass());
             }
+            sanding |= SandStorageBlockEntity.hasActiveSanding(sub);
         }
         if (drivenMass <= 0.0) {
             return MAX_ACCELERATION;
@@ -90,6 +93,9 @@ public final class TrainPropulsion {
         double slipRatio = poweredAxles <= 0 ? 0.0 : (double) slippingAxles / poweredAxles;
         double slipFactor = Math.max(0.25, 1.0 - 0.70 * slipRatio);
         double railAdhesion = isMonorail(train) ? 0.35 : 0.25;
+        if (sanding) {
+            railAdhesion = Math.min(0.55, railAdhesion * 1.8);
+        }
         return Math.max(0.15, railAdhesion * 9.81 * adhesiveShare * slipFactor);
     }
 
