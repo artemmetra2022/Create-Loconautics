@@ -68,13 +68,17 @@ public class TrainPonderPlugin implements PonderPlugin {
                 .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::cabControls)
                 .addStoryBoard("air_brake/double_cab", AirBrakeScenes::doubleCab)
                 .addStoryBoard("air_brake/compressor", AirBrakeScenes::compressorSupply)
-                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::brakingPractice);
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::brakingPractice)
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::preDepartureCheck)
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::faultFinding);
 
         helper.forComponents(
                         com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.TRIPLE_VALVE.getId())
                 .addStoryBoard("air_brake/triple_valve", AirBrakeScenes::tripleValve)
                 .addStoryBoard("air_brake/consist", AirBrakeScenes::consistHoses)
-                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::brakingPractice);
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::brakingPractice)
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::preDepartureCheck)
+                .addStoryBoard("air_brake/cab_panel", AirBrakeScenes::faultFinding);
 
         helper.forComponents(
                         com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.BRAKE_HOSE_CONNECTOR.getId(),
