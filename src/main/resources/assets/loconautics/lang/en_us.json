@@ -1985,5 +1985,10 @@
   "loconautics.sand_storage.goggles.header": "Sand Storage",
   "loconautics.sand_storage.goggles.amount": "Stored sand: %s / %s",
   "loconautics.sand_storage.goggles.active": "Sanding: active",
-  "loconautics.sand_storage.goggles.idle": "Sanding: idle"
+  "loconautics.sand_storage.goggles.idle": "Sanding: idle",
+  "item.loconautics.brake_pad_repair_kit": "Brake Pad Repair Kit",
+  "loconautics.brake_pads.wear": "Brake pad wear: %s%%",
+  "loconautics.brake_pads.temperature": "Brake pad temperature: %s °C",
+  "loconautics.brake_pads.repair_moving": "Brake pads can only be replaced while the carriage is stopped.",
+  "loconautics.brake_pads.repaired": "The complete set of brake pads has been replaced."
 }
