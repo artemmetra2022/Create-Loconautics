@@ -1946,5 +1946,17 @@
   "loconautics.ponder.brake_controller.text_8": "Строка Emergency задаёт отдельную частоту: при наличии сигнала тормоз срабатывает на полную силу.",
   "loconautics.ponder.brake_controller.text_9": "Возьмите предмет настройки, присядьте и нажмите ПКМ по аналоговому контроллеру, чтобы скопировать его частоту.",
   "loconautics.ponder.brake_controller.brake_controller_single.header": "Торможение приводного вала",
-  "loconautics.ponder.brake_controller.brake_controller_frequency.header": "Настройка частот тормозного контроллера"
+  "loconautics.ponder.brake_controller.brake_controller_frequency.header": "Настройка частот тормозного контроллера",
+  "loconautics.ponder.train_casing.text_1": "Удерживайте C с корпусом поезда в руке, чтобы открыть меню выбора.",
+  "loconautics.ponder.train_casing.text_2": "Колесо мыши переключает корпус на тележку.",
+  "loconautics.ponder.train_casing.text_3": "Нажмите ПКМ по рельсам, чтобы установить тележку.",
+  "loconautics.ponder.train_casing.text_4": "Корпуса поезда, размещённые между тележками, образуют кузов состава.",
+  "loconautics.ponder.train_casing.text_5": "Склейте блоки между собой и удерживайте ПКМ по физическому сборщику.",
+  "loconautics.ponder.train_casing.text_6": "Собранная конструкция становится поездом и может останавливаться на станциях.",
+  "loconautics.ponder.train_casing.text_7": "Установите вал на тележку, нажав по ней ПКМ с валом в руке.",
+  "loconautics.ponder.train_casing.text_8": "Вращение проходит насквозь с одной стороны на другую, как у заключённого в корпус вала.",
+  "loconautics.ponder.train_casing.text_9": "Присядьте и нажмите ПКМ гаечным ключом, чтобы снять вал.",
+  "loconautics.ponder.train_casing.text_10": "Без вала вращение не передаётся через тележку.",
+  "loconautics.ponder.train_casing.train_casing_bogeys.header": "Сборка поездов с помощью корпусов",
+  "loconautics.ponder.train_casing.train_casing_shaft.header": "Передача вращения через тележки"
 }
