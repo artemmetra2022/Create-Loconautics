@@ -208,7 +208,7 @@ public final class TrainPropulsion {
                 && train.speed() * train.targetSpeed() >= 0.0
                 && Math.abs(train.speed()) < Math.abs(train.targetSpeed());
         double rollingResistance = pulling ? 0.0
-                : LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get();
+                : LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() * 0.5;
 
         double brakeDeceleration = 0.0;
         if (train.brakeHold()) {
