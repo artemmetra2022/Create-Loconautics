@@ -1980,5 +1980,10 @@
   "loconautics.sand_storage.goggles.header": "Запас песка",
   "loconautics.sand_storage.goggles.amount": "Песок: %s / %s",
   "loconautics.sand_storage.goggles.active": "Подача песка: включена",
-  "loconautics.sand_storage.goggles.idle": "Подача песка: выключена"
+  "loconautics.sand_storage.goggles.idle": "Подача песка: выключена",
+  "item.loconautics.brake_pad_repair_kit": "Комплект тормозных колодок",
+  "loconautics.brake_pads.wear": "Износ колодок: %s%%",
+  "loconautics.brake_pads.temperature": "Температура колодок: %s °C",
+  "loconautics.brake_pads.repair_moving": "Нельзя менять колодки на движущемся вагоне!",
+  "loconautics.brake_pads.repaired": "Тормозные колодки полностью заменены."
 }
