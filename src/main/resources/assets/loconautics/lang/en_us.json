@@ -1996,5 +1996,7 @@
   "loconautics.brake_pads.warning.overheating": "Brake pads are overheating! Thermal fade is reducing braking force.",
   "loconautics.brake_pads.warning.failed": "Brake pad failure! This carriage has no friction braking.",
   "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Enable brake pad wear",
-  "loconautics.configuration.train.dynamics.brakePadWearRate": "Brake pad wear rate"
+  "loconautics.configuration.train.dynamics.brakePadWearRate": "Brake pad wear rate",
+  "gui.loconautics.status_display.pad_wear": "Pad wear",
+  "gui.loconautics.status_display.pad_temp": "Pad temp"
 }
