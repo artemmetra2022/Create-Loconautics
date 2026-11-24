@@ -23,6 +23,11 @@ import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
@@ -78,6 +83,7 @@ public final class TrainBrakes {
         TripleValveBlockEntity padValve = brakePadValve(sub);
         if (padValve != null) {
             padValve.tickBrakePadCondition(Math.abs(train.speed()), scale);
+            notifyBrakePadWarning(sub, padValve, padValve.pollBrakePadWarning());
             scale *= padValve.getBrakePadEfficiency();
         }
 
@@ -196,6 +202,31 @@ public final class TrainBrakes {
         }
 
         return Math.max(handbrakeStrength, controllerStrength);
+    }
+
+    private static void notifyBrakePadWarning(ServerSubLevel sub, TripleValveBlockEntity valve, int warning) {
+        if (warning <= 0) return;
+        ServerLevel level = sub.getLevel();
+        Vec3 position = dev.ryanhcode.sable.Sable.HELPER.projectOutOfSubLevel(level,
+                Vec3.atCenterOf(valve.getBlockPos()));
+        Component message = Component.translatable(switch (warning) {
+            case 1 -> "loconautics.brake_pads.warning.wear";
+            case 2 -> "loconautics.brake_pads.warning.critical";
+            case 3 -> "loconautics.brake_pads.warning.overheating";
+            default -> "loconautics.brake_pads.warning.failed";
+        });
+        net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound = switch (warning) {
+            case 1, 2 -> SoundEvents.BLOCK_NOTE_BLOCK_BASS;
+            case 3 -> SoundEvents.BLOCK_FIRE_EXTINGUISH;
+            default -> SoundEvents.BLOCK_ANVIL_LAND;
+        };
+        float pitch = warning == 1 ? 0.85f : warning == 2 ? 1.05f : warning == 3 ? 0.7f : 0.55f;
+        for (ServerPlayer player : level.players()) {
+            if (player.distanceToSqr(position.x, position.y, position.z) <= 32.0 * 32.0) {
+                player.displayClientMessage(message, true);
+                player.playNotifySound(sound, SoundSource.BLOCKS, 0.8f, pitch);
+            }
+        }
     }
 
     private static TripleValveBlockEntity brakePadValve(ServerSubLevel sub) {
