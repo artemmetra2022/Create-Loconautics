@@ -342,7 +342,6 @@ public final class LoconauticsClient {
                 "block.loconautics.industrial_pump");
     }
 
-
     /**
      * Gives every Loconautics block item the standard Create description tooltip.
      * Specific tooltips registered later in onClientSetup override this generic

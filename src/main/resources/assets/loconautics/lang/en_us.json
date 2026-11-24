@@ -1798,5 +1798,8 @@
   "block.loconautics.brake_hose_connector.tooltip.condition1": "When the connector is clicked",
   "block.loconautics.brake_hose_connector.tooltip.behaviour1": "Toggles the brake hose angle cock.",
   "block.loconautics.emergency_brake.tooltip.condition1": "When the handle is pulled",
-  "block.loconautics.emergency_brake.tooltip.behaviour1": "Vents the brake pipe and triggers an emergency stop for the consist."
+  "block.loconautics.emergency_brake.tooltip.behaviour1": "Vents the brake pipe and triggers an emergency stop for the consist.",
+  "block.loconautics.boiler_bogey.tooltip.summary": "A locomotive steam bogey. It accepts extra wheel pairs and lets you configure its pistons.",
+  "block.loconautics.boiler_bogey.tooltip.condition1": "When used with a Train Wheel",
+  "block.loconautics.boiler_bogey.tooltip.behaviour1": "Adds a wheel pair to the bogey. Sneak-click with a wrench to flip the pistons."
 }

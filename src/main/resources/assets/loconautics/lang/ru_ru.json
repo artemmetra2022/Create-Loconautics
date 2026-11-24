@@ -1793,5 +1793,8 @@
   "block.loconautics.brake_hose_connector.tooltip.condition1": "При нажатии на соединитель",
   "block.loconautics.brake_hose_connector.tooltip.behaviour1": "Переключает концевой кран тормозного рукава.",
   "block.loconautics.emergency_brake.tooltip.condition1": "При срыве рукоятки",
-  "block.loconautics.emergency_brake.tooltip.behaviour1": "Стравливает тормозную магистраль и вызывает экстренное торможение состава."
+  "block.loconautics.emergency_brake.tooltip.behaviour1": "Стравливает тормозную магистраль и вызывает экстренное торможение состава.",
+  "block.loconautics.boiler_bogey.tooltip.summary": "Паровая тележка локомотива. В неё можно устанавливать дополнительные пары колёс и настраивать поршни.",
+  "block.loconautics.boiler_bogey.tooltip.condition1": "При установке железнодорожного колеса",
+  "block.loconautics.boiler_bogey.tooltip.behaviour1": "Добавляет тележке пару колёс. Shift + ПКМ гаечным ключом переключает положение поршней."
 }
