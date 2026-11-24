@@ -1977,5 +1977,13 @@
   "loconautics.gui.goggles.gauge_brake_hose_pipe_pressure": "Brake Hose Pressure",
   "loconautics.gui.goggles.gauge_brake_hose_cock_state": "Brake Hose Cock",
   "loconautics.gui.goggles.gauge_brake_hose_open": "Cock Open",
-  "loconautics.gui.goggles.gauge_brake_hose_closed": "Cock Closed"
+  "loconautics.gui.goggles.gauge_brake_hose_closed": "Cock Closed",
+  "block.loconautics.sand_storage": "Locomotive Sand Storage",
+  "block.loconautics.sand_storage.tooltip.summary": "Stores sand for the locomotive sanding system.",
+  "block.loconautics.sand_storage.tooltip.condition1": "Right-click with Sand or Red Sand to add one charge.",
+  "block.loconautics.sand_storage.tooltip.behaviour1": "Bind a panel button to this block to apply sand under the powered wheels.",
+  "loconautics.sand_storage.goggles.header": "Sand Storage",
+  "loconautics.sand_storage.goggles.amount": "Stored sand: %s / %s",
+  "loconautics.sand_storage.goggles.active": "Sanding: active",
+  "loconautics.sand_storage.goggles.idle": "Sanding: idle"
 }
