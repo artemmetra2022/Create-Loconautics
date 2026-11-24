@@ -1994,5 +1994,7 @@
   "loconautics.brake_pads.warning.wear": "Brake pads are worn. Plan maintenance soon.",
   "loconautics.brake_pads.warning.critical": "Brake pads are critically worn. Braking efficiency is reduced!",
   "loconautics.brake_pads.warning.overheating": "Brake pads are overheating! Thermal fade is reducing braking force.",
-  "loconautics.brake_pads.warning.failed": "Brake pad failure! This carriage has no friction braking."
+  "loconautics.brake_pads.warning.failed": "Brake pad failure! This carriage has no friction braking.",
+  "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Enable brake pad wear",
+  "loconautics.configuration.train.dynamics.brakePadWearRate": "Brake pad wear rate"
 }
