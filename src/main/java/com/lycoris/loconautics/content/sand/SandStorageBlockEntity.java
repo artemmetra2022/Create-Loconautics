@@ -4,6 +4,7 @@ import com.lycoris.loconautics.common.sable.SubLevelBlocks;
 import com.lycoris.loconautics.content.controls.panel.PanelDriveBus;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -28,6 +29,11 @@ public class SandStorageBlockEntity extends SmartBlockEntity implements IHaveGog
 
     public SandStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        // This storage has no kinetic or fluid behaviours; it is operated by a panel button.
     }
 
     public int getSand() {
