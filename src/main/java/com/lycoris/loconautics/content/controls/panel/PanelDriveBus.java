@@ -35,6 +35,13 @@ public class PanelDriveBus {
         return Math.max(bid.current, bid.previous);
     }
 
+    /** Current signal being sent by linked panel parts to this block. */
+    public static float signal(Level level, BlockPos pos) {
+        Bid bid = BIDS.get(new Target(level.dimension(), pos));
+        if (bid == null || level.getGameTime() - bid.tick > 2) return 0f;
+        return bid.current;
+    }
+
     public static boolean isDriven(Level level, BlockPos pos) {
         Bid bid = BIDS.get(new Target(level.dimension(), pos));
         return bid != null && level.getGameTime() - bid.tick <= 2;
