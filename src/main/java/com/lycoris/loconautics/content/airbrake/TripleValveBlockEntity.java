@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.content.airbrake;
 
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.lycoris.loconautics.config.LoconauticsConfig;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.ChatFormatting;
@@ -64,6 +65,10 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
     private float syncedCylinder;
     private DistributorMode syncedMode = DistributorMode.CHARGE;
     private boolean restoredToBus;
+    private float brakePadWear;
+    private float brakePadTemperatureC = 20.0f;
+    private float syncedBrakePadWear;
+    private float syncedBrakePadTemperatureC = 20.0f;
 
     public TripleValveBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -100,6 +105,65 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
 
     public boolean isEmergency() {
         return emergency;
+    }
+
+    public float getBrakePadWear() { return brakePadWear; }
+    public float getBrakePadTemperatureC() { return brakePadTemperatureC; }
+
+    public float getBrakePadEfficiency() {
+        if (!LoconauticsConfig.BRAKE_PAD_WEAR_ENABLED.get()) return 1.0f;
+        float wearFactor;
+        if (brakePadWear < 0.40f) wearFactor = 1.0f;
+        else if (brakePadWear < 0.60f) wearFactor = Mth.lerp((brakePadWear - 0.40f) / 0.20f, 1.0f, 0.95f);
+        else if (brakePadWear < 0.75f) wearFactor = Mth.lerp((brakePadWear - 0.60f) / 0.15f, 0.95f, 0.85f);
+        else if (brakePadWear < 0.90f) wearFactor = Mth.lerp((brakePadWear - 0.75f) / 0.15f, 0.85f, 0.70f);
+        else if (brakePadWear < 1.0f) wearFactor = Mth.lerp((brakePadWear - 0.90f) / 0.10f, 0.70f, 0.50f);
+        else wearFactor = 0.0f;
+        float heatFactor;
+        if (brakePadTemperatureC <= 300.0f) heatFactor = 1.0f;
+        else if (brakePadTemperatureC < 550.0f) heatFactor = Mth.lerp((brakePadTemperatureC - 300.0f) / 250.0f, 1.0f, 0.70f);
+        else heatFactor = Mth.clamp(0.70f - (brakePadTemperatureC - 550.0f) * 0.00175f, 0.25f, 0.70f);
+        return Mth.clamp(wearFactor * heatFactor, 0.0f, 1.0f);
+    }
+
+    /** Called by carriage physics at five-tick intervals; speed is in blocks per second. */
+    public void tickBrakePadCondition(double speed, double appliedBrake) {
+        if (level == null || level.isClientSide || !LoconauticsConfig.BRAKE_PAD_WEAR_ENABLED.get()
+                || level.getGameTime() % 5L != 0L) return;
+        float biomeTemperature = level.getBiome(worldPosition).value().getBaseTemperature();
+        float ambient = Mth.clamp(biomeTemperature * 25.0f - 10.0f, -10.0f, 40.0f);
+        boolean raining = level.isRainingAt(worldPosition);
+        if (raining) ambient -= 4.0f;
+        float oldWear = brakePadWear;
+        float oldTemperature = brakePadTemperatureC;
+        float brake = Mth.clamp((float) appliedBrake, 0.0f, 1.0f);
+        if (speed > 0.1 && brake > 0.01f && brakePadWear < 1.0f) {
+            brakePadWear = Mth.clamp(brakePadWear + (float) (speed * brake * 0.0000033
+                    * LoconauticsConfig.BRAKE_PAD_WEAR_RATE.get()), 0.0f, 1.0f);
+            brakePadTemperatureC = Mth.clamp(brakePadTemperatureC + (float) (speed * brake * 0.012), ambient, 900.0f);
+        } else {
+            float cooling = Math.max(0.0f, brakePadTemperatureC - ambient) * 0.00035f;
+            if (raining) cooling *= 1.5f;
+            brakePadTemperatureC = Math.max(ambient, brakePadTemperatureC - cooling);
+        }
+        if (Math.abs(brakePadWear - oldWear) >= 0.000001f || Math.abs(brakePadTemperatureC - oldTemperature) >= 0.5f
+                || Math.abs(brakePadWear - syncedBrakePadWear) >= 0.001f
+                || Math.abs(brakePadTemperatureC - syncedBrakePadTemperatureC) >= 1.0f) {
+            syncedBrakePadWear = brakePadWear;
+            syncedBrakePadTemperatureC = brakePadTemperatureC;
+            setChanged();
+            sendData();
+        }
+    }
+
+    public void repairBrakePads() {
+        brakePadWear = 0.0f;
+        float biomeTemperature = level == null ? 20.0f : level.getBiome(worldPosition).value().getBaseTemperature() * 25.0f - 10.0f;
+        brakePadTemperatureC = Mth.clamp(biomeTemperature, -10.0f, 40.0f);
+        syncedBrakePadWear = brakePadWear;
+        syncedBrakePadTemperatureC = brakePadTemperatureC;
+        setChanged();
+        sendData();
     }
 
     /**
@@ -286,6 +350,10 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
                 .append(Component.translatable("loconautics.triple_valve.goggles.mode",
                         Component.translatable("loconautics.triple_valve.mode." + modeKey)))
                 .withStyle(emergency ? ChatFormatting.RED : ChatFormatting.GRAY));
+        tooltip.add(Component.literal(" ").append(Component.translatable("loconautics.brake_pads.wear", Math.round(brakePadWear * 100.0f)))
+                .withStyle(brakePadWear >= 0.90f ? ChatFormatting.RED : brakePadWear >= 0.75f ? ChatFormatting.GOLD : ChatFormatting.GREEN));
+        tooltip.add(Component.literal(" ").append(Component.translatable("loconautics.brake_pads.temperature", Math.round(brakePadTemperatureC)))
+                .withStyle(brakePadTemperatureC >= 550.0f ? ChatFormatting.RED : brakePadTemperatureC >= 300.0f ? ChatFormatting.GOLD : ChatFormatting.AQUA));
         return true;
     }
 
@@ -299,6 +367,8 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
         tag.putFloat("ReferencePipePressure", referencePipePressure);
         tag.putFloat("PreviousPipePressure", previousPipePressure);
         tag.putBoolean("Emergency", emergency);
+        tag.putFloat("BrakePadWear", brakePadWear);
+        tag.putFloat("BrakePadTemperatureC", brakePadTemperatureC);
     }
 
     @Override
@@ -333,11 +403,15 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
                 ? Mth.clamp(tag.getFloat("PreviousPipePressure"), 0f, AirBrakeTuning.WORKING_PIPE_BAR)
                 : pipePressure;
         emergency = tag.getBoolean("Emergency");
+        brakePadWear = Mth.clamp(tag.getFloat("BrakePadWear"), 0.0f, 1.0f);
+        brakePadTemperatureC = Mth.clamp(tag.contains("BrakePadTemperatureC") ? tag.getFloat("BrakePadTemperatureC") : 20.0f, -100.0f, 900.0f);
 
         syncedAux = auxPressure;
         syncedEmergencyReservoir = emergencyReservoirPressure;
         syncedPipe = pipePressure;
         syncedCylinder = brakeCylinderPressure;
         syncedMode = mode;
+        syncedBrakePadWear = brakePadWear;
+        syncedBrakePadTemperatureC = brakePadTemperatureC;
     }
 }
