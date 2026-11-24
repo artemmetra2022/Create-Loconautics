@@ -72,6 +72,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
 
         List<AirReservoirBlockEntity> targets = AirReservoirScanner.findReservoirs(this);
         float rpm = Math.abs(getSpeed());
+        // No main reservoir on the consist: nowhere to pump air into, so stay idle.
         boolean hasTargets = !targets.isEmpty();
         boolean needsCharge = internalPressure < AirBrakeTuning.COMPRESSOR_RESUME_BAR;
         boolean allFull = internalPressure >= AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR - 0.001f;
@@ -87,7 +88,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         }
 
         boolean nextPumping;
-        if (rpm <= 0.01f) {
+        if (rpm <= 0.01f || !hasTargets) {
             nextPumping = false;
         } else if (pumping) {
             nextPumping = !allFull;
@@ -118,19 +119,15 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
 
         if (pumping && rpm > 0.01f) {
             float chargePerTick = LoconauticsConfig.AIR_COMPRESSOR_CHARGE_RATE.get().floatValue() * (rpm / 64.0f);
-            if (hasTargets) {
-                float remaining = chargePerTick;
-                for (AirReservoirBlockEntity reservoir : targets) {
-                    remaining -= reservoir.addAir(remaining);
-                    if (remaining <= 0.0001f) {
-                        break;
-                    }
+            float remaining = chargePerTick;
+            for (AirReservoirBlockEntity reservoir : targets) {
+                remaining -= reservoir.addAir(remaining);
+                if (remaining <= 0.0001f) {
+                    break;
                 }
-                if (remaining > 0.0001f) {
-                    internalPressure = Mth.clamp(internalPressure + remaining, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
-                }
-            } else {
-                internalPressure = Mth.clamp(internalPressure + chargePerTick, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
+            }
+            if (remaining > 0.0001f) {
+                internalPressure = Mth.clamp(internalPressure + remaining, 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
             }
         }
 

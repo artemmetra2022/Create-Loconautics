@@ -75,9 +75,26 @@ public final class AirPipeBus {
         return node == null ? 0.0f : node.pressureBar;
     }
 
+    /**
+     * A brake pipe can only hold pressure if the consist has air hardware to feed it:
+     * at least one AirReservoir or AirCompressor on the connected network. Without any
+     * reservoir / compressor there is nothing to charge the pipe from, so the bus forces
+     * pressure to zero (and keeps it there even if a stale value was restored from NBT).
+     */
+    private static boolean hasAirSupply(BlockEntity source) {
+        return !AirReservoirScanner.findReservoirs(source).isEmpty()
+                || !AirReservoirScanner.findCompressors(source).isEmpty();
+    }
+
     public static void writePipePressure(BlockEntity source, float pressureBar) {
         PipeNode node = getOrCreateNode(source);
         if (node == null || !(source.getLevel() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        if (!hasAirSupply(source)) {
+            // No main reservoir / compressor anywhere in reach: pipe bleeds to zero.
+            node.pressureBar = 0f;
+            node.lastTick = serverLevel.getGameTime();
             return;
         }
         long now = serverLevel.getGameTime();
@@ -89,6 +106,13 @@ public final class AirPipeBus {
     public static void markVented(BlockEntity connector) {
         PipeNode node = getOrCreateNode(connector);
         if (node == null || !(connector.getLevel() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        // Nothing to vent into the pipe if the consist has no reservoir / compressor:
+        // keep it pinned at zero instead of bleeding a stale restored value.
+        if (!hasAirSupply(connector)) {
+            node.pressureBar = 0f;
+            node.lastTick = serverLevel.getGameTime();
             return;
         }
         long now = serverLevel.getGameTime();
