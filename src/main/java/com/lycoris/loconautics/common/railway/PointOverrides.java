@@ -103,25 +103,23 @@ public final class PointOverrides {
 
     public static ITrackSelector wrap(ITrackSelector original) {
         return (graph, pair) -> {
-            Map.Entry<TrackNode, TrackEdge> forced = choose(pair.getFirst(), pair.getSecond());
+            Map.Entry<TrackNode, TrackEdge> forced = choose(pair.getSecond());
             return forced != null ? forced : original.apply(graph, pair);
         };
     }
 
     /** the option a switch stand (or a train reserving an auto junction) holds among these, null when none */
     public static Map.Entry<TrackNode, TrackEdge> locked(List<Map.Entry<TrackNode, TrackEdge>> options) {
-        return choose(true, options);
+        return choose(options);
     }
 
-    private static Map.Entry<TrackNode, TrackEdge> choose(boolean forward,
-                                                           List<Map.Entry<TrackNode, TrackEdge>> options) {
+    private static Map.Entry<TrackNode, TrackEdge> choose(List<Map.Entry<TrackNode, TrackEdge>> options) {
         if (POINTS.isEmpty() || options.size() < 2) {
             return null;
         }
         for (Map.Entry<TrackNode, TrackEdge> option : options) {
-            // Create reverses the outgoing edge orientation while travelling backwards.
-            TrackNode junction = forward ? option.getValue().node1 : option.getValue().node2;
-            String toward = POINTS.get(nodeId(junction.getLocation()));
+            // Create stores each outgoing connection from its source node, including reverse travel.
+            String toward = POINTS.get(nodeId(option.getValue().node1.getLocation()));
             if (toward != null && toward.equals(nodeId(option.getKey().getLocation()))) {
                 return option;
             }
