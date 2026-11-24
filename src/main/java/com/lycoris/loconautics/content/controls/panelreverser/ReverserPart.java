@@ -165,15 +165,8 @@ public record ReverserPart(int position, @Nullable BlockPos link, int body, int 
         Level level = panel.getLevel();
         if (link != null && level != null && level.isLoaded(link)
                 && level.getBlockEntity(link) instanceof TransmissionBlockEntity transmission) {
-            transmission.releasePanelDirectionSource(panel.getBlockPos(), findSlot(panel));
+            transmission.releasePanelDirectionSource(panel.getBlockPos());
         }
-    }
-
-    private int findSlot(PanelBlockEntity panel) {
-        for (PanelSlot slot : PanelSlot.values()) {
-            if (panel.getPart(slot) == this) return slot.ordinal();
-        }
-        return -1;
     }
 
     @Override
@@ -198,10 +191,10 @@ public record ReverserPart(int position, @Nullable BlockPos link, int body, int 
         if (level.isClientSide) return InteractionResult.SUCCESS;
 
         int next = clamp(position + (upperHalf(panel, slot, hit) ? 1 : -1));
+        selectDirectionSource(panel, slot);
         if (next == position) return InteractionResult.CONSUME;
 
         panel.replacePart(slot, withPosition(next));
-        selectDirectionSource(panel, slot);
         level.playSound(null, panel.getBlockPos(), LoconauticsSounds.SWITCH_TOGGLE.get(), SoundSource.BLOCKS,
                 0.6f, 0.85f + 0.15f * next);
         return InteractionResult.CONSUME;
