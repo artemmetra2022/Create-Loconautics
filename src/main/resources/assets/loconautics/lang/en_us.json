@@ -1834,5 +1834,9 @@
   "loconautics.ponder.air_brake.braking_practice.text_7": "Estimate stopping distance with s ≈ v² / (2 × a). Convert km/h to m/s by dividing by 3.6. For example, at 90 km/h and 0.9 m/s², the ideal distance is about 350 blocks. The real distance is longer because of response delays, train mass and gradient.",
   "loconautics.ponder.air_brake.braking_practice.text_8": "Notch 15 is emergency braking only. It vents the pipe quickly, but even emergency brakes build force as the cylinders fill. The train will not stop instantly.",
   "loconautics.ponder.air_brake.braking_practice.text_9": "To release, lower the notches with Shift + right-click and return the valve to 0. The pipe will recharge and the cylinders will release gradually. Wait for pressure to recover before departing.",
-  "loconautics.ponder.air_brake.braking_practice.text_10": "Check the gauges and Engineer's Goggles: the Driver's Valve shows brake-pipe and main-reservoir pressure; the Triple Valve shows cylinder pressure and its operating mode."
+  "loconautics.ponder.air_brake.braking_practice.text_10": "Check the gauges and Engineer's Goggles: the Driver's Valve shows brake-pipe and main-reservoir pressure; the Triple Valve shows cylinder pressure and its operating mode.",
+  "loconautics.driver_brake_valve.goggles.mode": "Mode: %s",
+  "loconautics.driver_brake_valve.mode.charge": "charging / release",
+  "loconautics.driver_brake_valve.mode.service": "service braking",
+  "loconautics.driver_brake_valve.mode.emergency": "emergency braking"
 }

@@ -13,6 +13,8 @@ public final class AirBrakeTuning {
 
     public static final float MAX_AUX_RESERVOIR_BAR = 5.0f;
 
+    public static final int LAST_SERVICE_NOTCH = 14;
+    public static final int EMERGENCY_NOTCH = 15;
     public static final int MAX_NOTCH = EMERGENCY_NOTCH;
 
     /** Peak pneumatic service-brake deceleration at the reference consist mass, in m/s². */
@@ -20,9 +22,6 @@ public final class AirBrakeTuning {
 
     /** Peak pneumatic emergency-brake deceleration at the reference consist mass, in m/s². */
     public static final double EMERGENCY_BRAKE_MAX_DECEL_MPS2 = 1.6;
-
-    public static final int LAST_SERVICE_NOTCH = 14;
-    public static final int EMERGENCY_NOTCH = 15;
 
     private AirBrakeTuning() {
     }
@@ -35,7 +34,7 @@ public final class AirBrakeTuning {
         if (clamped >= EMERGENCY_NOTCH) {
             return 0.0f;
         }
-        float t = (clamped - 1) / (float) (MAX_NOTCH - 2);
+        float t = (clamped - 1) / (float) (LAST_SERVICE_NOTCH - 1);
         return Mth.lerp(t, WORKING_PIPE_BAR - 0.2f, MIN_SERVICE_PIPE_BAR);
     }
 }
