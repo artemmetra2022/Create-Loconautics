@@ -209,6 +209,7 @@ public final class LoconauticsClient {
         PonderIndex.addPlugin(new com.lycoris.loconautics.client.ponder.HosePonderPlugin());
         PonderIndex.addPlugin(new com.lycoris.loconautics.client.ponder.SmallEnginePonderPlugin());
         PonderIndex.addPlugin(new com.lycoris.loconautics.client.ponder.TrainPonderPlugin());
+        PonderIndex.addPlugin(new com.lycoris.loconautics.client.ponder.OverheadPonderPlugin());
 
         SimpleBlockEntityVisualizer
                 .builder(com.lycoris.loconautics.content.boiler.BoilerBlocks.BOILER_BOGEY_BE.get())
