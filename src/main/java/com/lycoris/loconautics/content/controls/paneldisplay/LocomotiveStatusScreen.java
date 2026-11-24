@@ -99,11 +99,18 @@ public final class LocomotiveStatusScreen extends NoBlurScreen {
                 .copy().append(Component.literal(": " + safety));
         graphics.drawString(font, safetyText, left + 16, top + 185, safetyColor, false);
 
+        drawRow(graphics, left + 16, top + 207, 164, "pad_wear",
+                data.brakePresent() ? String.format(Locale.ROOT, "%.0f %%", data.brakePadWearPercent()) : "--",
+                labelColor, data.brakePadWearPercent() >= 90f ? 0xFFFF5555 : valueColor);
+        drawRow(graphics, left + 202, top + 207, 162, "pad_temp",
+                data.brakePresent() ? String.format(Locale.ROOT, "%.0f °C", data.brakePadTemperatureC()) : "--",
+                labelColor, data.brakePadTemperatureC() >= 550f ? 0xFFFF5555 : valueColor);
+
         String lower = Component.translatable("gui.loconautics.status_display.slip").getString()
                 + ": " + (data.trainPresent() ? String.format(Locale.ROOT, "%.0f %%", data.wheelSlipPercent()) : "--")
                 + "    " + Component.translatable("gui.loconautics.status_display.brake_demand").getString()
                 + ": " + (data.trainPresent() ? String.format(Locale.ROOT, "%.0f %%", data.brakeDemandPercent()) : "--");
-        graphics.drawString(font, lower, left + 16, top + 207, mutedColor, false);
+        graphics.drawString(font, lower, left + 16, top + 220, mutedColor, false);
         super.render(graphics, mouseX, mouseY, partialTick);
     }
     private void drawRow(GuiGraphics graphics, int x, int y, int rowWidth, String key, String value,
