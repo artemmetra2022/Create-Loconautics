@@ -155,9 +155,8 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("loconautics.air_compressor.goggles.header")
                 .withStyle(ChatFormatting.GRAY));
-        boolean hasReservoir = !AirReservoirScanner.findReservoirs(this).isEmpty();
-        boolean hasDistributor = AirReservoirScanner.hasRequiredCompressorTargets(this)
-                && hasReservoir;
+        boolean hasReservoir = AirReservoirScanner.hasReservoir(this);
+        boolean hasDistributor = AirReservoirScanner.hasDistributor(this);
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable(
                         pumping ? "loconautics.air_compressor.goggles.pumping" : "loconautics.air_compressor.goggles.idle"))
