@@ -147,13 +147,15 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
             if (raining) cooling *= 1.5f;
             brakePadTemperatureC = Math.max(ambient, brakePadTemperatureC - cooling);
         }
-        if (Math.abs(brakePadWear - oldWear) >= 0.000001f || Math.abs(brakePadTemperatureC - oldTemperature) >= 0.5f
-                || Math.abs(brakePadWear - syncedBrakePadWear) >= 0.001f
-                || Math.abs(brakePadTemperatureC - syncedBrakePadTemperatureC) >= 1.0f) {
-            syncedBrakePadWear = brakePadWear;
-            syncedBrakePadTemperatureC = brakePadTemperatureC;
+        if (Math.abs(brakePadWear - oldWear) >= 0.000001f
+                || Math.abs(brakePadTemperatureC - oldTemperature) >= 0.001f) {
             setChanged();
-            sendData();
+            if (Math.abs(brakePadWear - syncedBrakePadWear) >= 0.005f
+                    || Math.abs(brakePadTemperatureC - syncedBrakePadTemperatureC) >= 1.0f) {
+                syncedBrakePadWear = brakePadWear;
+                syncedBrakePadTemperatureC = brakePadTemperatureC;
+                sendData();
+            }
         }
     }
 
