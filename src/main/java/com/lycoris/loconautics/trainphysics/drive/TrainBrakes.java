@@ -204,6 +204,7 @@ public final class TrainBrakes {
         return Math.max(handbrakeStrength, controllerStrength);
     }
 
+    /** Sends each newly crossed maintenance threshold to players within the configured fixed 32-block radius. */
     private static void notifyBrakePadWarning(ServerSubLevel sub, TripleValveBlockEntity valve, int warning) {
         if (warning <= 0) return;
         ServerLevel level = sub.getLevel();
