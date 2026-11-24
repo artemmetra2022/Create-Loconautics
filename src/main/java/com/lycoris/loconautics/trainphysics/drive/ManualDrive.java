@@ -45,7 +45,8 @@ public final class ManualDrive {
     }
 
     static List<Driver> driversIn(ServerLevel level, List<UUID> members) {
-        List<Driver> drivers = new ArrayList<>();
+        List<Driver> operated = new ArrayList<>();
+        List<Driver> locked = new ArrayList<>();
         for (UUID id : members) {
             ServerSubLevel sub = SubLevelData.resolve(level, id);
             if (sub == null || sub.isRemoved()) {
@@ -53,13 +54,21 @@ public final class ManualDrive {
             }
             for (AnalogControllerBlockEntity controller
                     : SubLevelBlocks.findAll(sub, AnalogControllerBlockEntity.class)) {
-                if ((controller.hasUser() || controller.isLocked()) && !controller.isScheduleControlled()
-                        && LocomotiveHardware.hasTransmissionFor(sub, controller)) {
-                    drivers.add(new Driver(controller, sub));
+                if (controller.isScheduleControlled()
+                        || !LocomotiveHardware.hasTransmissionFor(sub, controller)) {
+                    continue;
+                }
+                Driver driver = new Driver(controller, sub);
+                if (controller.hasUser()) {
+                    operated.add(driver);
+                } else if (controller.isLocked()) {
+                    locked.add(driver);
                 }
             }
         }
-        return drivers;
+        // A live cab takes priority over unattended cruise locks in the other cab.
+        // This prevents a parked controller from fighting the cab the player is using.
+        return operated.isEmpty() ? locked : operated;
     }
 
     // a tug of war between cabs, the side with more drivers wins and an even split goes nowhere
