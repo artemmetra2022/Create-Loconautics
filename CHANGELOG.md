@@ -1,5 +1,11 @@
 # Loconautics Changelog
 
+## Ver 0.1.8BETA
+
+### Changed
+- Wheelspin no longer forces a slipping bogey's surface speed down to a fixed near-zero value; spinning wheels retain the train's ground speed plus a controlled slip excess, so wheelspin does not become an artificial top-speed limiter.
+- Adhesion loss under wheelspin is less punitive while remaining noticeable. A hard launch at maximum controller power still causes wheelspin; gradual throttle application and sanding remain the better way to start smoothly.
+
 ## Ver 0.1.5BETA
 
 ### Added

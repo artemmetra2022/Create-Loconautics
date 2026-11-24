@@ -103,8 +103,15 @@ public final class WheelSlip {
             train.slippingBogeys().remove(bogeyLocal);
         }
         double sandingSpinScale = sanding ? 0.5 : 1.0;
-        double w = slipping ? Math.copySign(Math.min(Math.abs(commanded) * SLIP_FRACTION * sandingSpinScale,
-                SLIP_MAX_SPIN * sandingSpinScale), commanded) : carSpeed;
+        // A slipping wheel must spin faster than the train is moving, not crawl at a
+        // fixed 0.05 blocks/tick. The old cap unintentionally acted as a speed limiter:
+        // once a bogey slipped, its surface speed could remain almost zero at any train speed.
+        double slipExcess = Math.max(0.0, wheelSpeed - groundSpeed);
+        double visibleSpin = Math.min(slipExcess,
+                Math.max(SLIP_MAX_SPIN, wheelSpeed * SLIP_FRACTION) * sandingSpinScale);
+        double w = slipping
+                ? Math.copySign(groundSpeed + visibleSpin, commanded)
+                : carSpeed;
         train.wheelSurface().put(bogeyLocal, w);
         return w;
     }

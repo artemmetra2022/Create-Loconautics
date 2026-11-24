@@ -91,8 +91,11 @@ public final class TrainPropulsion {
         double totalMass = Math.max(1.0, result.totalMass());
         double adhesiveShare = Math.max(0.01, Math.min(1.0, drivenMass / totalMass));
         double slipRatio = poweredAxles <= 0 ? 0.0 : (double) slippingAxles / poweredAxles;
-        double slipFactor = Math.max(0.25, 1.0 - 0.70 * slipRatio);
-        double railAdhesion = isMonorail(train) ? 0.35 : 0.25;
+        // Wheelspin reduces adhesion, but should not collapse traction to a quarter
+        // of normal. This keeps a hard launch visibly slippery without trapping the
+        // consist at a permanently low speed after it has gathered momentum.
+        double slipFactor = Math.max(0.55, 1.0 - 0.45 * slipRatio);
+        double railAdhesion = isMonorail(train) ? 0.38 : 0.28;
         if (sanding) {
             railAdhesion = Math.min(0.55, railAdhesion * 1.8);
         }
