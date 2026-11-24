@@ -284,6 +284,9 @@
     },
     "minecraft:comparator": {
       "kind": "analog"
+    },
+    "loconautics:sand_storage": {
+      "kind": "binary"
     }
   }
 }
