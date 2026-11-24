@@ -1838,5 +1838,20 @@
   "loconautics.driver_brake_valve.goggles.mode": "Mode: %s",
   "loconautics.driver_brake_valve.mode.charge": "charging / release",
   "loconautics.driver_brake_valve.mode.service": "service braking",
-  "loconautics.driver_brake_valve.mode.emergency": "emergency braking"
+  "loconautics.driver_brake_valve.mode.emergency": "emergency braking",
+  "loconautics.ponder.overhead.poles.header": "Building overhead line masts",
+  "loconautics.ponder.overhead.poles.text_1": "Choose a short, standard or tall mast kit to match the clearance above your track and rolling stock.",
+  "loconautics.ponder.overhead.poles.text_2": "Place the kit once: it builds the base, shaft sections and cantilever head as one aligned assembly.",
+  "loconautics.ponder.overhead.poles.text_3": "Stand on the side where the track will run. The cantilever must face over the track so the contact wire can reach the pantograph.",
+  "loconautics.ponder.overhead.wire.header": "Installing the contact wire",
+  "loconautics.ponder.overhead.wire.text_1": "Run the contact wire between the cantilever heads. Keep every segment at the same height and make sure the wire reaches the pantograph path.",
+  "loconautics.ponder.overhead.wire.text_2": "The wire is non-colliding and is laid in straight horizontal segments. Extend the line mast by mast; avoid gaps in the section where you need electrical contact.",
+  "loconautics.ponder.overhead.pantograph.header": "Collecting power with a pantograph",
+  "loconautics.ponder.overhead.pantograph.text_1": "Mount the pantograph on the carriage roof, aligned beneath the contact wire. Check the roof height and the wire clearance before running the train.",
+  "loconautics.ponder.overhead.pantograph.text_2": "As the carriage moves beneath a valid wire, the pantograph raises and detects contact. It must physically reach the wire; a nearby wire is not enough.",
+  "loconautics.ponder.overhead.pantograph.text_3": "Contact provides a redstone output. Use that signal as an interlock for the electric motor throttle so the train cannot draw power away from the wire.",
+  "loconautics.ponder.overhead.motor.header": "Driving a train with the electric traction motor",
+  "loconautics.ponder.overhead.motor.text_1": "Install the electric traction motor on the carriage sublevel and connect its shaft to the drivetrain in the correct direction.",
+  "loconautics.ponder.overhead.motor.text_2": "A redstone level from 1 to 15 controls motor speed, up to 256 RPM. Start with a low signal and increase it gradually.",
+  "loconautics.ponder.overhead.motor.text_3": "Feed pantograph contact into the throttle circuit as a safety interlock. If contact is lost, remove the drive signal; the motor itself does not create overhead power."
 }
