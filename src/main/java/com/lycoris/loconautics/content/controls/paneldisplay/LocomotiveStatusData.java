@@ -124,6 +124,7 @@ public record LocomotiveStatusData(
         return new LocomotiveStatusData(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
                 buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
                 buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
-                buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readVarInt(), buf.readBoolean());
+                buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(),
+                buf.readVarInt(), buf.readBoolean());
     }
 }
