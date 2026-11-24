@@ -1951,5 +1951,17 @@
   "loconautics.ponder.brake_controller.text_8": "The Emergency row is a second frequency, while it has a signal the brake bites at full force",
   "loconautics.ponder.brake_controller.text_9": "Sneak and right click an Analog Controller with the item in hand to copy its frequency",
   "loconautics.ponder.brake_controller.brake_controller_single.header": "Braking the drive shaft",
-  "loconautics.ponder.brake_controller.brake_controller_frequency.header": "Binding the Brake Controller"
+  "loconautics.ponder.brake_controller.brake_controller_frequency.header": "Binding the Brake Controller",
+  "loconautics.ponder.train_casing.text_1": "Holding C with a Train Casing opens the selection menu",
+  "loconautics.ponder.train_casing.text_2": "Scrolling swaps the Casing for a Bogey",
+  "loconautics.ponder.train_casing.text_3": "Right click a Track to place the Bogey on it",
+  "loconautics.ponder.train_casing.text_4": "Train Casings placed between the Bogeys form the body of the train",
+  "loconautics.ponder.train_casing.text_5": "Glue the blocks together and hold right click on a Physics Assembler",
+  "loconautics.ponder.train_casing.text_6": "The assembled body counts as a Train and can dock at Stations",
+  "loconautics.ponder.train_casing.text_7": "Bogeys can be fitted with a Shaft by right clicking them with one",
+  "loconautics.ponder.train_casing.text_8": "Rotation from one side passes straight through, like an encased Shaft",
+  "loconautics.ponder.train_casing.text_9": "Sneak and Right click with a Wrench to remove the Shaft again",
+  "loconautics.ponder.train_casing.text_10": "Without the Shaft, rotation stops at the Bogey",
+  "loconautics.ponder.train_casing.train_casing_bogeys.header": "Building Trains with Train Casing",
+  "loconautics.ponder.train_casing.train_casing_shaft.header": "Passing Rotation through Bogeys"
 }
