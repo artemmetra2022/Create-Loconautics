@@ -27,6 +27,8 @@ public final class LoconauticsConfig {
     public static ModConfigSpec.DoubleValue DYNAMICS_BASE_DECELERATION;
     public static ModConfigSpec.DoubleValue DYNAMICS_ROLLING_RESISTANCE;
     public static ModConfigSpec.BooleanValue SLOPE_EFFECTS_ENABLED;
+    public static ModConfigSpec.BooleanValue BRAKE_PAD_WEAR_ENABLED;
+    public static ModConfigSpec.DoubleValue BRAKE_PAD_WEAR_RATE;
 
 
     public static ModConfigSpec.BooleanValue WRENCH_RELOCATION_ENABLED;
@@ -217,6 +219,16 @@ public final class LoconauticsConfig {
                 .comment("Turn off to climb any grade at flat track stress.")
                 .translation(TRANSLATION_PREFIX + "train.dynamics.slopeEffects")
                 .define("slopeEffects", true);
+
+        BRAKE_PAD_WEAR_ENABLED = BUILDER
+                .comment("Enables brake pad wear and thermal fade. Stored condition is preserved while disabled.")
+                .translation(TRANSLATION_PREFIX + "train.dynamics.brakePadWearEnabled")
+                .define("brakePadWearEnabled", true);
+
+        BRAKE_PAD_WEAR_RATE = BUILDER
+                .comment("Scales how quickly brake pads wear while a moving carriage is braking.")
+                .translation(TRANSLATION_PREFIX + "train.dynamics.brakePadWearRate")
+                .defineInRange("brakePadWearRate", 1.0, 0.1, 5.0);
 
         BUILDER.pop();
 
