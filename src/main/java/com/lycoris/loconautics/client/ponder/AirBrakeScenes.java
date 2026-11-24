@@ -247,7 +247,7 @@ public final class AirBrakeScenes {
 
     public static void preDepartureCheck(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = open(builder, "air_brake_pre_departure_check",
-                tr("loconautics.ponder.air_brake.pre_departure.header"), 9);
+                "loconautics.ponder.air_brake.pre_departure.header", 9);
 
         BlockPos valve = new BlockPos(2, 2, 2);
         BlockPos firstTriple = new BlockPos(4, 2, 2);
@@ -303,7 +303,7 @@ public final class AirBrakeScenes {
 
     public static void faultFinding(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = open(builder, "air_brake_fault_finding",
-                tr("loconautics.ponder.air_brake.fault_finding.header"), 9);
+                "loconautics.ponder.air_brake.fault_finding.header", 9);
 
         BlockPos valve = new BlockPos(2, 2, 2);
         BlockPos frontTriple = new BlockPos(4, 2, 2);
