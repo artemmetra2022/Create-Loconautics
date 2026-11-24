@@ -32,22 +32,32 @@ public final class AirReservoirScanner {
     }
 
 
-    public static boolean hasRequiredCompressorTargets(BlockEntity origin) {
+    public static boolean hasReservoir(BlockEntity origin) {
         if (!(origin.getLevel() instanceof ServerLevel level)) return false;
         SubLevel sub = Sable.HELPER.getContaining(origin);
         if (sub instanceof ServerSubLevel serverSub && !serverSub.isRemoved()) {
-            Scan scan = scan(serverSub);
-            return !scan.reservoirs().isEmpty() && !scan.distributors().isEmpty();
+            return !scan(serverSub).reservoirs().isEmpty();
         }
-        BlockPos pos = origin.getBlockPos();
-        boolean reservoir = false;
-        boolean distributor = false;
         for (Direction dir : Direction.values()) {
-            BlockEntity adjacent = level.getBlockEntity(pos.relative(dir));
-            reservoir |= adjacent instanceof AirReservoirBlockEntity;
-            distributor |= adjacent instanceof TripleValveBlockEntity;
+            if (level.getBlockEntity(origin.getBlockPos().relative(dir)) instanceof AirReservoirBlockEntity) return true;
         }
-        return reservoir && distributor;
+        return false;
+    }
+
+    public static boolean hasDistributor(BlockEntity origin) {
+        if (!(origin.getLevel() instanceof ServerLevel level)) return false;
+        SubLevel sub = Sable.HELPER.getContaining(origin);
+        if (sub instanceof ServerSubLevel serverSub && !serverSub.isRemoved()) {
+            return !scan(serverSub).distributors().isEmpty();
+        }
+        for (Direction dir : Direction.values()) {
+            if (level.getBlockEntity(origin.getBlockPos().relative(dir)) instanceof TripleValveBlockEntity) return true;
+        }
+        return false;
+    }
+
+    public static boolean hasRequiredCompressorTargets(BlockEntity origin) {
+        return hasReservoir(origin) && hasDistributor(origin);
     }
 
     public static List<AirReservoirBlockEntity> findReservoirs(BlockEntity origin) {
