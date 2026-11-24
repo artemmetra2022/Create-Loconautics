@@ -454,13 +454,18 @@ public final class TrainPropulsion {
         return false;
     }
 
+    /** Default gear-0 axle speed at 256 RPM. Keep the locomotive usable above Create's
+     * conservative train speed default while retaining the explicit config override. */
+    private static final double DEFAULT_BEARING_AXLE_SPEED_MPS = 80.0 / 3.6;
+
     public static double createTopSpeedMps() {
         return AllConfigs.server().trains.trainTopSpeed.get();
     }
 
     static double bearingAxleCapMps() {
         double cfg = LoconauticsConfig.BEARING_AXLE_MAX_SPEED.get();
-        return cfg < 0.0 ? createTopSpeedMps() : cfg;
+        // -1 means use Create's value as a floor, not a hard 26 km/h-style ceiling.
+        return cfg < 0.0 ? Math.max(createTopSpeedMps(), DEFAULT_BEARING_AXLE_SPEED_MPS) : cfg;
     }
 
     public static double bearingAxleCapBpt() {
