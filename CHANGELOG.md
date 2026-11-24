@@ -1,5 +1,13 @@
 # Loconautics Changelog
 
+## Ver 0.1.9BETA
+
+### Added
+- The locomotive status display now reports the mass of the locomotive carrying the display separately from the mass of the entire coupled consist. Both values are sampled from the train's physics sublevels and update as the consist changes.
+
+### Fixed
+- Air distributors now finish releasing the brake cylinder all the way to the commanded pressure after a stop-cock/emergency vent is closed. The previous release deadband could leave a tiny residual cylinder pressure (about 1%), holding the train after the brake pipe had recovered.
+
 ## Ver 0.1.8BETA
 
 ### Changed

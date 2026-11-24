@@ -9,6 +9,8 @@ import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
 import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
 import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
 import com.lycoris.loconautics.content.controls.panel.PanelBlockEntity;
+import com.lycoris.loconautics.trainphysics.drive.ConsistPower;
+import com.lycoris.loconautics.trainphysics.TrainConsist;
 import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -18,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public record LocomotiveStatusData(
         boolean trainPresent, boolean enginePresent, boolean brakePresent,
-        float speedKmh, float acceleration, float consistMass, float gradePercent,
+        float speedKmh, float acceleration, float locomotiveMass, float consistMass, float gradePercent,
         float adhesionLimit, float wheelSlipPercent, float brakeDemandPercent,
         float brakePadWearPercent, float brakePadTemperatureC, float mainAirBar, float brakePipeBar, float engineRpm, float engineOutputSu,
         float fuelPercent, float engineHeatPercent, int safetyAlarm, boolean emergency) {
@@ -54,7 +56,18 @@ public record LocomotiveStatusData(
             }
         }
 
-        boolean train = SableTrainRegistry.bySubLevel(sub.getUniqueId()) != null;
+        var trainData = SableTrainRegistry.bySubLevel(sub.getUniqueId());
+        boolean train = trainData != null && !trainData.isGhost();
+        float locomotiveMass = 0f;
+        float consistMass = 0f;
+        if (train) {
+            // The panel's own Sable sublevel is the locomotive carrying this indicator.
+            locomotiveMass = (float) TrainConsist.subLevelMass(sub);
+            ConsistPower.Result consist = ConsistPower.resultFor(trainData);
+            consistMass = consist == null
+                    ? (float) TrainConsist.totalMass(sub.getLevel(), sub.getUniqueId())
+                    : (float) consist.totalMass();
+        }
         boolean hasEngine = engine != null;
         boolean hasBrakes = brakeValve != null || reservoir != null || padValve != null;
         float mainAir = brakeValve != null ? brakeValve.getMainPressure()
@@ -68,7 +81,7 @@ public record LocomotiveStatusData(
                 train, hasEngine, hasBrakes,
                 speedometer == null ? 0f : speedometer.getSpeed() * 3.6f,
                 speedometer == null ? 0f : speedometer.getAcceleration(),
-                speedometer == null ? 0f : speedometer.getConsistMass(),
+                locomotiveMass, consistMass,
                 speedometer == null ? 0f : speedometer.getTrackGrade(),
                 speedometer == null ? 0f : speedometer.getAdhesionLimit(),
                 speedometer == null ? 0f : speedometer.getPoweredAxleSlip() * 100f,
@@ -85,7 +98,7 @@ public record LocomotiveStatusData(
     }
 
     public static LocomotiveStatusData empty() {
-        return new LocomotiveStatusData(false, false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        return new LocomotiveStatusData(false, false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 SafetyBlockEntity.ALARM_NONE, false);
     }
 
@@ -103,6 +116,7 @@ public record LocomotiveStatusData(
         buf.writeBoolean(brakePresent);
         buf.writeFloat(speedKmh);
         buf.writeFloat(acceleration);
+        buf.writeFloat(locomotiveMass);
         buf.writeFloat(consistMass);
         buf.writeFloat(gradePercent);
         buf.writeFloat(adhesionLimit);

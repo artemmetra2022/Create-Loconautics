@@ -256,10 +256,15 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
             } else {
                 applyServiceBrake(targetCylinder);
             }
-        } else if (targetCylinder < brakeCylinderPressure - MIN_TRIGGER_DROP_BAR) {
-            // Rising brake-pipe pressure commands a graduated release.
+        } else if (brakeCylinderPressure > targetCylinder + 0.001f) {
+            // Keep the normal graduated release, but never leave a tiny residual
+            // cylinder pressure behind: that residual can keep a consist held
+            // after an emergency stop-cock vent has been closed.
             brakeCylinderPressure = Math.max(targetCylinder,
                     brakeCylinderPressure - CYLINDER_RELEASE_RATE);
+            if (brakeCylinderPressure - targetCylinder < 0.01f) {
+                brakeCylinderPressure = targetCylinder;
+            }
         }
 
         updateMode(targetCylinder);

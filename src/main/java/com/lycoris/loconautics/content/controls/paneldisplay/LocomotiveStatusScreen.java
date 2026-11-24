@@ -65,11 +65,13 @@ public final class LocomotiveStatusScreen extends NoBlurScreen {
                 data.trainPresent() ? String.format(Locale.ROOT, "%.1f km/h", data.speedKmh()) : "--", labelColor, valueColor);
         drawRow(graphics, left + 16, top + 101, 164, "acceleration",
                 data.trainPresent() ? String.format(Locale.ROOT, "%+.2f m/s²", data.acceleration()) : "--", labelColor, valueColor);
-        drawRow(graphics, left + 16, top + 120, 164, "mass",
+        drawRow(graphics, left + 16, top + 120, 164, "locomotive_mass",
+                data.trainPresent() ? String.format(Locale.ROOT, "%,.0f kg", data.locomotiveMass()) : "--", labelColor, valueColor);
+        drawRow(graphics, left + 16, top + 139, 164, "mass",
                 data.trainPresent() ? String.format(Locale.ROOT, "%,.0f kg", data.consistMass()) : "--", labelColor, valueColor);
-        drawRow(graphics, left + 16, top + 139, 164, "grade",
+        drawRow(graphics, left + 16, top + 158, 164, "grade",
                 data.trainPresent() ? String.format(Locale.ROOT, "%+.1f %%", data.gradePercent()) : "--", labelColor, valueColor);
-        drawRow(graphics, left + 16, top + 158, 164, "adhesion",
+        drawRow(graphics, left + 16, top + 177, 164, "adhesion",
                 data.trainPresent() ? String.format(Locale.ROOT, "%.2f m/s²", data.adhesionLimit()) : "--", labelColor, valueColor);
 
         graphics.drawString(font, Component.translatable("gui.loconautics.status_display.traction"),
@@ -97,12 +99,12 @@ public final class LocomotiveStatusScreen extends NoBlurScreen {
                 : data.severity() == 1 ? 0xFFFFC34A : 0xFF67D49A;
         Component safetyText = Component.translatable("gui.loconautics.status_display.safety")
                 .copy().append(Component.literal(": " + safety));
-        graphics.drawString(font, safetyText, left + 16, top + 185, safetyColor, false);
+        graphics.drawString(font, safetyText, left + 16, top + 194, safetyColor, false);
 
-        drawRow(graphics, left + 16, top + 207, 164, "pad_wear",
+        drawRow(graphics, left + 16, top + 209, 164, "pad_wear",
                 data.brakePresent() ? String.format(Locale.ROOT, "%.0f %%", data.brakePadWearPercent()) : "--",
                 labelColor, data.brakePadWearPercent() >= 90f ? 0xFFFF5555 : valueColor);
-        drawRow(graphics, left + 202, top + 207, 162, "pad_temp",
+        drawRow(graphics, left + 202, top + 209, 162, "pad_temp",
                 data.brakePresent() ? String.format(Locale.ROOT, "%.0f °C", data.brakePadTemperatureC()) : "--",
                 labelColor, data.brakePadTemperatureC() >= 550f ? 0xFFFF5555 : valueColor);
 

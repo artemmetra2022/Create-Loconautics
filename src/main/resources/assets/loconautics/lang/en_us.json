@@ -2003,5 +2003,6 @@
   "loconautics.air_compressor.goggles.reservoir_detected": "Air reservoir: detected",
   "loconautics.air_compressor.goggles.reservoir_missing": "Air reservoir not detected — no place to pump air",
   "loconautics.air_compressor.goggles.distributor_detected": "Air distributor: detected",
-  "loconautics.air_compressor.goggles.distributor_missing": "Air distributor not detected"
+  "loconautics.air_compressor.goggles.distributor_missing": "Air distributor not detected",
+  "gui.loconautics.status_display.locomotive_mass": "Locomotive mass"
 }

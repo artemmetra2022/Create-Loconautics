@@ -1998,5 +1998,6 @@
   "loconautics.air_compressor.goggles.reservoir_detected": "Воздушный резервуар: обнаружен",
   "loconautics.air_compressor.goggles.reservoir_missing": "Не обнаружен воздушный резервуар — качать воздух некуда",
   "loconautics.air_compressor.goggles.distributor_detected": "Воздухораспределитель: обнаружен",
-  "loconautics.air_compressor.goggles.distributor_missing": "Не обнаружен воздухораспределитель"
+  "loconautics.air_compressor.goggles.distributor_missing": "Не обнаружен воздухораспределитель",
+  "gui.loconautics.status_display.locomotive_mass": "Масса локомотива"
 }
