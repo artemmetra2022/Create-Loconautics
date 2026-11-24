@@ -245,6 +245,113 @@ public final class AirBrakeScenes {
         scene.idle(75);
     }
 
+    public static void preDepartureCheck(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = open(builder, "air_brake_pre_departure_check",
+                tr("loconautics.ponder.air_brake.pre_departure.header"), 9);
+
+        BlockPos valve = new BlockPos(2, 2, 2);
+        BlockPos firstTriple = new BlockPos(4, 2, 2);
+        BlockPos middleTriple = new BlockPos(6, 2, 2);
+        BlockPos rearTriple = new BlockPos(8, 2, 2);
+
+        scene.world().setBlock(firstTriple, AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().setBlock(middleTriple, AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().setBlock(rearTriple, AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().showSection(util.select().fromTo(0, 1, 0, 8, 2, 4), Direction.DOWN);
+        scene.idle(15);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_1"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_2"))
+                .attachKeyFrame().colored(PonderPalette.BLUE).placeNearTarget()
+                .pointAt(util.vector().topOf(firstTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_3"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(middleTriple));
+        scene.idle(95);
+
+        scene.overlay().showControls(util.vector().topOf(valve), Pointing.DOWN, 35).rightClick();
+        scene.idle(10);
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_4"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_5"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(rearTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_6"))
+                .attachKeyFrame().colored(PonderPalette.GREEN).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.pre_departure.text_7"))
+                .attachKeyFrame().colored(PonderPalette.RED).placeNearTarget()
+                .pointAt(util.vector().topOf(rearTriple));
+        scene.idle(95);
+    }
+
+    public static void faultFinding(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = open(builder, "air_brake_fault_finding",
+                tr("loconautics.ponder.air_brake.fault_finding.header"), 9);
+
+        BlockPos valve = new BlockPos(2, 2, 2);
+        BlockPos frontTriple = new BlockPos(4, 2, 2);
+        BlockPos rearTriple = new BlockPos(8, 2, 2);
+        scene.world().setBlock(frontTriple, AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().setBlock(rearTriple, AirBrakeBlocks.TRIPLE_VALVE.get().defaultBlockState(), false);
+        scene.world().showSection(util.select().fromTo(0, 1, 0, 8, 2, 4), Direction.DOWN);
+        scene.idle(15);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_1"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_2"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(frontTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_3"))
+                .attachKeyFrame().colored(PonderPalette.BLUE).placeNearTarget()
+                .pointAt(util.vector().topOf(rearTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_4"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(rearTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_5"))
+                .attachKeyFrame().colored(PonderPalette.RED).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_6"))
+                .attachKeyFrame().placeNearTarget().pointAt(util.vector().topOf(frontTriple));
+        scene.idle(95);
+
+        scene.overlay().showText(85)
+                .text(tr("loconautics.ponder.air_brake.fault_finding.text_7"))
+                .attachKeyFrame().colored(PonderPalette.GREEN).placeNearTarget()
+                .pointAt(util.vector().topOf(valve));
+        scene.idle(95);
+    }
+
     public static void brakingPractice(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = open(builder, "air_brake_braking_practice",
                 "loconautics.ponder.air_brake.braking_practice.header", 7);
