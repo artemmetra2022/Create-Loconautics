@@ -80,11 +80,12 @@ public class SafetyScreen extends Screen {
             boolean on = (enabledMask & (1 << i)) != 0;
             boolean bound = (frequencyMask & (1 << i)) != 0;
 
-            addRenderableWidget(Button.builder(onOff(on), button -> {
+            Button toggle = addRenderableWidget(Button.builder(onOff(on), button -> {
                 enabledMask ^= 1 << i;
                 send(-1, SafetyConfigurePacket.ACTION_NONE);
                 rebuildWidgets();
             }).bounds(left + SWITCH_X, y, SWITCH_W, 20).build());
+            toggle.active = device.implemented();
 
             addRenderableWidget(Button.builder(
                     Component.translatable(bound ? "gui.loconautics.safety.rebind" : "gui.loconautics.safety.bind"),
@@ -93,8 +94,8 @@ public class SafetyScreen extends Screen {
                     .tooltip(Tooltip.create(Component.translatable("gui.loconautics.safety.bind.tooltip")))
                     .build());
             // Placeholder safety modes remain visible for clarity, but cannot be enabled or bound.
-            Button toggle = (Button) children().get(children().size() - 3);
-            toggle.active = device.implemented();
+            Button link = (Button) children().get(children().size() - 1);
+            link.active = device.implemented();
 
             Button clear = Button.builder(Component.literal("x"),
                     button -> send(i, SafetyConfigurePacket.ACTION_CLEAR))
