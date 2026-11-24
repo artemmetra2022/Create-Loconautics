@@ -1963,5 +1963,19 @@
   "loconautics.ponder.train_casing.text_9": "Sneak and Right click with a Wrench to remove the Shaft again",
   "loconautics.ponder.train_casing.text_10": "Without the Shaft, rotation stops at the Bogey",
   "loconautics.ponder.train_casing.train_casing_bogeys.header": "Building Trains with Train Casing",
-  "loconautics.ponder.train_casing.train_casing_shaft.header": "Passing Rotation through Bogeys"
+  "loconautics.ponder.train_casing.train_casing_shaft.header": "Passing Rotation through Bogeys",
+  "loconautics.gui.goggles.gauge_main_reservoir_fill": "Main Reservoir Fill",
+  "loconautics.gui.goggles.gauge_driver_brake_notch": "Driver's Brake Valve Position",
+  "loconautics.gui.goggles.gauge_air_compressor_pressure": "Compressor Pressure",
+  "loconautics.gui.goggles.gauge_air_compressor_fill": "Compressor Pressure (%)",
+  "loconautics.gui.goggles.gauge_air_compressor_state": "Compressor State",
+  "loconautics.gui.goggles.gauge_air_compressor_pumping": "Pumping",
+  "loconautics.gui.goggles.gauge_air_compressor_idle": "Idle",
+  "loconautics.gui.goggles.gauge_triple_valve_pipe_pressure": "Brake Pipe Pressure",
+  "loconautics.gui.goggles.gauge_triple_valve_aux_pressure": "Auxiliary Reservoir Pressure",
+  "loconautics.gui.goggles.gauge_triple_valve_emergency_reservoir_pressure": "Emergency Reservoir Pressure",
+  "loconautics.gui.goggles.gauge_brake_hose_pipe_pressure": "Brake Hose Pressure",
+  "loconautics.gui.goggles.gauge_brake_hose_cock_state": "Brake Hose Cock",
+  "loconautics.gui.goggles.gauge_brake_hose_open": "Cock Open",
+  "loconautics.gui.goggles.gauge_brake_hose_closed": "Cock Closed"
 }
