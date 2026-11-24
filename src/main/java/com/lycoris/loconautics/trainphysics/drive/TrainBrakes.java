@@ -217,15 +217,15 @@ public final class TrainBrakes {
             default -> "loconautics.brake_pads.warning.failed";
         });
         net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound = switch (warning) {
-            case 1, 2 -> SoundEvents.BLOCK_NOTE_BLOCK_BASS;
-            case 3 -> SoundEvents.BLOCK_FIRE_EXTINGUISH;
-            default -> SoundEvents.BLOCK_ANVIL_LAND;
+            case 1, 2 -> SoundEvents.CHAIN_PLACE;
+            case 3 -> SoundEvents.ARMOR_EQUIP_LEATHER;
+            default -> SoundEvents.ANVIL_USE;
         };
         float pitch = warning == 1 ? 0.85f : warning == 2 ? 1.05f : warning == 3 ? 0.7f : 0.55f;
         for (ServerPlayer player : level.players()) {
             if (player.distanceToSqr(position.x, position.y, position.z) <= 32.0 * 32.0) {
                 player.displayClientMessage(message, true);
-                player.playNotifySound(sound, SoundSource.BLOCKS, 0.8f, pitch);
+                player.playNotifySound(sound.value(), SoundSource.BLOCKS, 0.8f, pitch);
             }
         }
     }
