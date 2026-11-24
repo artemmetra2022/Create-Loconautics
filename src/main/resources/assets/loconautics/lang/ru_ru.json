@@ -1991,5 +1991,7 @@
   "loconautics.brake_pads.warning.overheating": "Перегрев тормозов! Из-за нагрева тормозная сила снижается.",
   "loconautics.brake_pads.warning.failed": "Отказ тормозных колодок! У этого вагона нет фрикционного торможения.",
   "loconautics.configuration.train.dynamics.brakePadWearEnabled": "Износ тормозных колодок",
-  "loconautics.configuration.train.dynamics.brakePadWearRate": "Скорость износа колодок"
+  "loconautics.configuration.train.dynamics.brakePadWearRate": "Скорость износа колодок",
+  "gui.loconautics.status_display.pad_wear": "Износ колодок",
+  "gui.loconautics.status_display.pad_temp": "Температура колодок"
 }
