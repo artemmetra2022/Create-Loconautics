@@ -211,7 +211,10 @@ public final class TrainBrakes {
         }
         // Rolling resistance force grows with axle load, but so does the car's mass:
         // its resulting deceleration is therefore approximately independent of load.
-        return Math.min(1.0, LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() / BRAKE_DECEL);
+        // Free-running rail vehicles should coast for a long time; keep the config value as a
+        // familiar tuning knob, but apply only one fifth of the former drag to avoid an
+        // artificial speed drop when a train leaves a downhill grade for level track.
+        return Math.min(1.0, LoconauticsConfig.DYNAMICS_ROLLING_RESISTANCE.get() * 0.2 / BRAKE_DECEL);
     }
 
     private static double rollingWeightUnclamped(ServerSubLevel sub) {
