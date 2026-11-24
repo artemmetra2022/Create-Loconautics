@@ -1990,5 +1990,9 @@
   "loconautics.brake_pads.wear": "Brake pad wear: %s%%",
   "loconautics.brake_pads.temperature": "Brake pad temperature: %s °C",
   "loconautics.brake_pads.repair_moving": "Brake pads can only be replaced while the carriage is stopped.",
-  "loconautics.brake_pads.repaired": "The complete set of brake pads has been replaced."
+  "loconautics.brake_pads.repaired": "The complete set of brake pads has been replaced.",
+  "loconautics.brake_pads.warning.wear": "Brake pads are worn. Plan maintenance soon.",
+  "loconautics.brake_pads.warning.critical": "Brake pads are critically worn. Braking efficiency is reduced!",
+  "loconautics.brake_pads.warning.overheating": "Brake pads are overheating! Thermal fade is reducing braking force.",
+  "loconautics.brake_pads.warning.failed": "Brake pad failure! This carriage has no friction braking."
 }
