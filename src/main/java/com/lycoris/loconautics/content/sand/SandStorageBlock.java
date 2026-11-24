@@ -12,12 +12,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class SandStorageBlock extends Block implements IBE<SandStorageBlockEntity> {
 
+    public static final IntegerProperty FILL_LEVEL = IntegerProperty.create("fill_level", 0, 4);
+
     public SandStorageBlock(Properties properties) {
         super(properties);
+        registerDefaultState(defaultBlockState().setValue(FILL_LEVEL, 0));
+    }
+
+    public static int fillLevelFor(int amount) {
+        return Mth.clamp(Mth.ceil(amount * 4f / SandStorageBlockEntity.CAPACITY), 0, 4);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FILL_LEVEL);
     }
 
     @Override

@@ -1974,6 +1974,7 @@
   "loconautics.gui.goggles.gauge_brake_hose_open": "Кран открыт",
   "loconautics.gui.goggles.gauge_brake_hose_closed": "Кран закрыт",
   "block.loconautics.sand_storage": "Песочный бункер локомотива",
+  "block.loconautics.sand_storage.tooltip.condition2": "Уровень песка виден прямо внутри открытого бункера.",
   "block.loconautics.sand_storage.tooltip.summary": "Хранит песок для системы пескоподачи локомотива.",
   "block.loconautics.sand_storage.tooltip.condition1": "ПКМ с песком или красным песком добавляет одну порцию.",
   "block.loconautics.sand_storage.tooltip.behaviour1": "Привяжите к бункеру кнопку панели, чтобы подавать песок под ведущие колёса.",

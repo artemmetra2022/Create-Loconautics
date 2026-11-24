@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -46,7 +47,19 @@ public class SandStorageBlockEntity extends SmartBlockEntity implements IHaveGog
         }
         sand = Math.min(CAPACITY, sand + amount);
         setChanged();
+        syncVisualLevel();
         return true;
+    }
+
+    private void syncVisualLevel() {
+        if (level == null || level.isClientSide || !(getBlockState().getBlock() instanceof SandStorageBlock)) {
+            return;
+        }
+        int visualLevel = SandStorageBlock.fillLevelFor(sand);
+        BlockState state = getBlockState();
+        if (state.getValue(SandStorageBlock.FILL_LEVEL) != visualLevel) {
+            level.setBlock(worldPosition, state.setValue(SandStorageBlock.FILL_LEVEL, visualLevel), Block.UPDATE_ALL);
+        }
     }
 
     public boolean isSanding() {
@@ -76,11 +89,15 @@ public class SandStorageBlockEntity extends SmartBlockEntity implements IHaveGog
             return;
         }
 
+        // Also repairs the visual state after loading saved block-entity data.
+        syncVisualLevel();
+
         boolean powered = PanelDriveBus.signal(level, worldPosition) > 0f;
         if (powered && !buttonDown && sand > 0) {
             sand--;
             sandingUntil = Math.max(sandingUntil, level.getGameTime()) + SANDING_DURATION_TICKS;
             setChanged();
+            syncVisualLevel();
             sendData();
             level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
             level.playSound(null, worldPosition, SoundEvents.SAND_PLACE, SoundSource.BLOCKS, 0.7f, 0.72f);
