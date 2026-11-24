@@ -2,6 +2,7 @@ package com.lycoris.loconautics.content.airbrake;
 
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
+import com.lycoris.loconautics.common.sable.SubLevelBlocks;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,8 @@ public final class BrakePadRepairKitItem extends Item {
         BlockEntity blockEntity;
         SubLevel subLevel = Sable.HELPER.getContaining(level, Vec3.atCenterOf(pos));
         if (subLevel != null) {
-            blockEntity = subLevel.getBlockEntity(pos);
+            blockEntity = SubLevelBlocks.findAll(subLevel, TripleValveBlockEntity.class).stream()
+                    .filter(candidate -> candidate.getBlockPos().equals(pos)).findFirst().orElse(null);
             SableTrain train = SableTrainRegistry.bySubLevel(subLevel.getUniqueId());
             if (train != null && Math.abs(train.speed()) > 0.05) {
                 if (player != null) {
