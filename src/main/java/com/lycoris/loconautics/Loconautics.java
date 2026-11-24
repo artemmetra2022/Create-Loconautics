@@ -38,6 +38,7 @@ public final class Loconautics {
         com.lycoris.loconautics.content.buffer.BufferBlocks.init();
         com.lycoris.loconautics.content.combustion.SmallEngineBlocks.init();
         com.lycoris.loconautics.content.airbrake.AirBrakeBlocks.init();
+        com.lycoris.loconautics.content.sand.SandStorageBlocks.init();
         com.lycoris.loconautics.content.conductorshat.ConductorsHats.init();
         com.lycoris.loconautics.content.conductorshat.ConductorsGoggles.init();
         com.lycoris.loconautics.registry.LoconauticsSounds.register(modEventBus);
