@@ -37,7 +37,7 @@ public class TrainCasingScenes {
 
     public static void bogeys(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        scene.title("train_casing_bogeys", "Building Trains with Train Casing");
+        scene.title("train_casing_bogeys", net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.train_casing_bogeys.header").getString());
         scene.configureBasePlate(0, 0, 7);
         scene.scaleSceneView(.8f);
         scene.setSceneOffsetY(-1);
@@ -60,7 +60,7 @@ public class TrainCasingScenes {
         scene.idle(20);
         scene.overlay().showControls(railTop, Pointing.DOWN, 40).withItem(casingStack);
         scene.overlay().showText(70)
-                .text("Holding C with a Train Casing opens the selection menu")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_1").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(railTop);
@@ -70,7 +70,7 @@ public class TrainCasingScenes {
         scene.idle(15);
         menu.select(scene, 1);
         scene.overlay().showText(70)
-                .text("Scrolling swaps the Casing for a Bogey")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_2").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(railTop);
@@ -83,7 +83,7 @@ public class TrainCasingScenes {
         ElementLink<WorldSectionElement> body = scene.world()
                 .showIndependentSection(util.select().position(BOGEY_A), Direction.DOWN);
         scene.overlay().showText(70)
-                .text("Right click a Track to place the Bogey on it")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_3").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(BOGEY_A));
@@ -101,7 +101,7 @@ public class TrainCasingScenes {
         scene.idle(5);
         scene.world().showSectionAndMerge(util.select().position(CASING_B), Direction.DOWN, body);
         scene.overlay().showText(70)
-                .text("Train Casings placed between the Bogeys form the body of the train")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_4").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CASING_B));
@@ -115,7 +115,7 @@ public class TrainCasingScenes {
         scene.overlay().showOutline(PonderPalette.OUTPUT, "glue", glued, 110);
         scene.idle(20);
         scene.overlay().showText(80)
-                .text("Glue the blocks together and hold right click on a Physics Assembler")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_5").getString())
                 .attachKeyFrame()
                 .colored(PonderPalette.OUTPUT)
                 .placeNearTarget()
@@ -133,7 +133,7 @@ public class TrainCasingScenes {
         scene.effects().indicateSuccess(STATION);
         scene.idle(10);
         scene.overlay().showText(80)
-                .text("The assembled body counts as a Train and can dock at Stations")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_6").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(STATION));
@@ -142,7 +142,7 @@ public class TrainCasingScenes {
 
     public static void shaft(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        scene.title("train_casing_shaft", "Passing Rotation through Bogeys");
+        scene.title("train_casing_shaft", net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.train_casing_shaft.header").getString());
         scene.configureBasePlate(1, 0, 5);
         scene.setSceneOffsetY(-1);
         scene.showBasePlate();
@@ -161,7 +161,7 @@ public class TrainCasingScenes {
         scene.world().modifyBlocks(util.select().position(AXLE_BOGEY),
                 state -> state.setValue(BogeyShaft.SHAFTED, true), false);
         scene.overlay().showText(70)
-                .text("Bogeys can be fitted with a Shaft by right clicking them with one")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_7").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE_BOGEY));
@@ -178,7 +178,7 @@ public class TrainCasingScenes {
         scene.world().setKineticSpeed(driven.add(util.select().position(0, 2, 2)), SHAFT_RPM);
         scene.effects().rotationSpeedIndicator(new BlockPos(1, 2, 2));
         scene.overlay().showText(70)
-                .text("Rotation from one side passes straight through, like an encased Shaft")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_8").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE_BOGEY));
@@ -191,14 +191,14 @@ public class TrainCasingScenes {
                 state -> state.setValue(BogeyShaft.SHAFTED, false), false);
         scene.world().setKineticSpeed(util.select().fromTo(4, 2, 2, 5, 2, 2), 0);
         scene.overlay().showText(70)
-                .text("Sneak and Right click with a Wrench to remove the Shaft again")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_9").getString())
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(AXLE_BOGEY));
         scene.idle(80);
 
         scene.overlay().showText(60)
-                .text("Without the Shaft, rotation stops at the Bogey")
+                .text(net.minecraft.network.chat.Component.translatable("loconautics.ponder.train_casing.text_10").getString())
                 .attachKeyFrame()
                 .colored(PonderPalette.RED)
                 .placeNearTarget()
