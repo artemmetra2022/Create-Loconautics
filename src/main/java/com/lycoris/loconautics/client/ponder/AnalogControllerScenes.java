@@ -21,12 +21,12 @@ public class AnalogControllerScenes {
     private static final BlockPos CONTROLLER = new BlockPos(2, 1, 2);
 
     public static void intro(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "analog_controller_intro", "Driving with Analog Controllers");
+        CreateSceneBuilder scene = open(builder, "analog_controller_intro", tr("loconautics.ponder.analog_controller.analog_controller_intro.header"));
 
         scene.world().showSection(util.select().position(CONTROLLER), Direction.DOWN);
         scene.idle(15);
         scene.overlay().showText(70)
-                .text("Analog Controllers send throttle and steering over Redstone Link frequencies")
+                .text(tr("loconautics.ponder.analog_controller.text_1"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -35,14 +35,14 @@ public class AnalogControllerScenes {
         scene.overlay().showControls(util.vector().topOf(CONTROLLER), Pointing.DOWN, 30).rightClick();
         scene.idle(10);
         scene.overlay().showText(60)
-                .text("Right click one to take control of it")
+                .text(tr("loconautics.ponder.analog_controller.text_2"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
         scene.idle(70);
 
         scene.overlay().showText(70)
-                .text("Holding forward raises the output one level at a time")
+                .text(tr("loconautics.ponder.analog_controller.text_3"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -53,7 +53,7 @@ public class AnalogControllerScenes {
         scene.idle(10);
 
         scene.overlay().showText(60)
-                .text("Letting go steps the output back down")
+                .text(tr("loconautics.ponder.analog_controller.text_4"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -65,14 +65,14 @@ public class AnalogControllerScenes {
 
         power(scene, util, 8);
         scene.overlay().showText(70)
-                .text("Sprint locks the output where it is")
+                .text(tr("loconautics.ponder.analog_controller.text_5"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
         scene.idle(80);
 
         scene.overlay().showText(70)
-                .text("The mouse wheel sets the highest level the output can reach")
+                .text(tr("loconautics.ponder.analog_controller.text_6"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -80,7 +80,7 @@ public class AnalogControllerScenes {
     }
 
     public static void frequency(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = open(builder, "analog_controller_frequency", "Binding Analog Controllers to Redstone Links");
+        CreateSceneBuilder scene = open(builder, "analog_controller_frequency", tr("loconautics.ponder.analog_controller.analog_controller_frequency.header"));
 
         scene.world().showSection(util.select().position(CONTROLLER), Direction.DOWN);
         scene.idle(20);
@@ -96,7 +96,7 @@ public class AnalogControllerScenes {
                 .whileSneaking();
         scene.idle(10);
         scene.overlay().showText(50)
-                .text("Sneak and Right click it to open its Interface")
+                .text(tr("loconautics.ponder.analog_controller.text_7"))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(CONTROLLER));
@@ -106,28 +106,28 @@ public class AnalogControllerScenes {
         scene.idle(20);
         panel.mark(scene, 0);
         scene.overlay().showText(80)
-                .text("The Speed row is the frequency sent while driving forward")
+                .text(tr("loconautics.ponder.analog_controller.text_8"))
                 .attachKeyFrame()
                 .placeNearTarget();
         fill(scene, panel, 0, Items.GOLD_INGOT, Items.REDSTONE);
 
         panel.mark(scene, 1);
         scene.overlay().showText(80)
-                .text("The Direction row is the one sent while driving backward")
+                .text(tr("loconautics.ponder.analog_controller.text_9"))
                 .attachKeyFrame()
                 .placeNearTarget();
         fill(scene, panel, 1, Items.IRON_INGOT, Items.LAPIS_LAZULI);
 
         panel.mark(scene, 2);
         scene.overlay().showText(80)
-                .text("The Left row is the frequency sent while steering left")
+                .text(tr("loconautics.ponder.analog_controller.text_10"))
                 .attachKeyFrame()
                 .placeNearTarget();
         fill(scene, panel, 2, Items.COPPER_INGOT, Items.EMERALD);
 
         panel.mark(scene, 3);
         scene.overlay().showText(80)
-                .text("The Right row is the frequency sent while steering right")
+                .text(tr("loconautics.ponder.analog_controller.text_11"))
                 .attachKeyFrame()
                 .placeNearTarget();
         fill(scene, panel, 3, Items.QUARTZ, Items.AMETHYST_SHARD);
@@ -151,6 +151,10 @@ public class AnalogControllerScenes {
                 tag -> tag.putInt("Power", level));
         scene.world().modifyBlockEntity(CONTROLLER, AnalogControllerBlockEntity.class,
                 be -> be.animSpeed.startWithValue(level / (double) TOP_LEVEL));
+    }
+
+    private static String tr(String key) {
+        return net.minecraft.network.chat.Component.translatable(key).getString();
     }
 
     private static CreateSceneBuilder open(SceneBuilder builder, String id, String title) {
