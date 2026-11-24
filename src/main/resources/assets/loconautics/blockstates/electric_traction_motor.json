@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "loconautics:block/electric_traction_motor" },
+    "facing=east": { "model": "loconautics:block/electric_traction_motor", "y": 90 },
+    "facing=south": { "model": "loconautics:block/electric_traction_motor", "y": 180 },
+    "facing=west": { "model": "loconautics:block/electric_traction_motor", "y": 270 }
+  }
+}

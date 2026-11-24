@@ -1678,5 +1678,9 @@
   "item.loconautics.overhead_contact_wire": "Overhead contact wire",
   "item.loconautics.pantograph": "Pantograph",
   "gui.goggles.pantograph_connected": "Contact wire connected",
-  "gui.goggles.pantograph_disconnected": "No contact wire"
+  "gui.goggles.pantograph_disconnected": "No contact wire",
+  "block.loconautics.electric_traction_motor": "Electric Traction Motor",
+  "gui.goggles.loconautics_electric_motor": "Electric traction motor",
+  "gui.goggles.loconautics_electric_motor_running": "Running · %1$s RPM · redstone %2$s",
+  "gui.goggles.loconautics_electric_motor_stopped": "Stopped · redstone %2$s"
 }

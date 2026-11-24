@@ -1673,5 +1673,9 @@
   "item.loconautics.overhead_contact_wire": "Контактный провод",
   "item.loconautics.pantograph": "Пантограф",
   "gui.goggles.pantograph_connected": "Контакт с проводом установлен",
-  "gui.goggles.pantograph_disconnected": "Контактный провод не найден"
+  "gui.goggles.pantograph_disconnected": "Контактный провод не найден",
+  "block.loconautics.electric_traction_motor": "Электрический тяговый двигатель",
+  "gui.goggles.loconautics_electric_motor": "Электрический тяговый двигатель",
+  "gui.goggles.loconautics_electric_motor_running": "Работает · %1$s об/мин · редстоун %2$s",
+  "gui.goggles.loconautics_electric_motor_stopped": "Остановлен · редстоун %2$s"
 }

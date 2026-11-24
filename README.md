@@ -68,3 +68,8 @@ The code is MIT. The art, including the icon above, is all rights reserved. Both
 - Run overhead contact wire segments from mast to mast. The wire follows the horizontal direction you are facing when placing it; keep every segment at the same height as the mast head.
 - Place a pantograph on the roof of a carriage. On a Sable train it checks the world-space wire position, raises to one of three extension stages and outputs a full redstone signal while touching the contact wire.
 - The pantograph contact currently provides contact detection and a redstone output for automation. A dedicated electric traction motor and full electrical power-distribution model are not part of this first catenary implementation yet.
+
+
+## Electric traction motor (experimental)
+
+The electric traction motor is a Create kinetic source for a train carriage. Place it on the carriage sublevel and connect its output shaft to the existing drivetrain (for example, a Bearing Axle). The motor reads the redstone level on its own block: 0 stops it, and 1–15 scales its speed up to 256 RPM. The pantograph provides a redstone contact signal while touching the overhead wire; route that signal to the motor with redstone wiring. A separate throttle signal/control circuit is still required for realistic traction control. This is a kinetic prototype, not a simulated high-voltage electrical grid.

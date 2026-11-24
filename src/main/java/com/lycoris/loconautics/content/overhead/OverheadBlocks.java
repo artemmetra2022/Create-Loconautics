@@ -55,6 +55,22 @@ public final class OverheadBlocks {
             LoconauticsRegistries.ITEMS.register("pantograph",
                     () -> new BlockItem(PANTOGRAPH.get(), new Item.Properties().stacksTo(16)));
 
+    public static final DeferredHolder<Block, ElectricTractionMotorBlock> ELECTRIC_MOTOR =
+            LoconauticsRegistries.BLOCKS.register("electric_traction_motor",
+                    () -> new ElectricTractionMotorBlock(metal().strength(3.5f)));
+
+    public static final DeferredHolder<Item, BlockItem> ELECTRIC_MOTOR_ITEM =
+            LoconauticsRegistries.ITEMS.register("electric_traction_motor",
+                    () -> new BlockItem(ELECTRIC_MOTOR.get(), new Item.Properties().stacksTo(16)));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricTractionMotorBlockEntity>>
+            ELECTRIC_MOTOR_BE = LoconauticsRegistries.BLOCK_ENTITIES.register("electric_traction_motor", () ->
+            BlockEntityType.Builder.of(OverheadBlocks::createElectricMotorBE, ELECTRIC_MOTOR.get()).build(null));
+
+    private static ElectricTractionMotorBlockEntity createElectricMotorBE(BlockPos pos, BlockState state) {
+        return new ElectricTractionMotorBlockEntity(ELECTRIC_MOTOR_BE.get(), pos, state);
+    }
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PantographBlockEntity>>
             PANTOGRAPH_BE = LoconauticsRegistries.BLOCK_ENTITIES.register("pantograph", () ->
             BlockEntityType.Builder.of(OverheadBlocks::createPantographBE, PANTOGRAPH.get()).build(null));

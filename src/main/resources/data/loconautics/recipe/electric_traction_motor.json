@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["IRI", "CBC", "IRI"],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "R": { "item": "minecraft:redstone" },
+    "C": { "item": "create:andesite_casing" },
+    "B": { "item": "create:shaft" }
+  },
+  "result": { "id": "loconautics:electric_traction_motor", "count": 1 }
+}

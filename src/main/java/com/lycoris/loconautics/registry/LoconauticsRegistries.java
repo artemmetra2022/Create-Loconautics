@@ -868,6 +868,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.POLE_TALL.get());
                         output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.WIRE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.PANTOGRAPH_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.overhead.OverheadBlocks.ELECTRIC_MOTOR_ITEM.get());
                     })
                     .build());
 
