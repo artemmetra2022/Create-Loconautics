@@ -69,6 +69,7 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
     private float brakePadTemperatureC = 20.0f;
     private float syncedBrakePadWear;
     private float syncedBrakePadTemperatureC = 20.0f;
+    private int lastBrakePadWarning;
 
     public TripleValveBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -156,8 +157,26 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
         }
     }
 
+    /** Returns a warning code only when a new severity threshold is crossed. */
+    public int pollBrakePadWarning() {
+        int warning = brakePadWear >= 1.0f ? 4
+                : brakePadTemperatureC >= 550.0f ? 3
+                : brakePadWear >= 0.90f ? 2
+                : brakePadWear >= 0.75f ? 1 : 0;
+        if (warning < lastBrakePadWarning) {
+            lastBrakePadWarning = warning;
+            return 0;
+        }
+        if (warning > lastBrakePadWarning) {
+            lastBrakePadWarning = warning;
+            return warning;
+        }
+        return 0;
+    }
+
     public void repairBrakePads() {
         brakePadWear = 0.0f;
+        lastBrakePadWarning = 0;
         float biomeTemperature = level == null ? 20.0f : level.getBiome(worldPosition).value().getBaseTemperature() * 25.0f - 10.0f;
         brakePadTemperatureC = Mth.clamp(biomeTemperature, -10.0f, 40.0f);
         syncedBrakePadWear = brakePadWear;
