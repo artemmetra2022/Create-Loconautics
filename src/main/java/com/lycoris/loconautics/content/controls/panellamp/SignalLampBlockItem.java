@@ -2,7 +2,9 @@ package com.lycoris.loconautics.content.controls.panellamp;
 
 import com.lycoris.loconautics.content.boiler.BoilerBlocks;
 import com.lycoris.loconautics.content.controls.panel.PanelBlockItem;
+import com.lycoris.loconautics.content.controls.panel.PanelFrequencyMenu;
 import com.lycoris.loconautics.content.controls.panel.PanelPart;
+import com.lycoris.loconautics.content.controls.panel.PanelSlot;
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -13,7 +15,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -29,14 +30,18 @@ public class SignalLampBlockItem extends PanelBlockItem {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockEntity source = level.getBlockEntity(pos);
-        if (source == null) source = com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity.resolve(level, pos);
-        SignalLampMode mode = SignalLampMode.forSource(source);
-        if (mode == null) return super.useOn(context);
+        if (source == null) {
+            source = com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity.resolve(level, pos);
+        }
+        SignalLampMode defaultMode = SignalLampMode.forSource(source);
+        if (defaultMode == null) return super.useOn(context);
 
         if (!level.isClientSide) {
             ItemStack stack = context.getItemInHand();
             stack.set(LoconauticsRegistries.SIGNAL_LAMP_TARGET.get(), pos);
-            stack.set(LoconauticsRegistries.SIGNAL_LAMP_MODE.get(), mode.id());
+            // A valid initial value lets the part be placed; the actual mode is chosen
+            // in the selector that opens immediately after it is mounted on the panel.
+            stack.set(LoconauticsRegistries.SIGNAL_LAMP_MODE.get(), defaultMode.id());
             announceBound(stack, context.getPlayer(), level.getBlockState(pos));
         }
         return InteractionResult.SUCCESS;
@@ -58,6 +63,11 @@ public class SignalLampBlockItem extends PanelBlockItem {
         SignalLampMode mode = SignalLampMode.byId(stack.get(LoconauticsRegistries.SIGNAL_LAMP_MODE.get()));
         return target == null || mode == null
                 ? null : new SignalLampPart(target, mode, SignalLampPart.DEFAULT_BODY, false);
+    }
+
+    @Override
+    protected void onPartPlaced(Player player, BlockPos pos, PanelSlot slot, ItemStack stack) {
+        PanelFrequencyMenu.open(player, pos, slot);
     }
 
     public static ItemStack stackFor(SignalLampPart lamp) {

@@ -117,6 +117,8 @@ public class PanelVisual extends AbstractBlockEntityVisual<PanelBlockEntity> imp
             case ButtonPart button -> new ButtonPartVisual(context, button);
             case ValvePart valve -> new ValvePartVisual(context, valve);
             case SignalLampPart lamp -> new SignalLampPartVisual(context, lamp);
+            case com.lycoris.loconautics.content.camera.CameraMonitorPart monitor ->
+                    new com.lycoris.loconautics.content.camera.CameraMonitorPartVisual(context, monitor);
             case com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPart display ->
                     new com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPartVisual(context);
             default -> null;

@@ -8,6 +8,8 @@ import com.lycoris.loconautics.content.controls.panelgauge.GaugeBlockEntity;
 import com.lycoris.loconautics.content.controls.panelgauge.GaugeMetric;
 import com.lycoris.loconautics.content.controls.panelgauge.GaugeSelectorScreen;
 import com.lycoris.loconautics.content.controls.panellever.LeverPart;
+import com.lycoris.loconautics.content.controls.panellamp.SignalLampPart;
+import com.lycoris.loconautics.content.controls.panellamp.SignalLampSelectorScreen;
 import com.lycoris.loconautics.content.controls.panellever.LeverSelectorScreen;
 import com.lycoris.loconautics.content.controls.panelswitch.SwitchPart;
 import com.lycoris.loconautics.content.controls.panelswitch.SwitchSelectorScreen;
@@ -25,6 +27,7 @@ public final class PanelPartScreens {
         if (part instanceof ButtonPart button) return new ButtonSelectorScreen(menu, inventory, button);
         if (part instanceof LeverPart lever) return new LeverSelectorScreen(menu, inventory, lever);
         if (part instanceof SwitchPart switcher) return new SwitchSelectorScreen(menu, inventory, switcher);
+        if (part instanceof SignalLampPart lamp) return new SignalLampSelectorScreen(menu, inventory, lamp);
         if (part instanceof GaugeBlockEntity.Gauge gauge) {
             GaugeMetric metric = menu.contentHolder != null
                     && menu.contentHolder.panel() instanceof GaugeBlockEntity gaugePanel

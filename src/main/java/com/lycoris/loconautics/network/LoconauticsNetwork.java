@@ -66,6 +66,9 @@ public final class LoconauticsNetwork {
         r.playToServer(com.lycoris.loconautics.network.packets.controls.LocomotiveGaugeSelectPacket.TYPE,
                 com.lycoris.loconautics.network.packets.controls.LocomotiveGaugeSelectPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.controls.LocomotiveGaugeSelectPacket::handle);
+        r.playToServer(com.lycoris.loconautics.network.packets.controls.SignalLampSelectPacket.TYPE,
+                com.lycoris.loconautics.network.packets.controls.SignalLampSelectPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.controls.SignalLampSelectPacket::handle);
         r.playToServer(com.lycoris.loconautics.network.packets.controls.ValveTurnPacket.TYPE,
                 com.lycoris.loconautics.network.packets.controls.ValveTurnPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.controls.ValveTurnPacket::handle);

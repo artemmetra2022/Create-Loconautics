@@ -2017,5 +2017,16 @@
   "item.loconautics.camera_monitor": "Монитор камеры",
   "gui.loconautics.camera_monitor.linked": "Привязана камера:",
   "gui.loconautics.camera_monitor.unbound": "Монитор отвязан от камеры",
-  "gui.loconautics.camera_monitor.bind_first": "Сначала нажмите ПКМ по установленной камере, чтобы привязать монитор"
+  "gui.loconautics.camera_monitor.bind_first": "Сначала нажмите ПКМ по установленной камере, чтобы привязать монитор",
+  "gui.loconautics.signal_lamp_selector": "Настройка сигнальной лампы",
+  "gui.loconautics.signal_lamp_selector.done": "Готово",
+  "gui.loconautics.signal_lamp_selector.mode": "Что отслеживать",
+  "loconautics.gui.goggles.signal_lamp.low_pipe_pressure": "Низкое давление в тормозной магистрали",
+  "loconautics.gui.goggles.signal_lamp.emergency_valve": "Экстренная позиция крана машиниста",
+  "loconautics.gui.goggles.signal_lamp.low_fuel": "Низкий запас топлива",
+  "loconautics.gui.goggles.signal_lamp.high_brake_demand": "Сильное торможение состава",
+  "loconautics.gui.goggles.signal_lamp.high_acceleration": "Сильное ускорение или замедление",
+  "loconautics.gui.goggles.signal_lamp.safety_warning": "Предупреждение системы безопасности",
+  "loconautics.gui.goggles.signal_lamp.safety_emergency": "Аварийное срабатывание защиты",
+  "loconautics.gui.goggles.signal_lamp.service_braking": "Служебное торможение"
 }

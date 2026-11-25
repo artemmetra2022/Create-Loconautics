@@ -1,6 +1,7 @@
 package com.lycoris.loconautics.content.controls.panellamp;
 
 import com.lycoris.loconautics.content.controls.panel.PanelBlockEntity;
+import com.lycoris.loconautics.content.controls.panel.PanelFrequencyMenu;
 import com.lycoris.loconautics.content.controls.panel.PanelPart;
 import com.lycoris.loconautics.content.controls.panel.PanelPartType;
 import com.lycoris.loconautics.content.controls.panel.PanelSlot;
@@ -53,12 +54,18 @@ public record SignalLampPart(BlockPos target, SignalLampMode mode, int body, boo
 
     @Override
     public ItemStack asStack() {
-        return com.lycoris.loconautics.content.controls.panellamp.SignalLampBlockItem.stackFor(this);
+        return SignalLampBlockItem.stackFor(this);
     }
 
     @Override
     public InteractionResult use(PanelBlockEntity panel, PanelSlot slot, Player player) {
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public InteractionResult configure(PanelBlockEntity panel, PanelSlot slot, Player player) {
+        PanelFrequencyMenu.open(player, panel.getBlockPos(), slot);
+        return InteractionResult.CONSUME;
     }
 
     @Override
@@ -100,8 +107,7 @@ public record SignalLampPart(BlockPos target, SignalLampMode mode, int body, boo
         LoconauticsLang.translate(mode.langKey()).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
         boolean lit = mode.isActive(source);
         LoconauticsLang.translate(mode.statusKey(source))
-                .style(lit ? (mode == SignalLampMode.LOW_AIR || mode == SignalLampMode.WHEEL_SLIP
-                        ? ChatFormatting.GOLD : ChatFormatting.RED) : ChatFormatting.GREEN)
+                .style(lit ? (mode.warning() ? ChatFormatting.GOLD : ChatFormatting.RED) : ChatFormatting.GREEN)
                 .forGoggles(tooltip, 1);
     }
 

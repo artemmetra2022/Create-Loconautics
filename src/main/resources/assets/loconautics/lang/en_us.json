@@ -2011,5 +2011,16 @@
   "item.loconautics.camera_monitor": "Camera Monitor",
   "gui.loconautics.camera_monitor.linked": "Linked camera:",
   "gui.loconautics.camera_monitor.unbound": "Camera monitor unlinked",
-  "gui.loconautics.camera_monitor.bind_first": "Right-click an installed camera first to bind this monitor"
+  "gui.loconautics.camera_monitor.bind_first": "Right-click an installed camera first to bind this monitor",
+  "gui.loconautics.signal_lamp_selector": "Signal lamp setup",
+  "gui.loconautics.signal_lamp_selector.done": "Done",
+  "gui.loconautics.signal_lamp_selector.mode": "Monitor condition",
+  "loconautics.gui.goggles.signal_lamp.low_pipe_pressure": "Low brake pipe pressure",
+  "loconautics.gui.goggles.signal_lamp.emergency_valve": "Driver's valve in emergency notch",
+  "loconautics.gui.goggles.signal_lamp.low_fuel": "Low fuel level",
+  "loconautics.gui.goggles.signal_lamp.high_brake_demand": "High train brake demand",
+  "loconautics.gui.goggles.signal_lamp.high_acceleration": "High acceleration or deceleration",
+  "loconautics.gui.goggles.signal_lamp.safety_warning": "Safety system warning",
+  "loconautics.gui.goggles.signal_lamp.safety_emergency": "Safety system emergency",
+  "loconautics.gui.goggles.signal_lamp.service_braking": "Service braking"
 }
