@@ -34,7 +34,12 @@ public final class CameraBlocks {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CameraBlockEntity>> CAMERA_BE =
             LoconauticsRegistries.BLOCK_ENTITIES.register("security_camera", () ->
-                    BlockEntityType.Builder.of((pos, state) -> new CameraBlockEntity(CAMERA_BE.get(), pos, state), CAMERA.get()).build(null));
+                    BlockEntityType.Builder.of(CameraBlocks::createCameraBlockEntity, CAMERA.get()).build(null));
+
+    private static CameraBlockEntity createCameraBlockEntity(net.minecraft.core.BlockPos pos,
+                                                             net.minecraft.world.level.block.state.BlockState state) {
+        return new CameraBlockEntity(CAMERA_BE.get(), pos, state);
+    }
 
     private CameraBlocks() {
     }
