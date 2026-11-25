@@ -2007,5 +2007,9 @@
   "gui.loconautics.status_display.locomotive_mass": "Locomotive mass",
   "loconautics.track_switch.occupied": "This switch is already controlled by another stand",
   "block.loconautics.security_camera": "Security Camera",
-  "item.loconautics.security_camera": "Security Camera"
+  "item.loconautics.security_camera": "Security Camera",
+  "item.loconautics.camera_monitor": "Camera Monitor",
+  "gui.loconautics.camera_monitor.linked": "Linked camera:",
+  "gui.loconautics.camera_monitor.unbound": "Camera monitor unlinked",
+  "gui.loconautics.camera_monitor.bind_first": "Right-click an installed camera first to bind this monitor"
 }
