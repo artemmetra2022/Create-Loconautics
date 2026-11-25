@@ -102,7 +102,8 @@ public class DriverBrakeValveBlock extends HorizontalDirectionalBlock implements
     @Override
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof DriverBrakeValveBlockEntity be) {
-            return be.isIsolated() ? 0 : net.minecraft.util.Mth.clamp(be.getNotch(), 0, 15);
+            return be.isIsolated() ? 0
+                    : net.minecraft.util.Mth.clamp(be.getNotch(), 0, AirBrakeTuning.MAX_NOTCH);
         }
         return 0;
     }

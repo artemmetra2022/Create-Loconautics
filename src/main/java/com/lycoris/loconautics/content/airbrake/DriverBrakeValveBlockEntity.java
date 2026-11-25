@@ -241,6 +241,7 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
         tag.putInt("Notch", notch);
+        tag.putInt("NotchVersion", AirBrakeTuning.NOTCH_DATA_VERSION);
         tag.putBoolean("Isolated", isolated);
         tag.putFloat("PipePressure", pipePressure);
         tag.putFloat("MainPressure", mainPressure);
@@ -249,7 +250,11 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
     @Override
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
-        notch = Mth.clamp(tag.getInt("Notch"), 0, AirBrakeTuning.MAX_NOTCH);
+        int savedNotch = tag.getInt("Notch");
+        if (tag.getInt("NotchVersion") < AirBrakeTuning.NOTCH_DATA_VERSION) {
+            savedNotch = AirBrakeTuning.migrateLegacyNotch(savedNotch);
+        }
+        notch = Mth.clamp(savedNotch, 0, AirBrakeTuning.MAX_NOTCH);
         isolated = tag.getBoolean("Isolated");
         pipePressure = Mth.clamp(tag.getFloat("PipePressure"), 0f, AirBrakeTuning.WORKING_PIPE_BAR);
         mainPressure = Mth.clamp(tag.getFloat("MainPressure"), 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
