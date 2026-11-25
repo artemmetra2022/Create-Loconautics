@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
+import com.lycoris.loconautics.mixin.client.camera.MinecraftRenderTargetAccessor;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -121,8 +122,6 @@ public final class CameraFeedManager {
         Entity oldCameraEntity = mc.cameraEntity;
         RenderTarget oldMainTarget = mc.getMainRenderTarget();
         Camera camera = mc.gameRenderer.getMainCamera();
-        float oldEyeHeight = camera.eyeHeight;
-        float oldEyeHeightOld = camera.eyeHeightOld;
         boolean oldOutline = true;
         Marker cameraEntity = new Marker(EntityType.MARKER, level);
         Vec3 cameraPosition = Vec3.atCenterOf(globalPos.pos()).add(
@@ -137,12 +136,11 @@ public final class CameraFeedManager {
             mc.cameraEntity = cameraEntity;
             camera.setup(level, cameraEntity, false, false,
                     partialTick.getGameTimeDeltaPartialTick(false));
-            camera.eyeHeight = camera.eyeHeightOld = 0.0f;
 
             currentlyCaptured = globalPos;
             target.clear(true);
             target.bindWrite(true);
-            mc.mainRenderTarget = target;
+            ((MinecraftRenderTargetAccessor) (Object) mc).loconautics$setMainRenderTarget(target);
             mc.gameRenderer.setRenderBlockOutline(false);
             mc.gameRenderer.renderLevel(DeltaTracker.ONE);
             FAILED.remove(globalPos);
@@ -153,16 +151,12 @@ public final class CameraFeedManager {
         } finally {
             currentlyCaptured = null;
             mc.cameraEntity = oldCameraEntity;
-            mc.mainRenderTarget = oldMainTarget;
+            ((MinecraftRenderTargetAccessor) (Object) mc).loconautics$setMainRenderTarget(oldMainTarget);
             oldMainTarget.bindWrite(true);
-            camera.eyeHeight = oldEyeHeight;
-            camera.eyeHeightOld = oldEyeHeightOld;
             Entity restoreEntity = oldCameraEntity == null ? mc.player : oldCameraEntity;
             camera.setup(level, restoreEntity, !mc.options.getCameraType().isFirstPerson(),
                     mc.options.getCameraType().isMirrored(),
                     partialTick.getGameTimeDeltaPartialTick(true));
-            camera.eyeHeight = oldEyeHeight;
-            camera.eyeHeightOld = oldEyeHeightOld;
             mc.gameRenderer.setRenderBlockOutline(oldOutline);
             cameraEntity.discard();
         }
