@@ -157,7 +157,8 @@
     "client.AdvancedDisplayCartMixin",
     "client.portal.RenderChunkRegionPortalCutMixin",
     "client.gui.WorldTypeLagTooltipMixin",
-    "client.camera.GameRendererCameraMixin"
+    "client.camera.GameRendererCameraMixin",
+    "client.camera.MinecraftRenderTargetAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
