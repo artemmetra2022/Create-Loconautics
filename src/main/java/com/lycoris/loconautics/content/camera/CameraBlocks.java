@@ -34,7 +34,7 @@ public final class CameraBlocks {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CameraBlockEntity>> CAMERA_BE =
             LoconauticsRegistries.BLOCK_ENTITIES.register("security_camera", () ->
-                    BlockEntityType.Builder.of(CameraBlockEntity::new, CAMERA.get()).build(null));
+                    BlockEntityType.Builder.of((pos, state) -> new CameraBlockEntity(CAMERA_BE.get(), pos, state), CAMERA.get()).build(null));
 
     private CameraBlocks() {
     }
