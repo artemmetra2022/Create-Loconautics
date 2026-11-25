@@ -520,6 +520,10 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_stats")
                 .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(isConnected()
+                        ? "loconautics.gui.goggles.knuckle_connected"
+                        : "loconautics.gui.goggles.knuckle_disconnected")
+                .withStyle(isConnected() ? ChatFormatting.GREEN : ChatFormatting.GRAY));
         tooltip.add(Component.translatable("loconautics.gui.goggles.knuckle_load",
                 String.format(Locale.ROOT, "%.1f", lastCouplerLoadAccel))
                 .withStyle(ChatFormatting.GOLD));
