@@ -27,6 +27,11 @@ public final class CameraBlocks {
             LoconauticsRegistries.ITEMS.register("security_camera", () ->
                     new BlockItem(CAMERA.get(), new Item.Properties().stacksTo(16)));
 
+    public static final DeferredHolder<net.minecraft.world.item.Item, CameraMonitorBlockItem> CAMERA_MONITOR_ITEM =
+            LoconauticsRegistries.ITEMS.register("camera_monitor", () ->
+                    new CameraMonitorBlockItem(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_GAUGE.get(),
+                            new net.minecraft.world.item.Item.Properties().stacksTo(16)));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CameraBlockEntity>> CAMERA_BE =
             LoconauticsRegistries.BLOCK_ENTITIES.register("security_camera", () ->
                     BlockEntityType.Builder.of(CameraBlockEntity::new, CAMERA.get()).build(null));
