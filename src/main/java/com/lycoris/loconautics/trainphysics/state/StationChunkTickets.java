@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.joml.Vector3d;
+
 import static com.lycoris.loconautics.foundation.LogFormat.shortId;
 
 
