@@ -156,7 +156,8 @@
     "client.gui.GuiSelectedItemNameMixin",
     "client.AdvancedDisplayCartMixin",
     "client.portal.RenderChunkRegionPortalCutMixin",
-    "client.gui.WorldTypeLagTooltipMixin"
+    "client.gui.WorldTypeLagTooltipMixin",
+    "client.camera.GameRendererCameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1
