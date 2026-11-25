@@ -98,7 +98,7 @@ public final class LengthTrace {
         }
         double polyline = drawConsist(level, cars, mids);
         if (log) {
-            LoconauticsConstants.LOGGER.info("[lentrace] consist head={} cars={} consistLength={} polyline={} "
+            LoconauticsConstants.LOGGER.debug("[lentrace] consist head={} cars={} consistLength={} polyline={} "
                             + "delta={}{}", shortId(cars.get(0).car().subLevelId()), cars.size(),
                     fmt(consist), fmt(polyline), fmt(polyline - consist), detail);
             logPairs(level, cars, mids);
@@ -134,7 +134,7 @@ public final class LengthTrace {
         for (int i = 1; i < cars.size(); i++) {
             double prevHalf = TrainLength.carLength(level, cars.get(i - 1)) / 2.0;
             double half = TrainLength.carLength(level, cars.get(i)) / 2.0;
-            LoconauticsConstants.LOGGER.info("[lentrace] pair {} to {} centerSpacing={} actualMidGap={}",
+            LoconauticsConstants.LOGGER.debug("[lentrace] pair {} to {} centerSpacing={} actualMidGap={}",
                     shortId(cars.get(i - 1).car().subLevelId()), shortId(cars.get(i).car().subLevelId()),
                     fmt(TrainLength.centerSpacing(level, cars.get(i - 1), cars.get(i), prevHalf, half)),
                     fmt(mids.get(i - 1).distance(mids.get(i))));

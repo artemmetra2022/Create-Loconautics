@@ -200,7 +200,7 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
 
     private void traceTransition(String what) {
         if (level != null && !level.isClientSide()) {
-            LoconauticsConstants.LOGGER.info("[knuckle] {} {} partner={} tick={}", what, getBlockPos(),
+            LoconauticsConstants.LOGGER.debug("[knuckle] {} {} partner={} tick={}", what, getBlockPos(),
                     partnerSubLevelId, level.getGameTime());
         }
     }
@@ -208,7 +208,7 @@ public class KnuckleBlockEntity extends SmartBlockEntity implements PartialSafeN
     public void clearConnection() {
         traceTransition("uncouple");
         StackTraceElement[] frames = new Throwable().getStackTrace();
-        LoconauticsConstants.LOGGER.info("[iss234k] clearConnection {} called from {} < {} < {}", getBlockPos(),
+        LoconauticsConstants.LOGGER.debug("[iss234k] clearConnection {} called from {} < {} < {}", getBlockPos(),
                 frames.length > 1 ? frames[1] : "?", frames.length > 2 ? frames[2] : "?", frames.length > 3 ? frames[3] : "?");
         returnContacts();
         releaseCoupling();

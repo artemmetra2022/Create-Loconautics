@@ -217,7 +217,7 @@ public final class GhostWheelBodies {
                 continue;
             }
             wipe(container, sub);
-            LoconauticsConstants.LOGGER.info("[ghostwheel] wiped orphaned wheel body {} that loaded with no bogey",
+            LoconauticsConstants.LOGGER.debug("[ghostwheel] wiped orphaned wheel body {} that loaded with no bogey",
                     entry.getKey());
         }
         ARRIVED.clear();
@@ -248,7 +248,7 @@ public final class GhostWheelBodies {
             wiped++;
         }
         if (wiped > 0) {
-            LoconauticsConstants.LOGGER.info("[ghostwheel] wiped {} orphaned wheel body sub level(s) left over from the last session", wiped);
+            LoconauticsConstants.LOGGER.debug("[ghostwheel] wiped {} orphaned wheel body sub level(s) left over from the last session", wiped);
         }
     }
 

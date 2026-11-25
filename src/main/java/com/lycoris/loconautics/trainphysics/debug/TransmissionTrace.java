@@ -15,7 +15,7 @@ public final class TransmissionTrace {
         if (be.getLevel() == null || be.getLevel().isClientSide) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[transmit] {} {} {}#{} power={} reversed={} target={} speed={} source={}@{} network={} flicker={}",
+        LoconauticsConstants.LOGGER.debug("[transmit] {} {} {}#{} power={} reversed={} target={} speed={} source={}@{} network={} flicker={}",
                 be.getBlockPos().toShortString(), what, be.getLevel().dimension().location().getPath(),
                 System.identityHashCode(be), be.getPower(), be.isReversed(),
                 String.format(Locale.ROOT, "%.1f", be.getTargetRpm()),
@@ -27,6 +27,6 @@ public final class TransmissionTrace {
         if (be.getLevel() == null || be.getLevel().isClientSide) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[transmit] {} removed", be.getBlockPos().toShortString());
+        LoconauticsConstants.LOGGER.debug("[transmit] {} removed", be.getBlockPos().toShortString());
     }
 }

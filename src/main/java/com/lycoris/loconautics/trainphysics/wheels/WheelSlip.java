@@ -89,13 +89,15 @@ public final class WheelSlip {
         int threshold = wheelspin ? SPIN_DELAY_TICKS + sandingDelay : STALL_DELAY_TICKS + sandingDelay;
         boolean slipping = stall >= threshold || stall > 0 && train.slippingBogeys().contains(bogeyLocal);
         if (slipping != train.slippingBogeys().contains(bogeyLocal)) {
-            LoconauticsConstants.LOGGER.info("[slipdbg] car {} bogey {} slipping {} stall {} commanded {} carSpeed {} trainSpeed {} locked {} computerIdle {}",
+          if (LoconauticsConstants.LOGGER.isDebugEnabled()) {
+            LoconauticsConstants.LOGGER.debug("[slipdbg] car {} bogey {} slipping {} stall {} commanded {} carSpeed {} trainSpeed {} locked {} computerIdle {}",
                     train.id().toString().substring(0, 8), bogeyLocal.toShortString(), slipping, stall, commanded,
                     carSpeed, train.speed(), locked, computerIdle);
-            LoconauticsConstants.LOGGER.info("[issue289] car {} bogey {} slipping {} brakeScale {} braked {} brakeHard {} brakeHold {} handbrake {} ccHeld {} ccDriving {} target {} powered {}",
+            LoconauticsConstants.LOGGER.debug("[issue289] car {} bogey {} slipping {} brakeScale {} braked {} brakeHard {} brakeHold {} handbrake {} ccHeld {} ccDriving {} target {} powered {}",
                     train.id().toString().substring(0, 8), bogeyLocal.toShortString(), slipping, train.brakeScale(),
                     train.isBraked(), train.brakeHard(), train.brakeHold(), train.handbrake(), CcControl.held(train.id()),
                     CcControl.isDriving(train.id()), train.targetSpeed(), train.isPowered());
+          }
         }
         if (slipping) {
             train.slippingBogeys().add(bogeyLocal);

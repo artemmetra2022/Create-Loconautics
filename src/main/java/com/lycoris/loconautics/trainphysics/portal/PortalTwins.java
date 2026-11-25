@@ -579,7 +579,7 @@ public final class PortalTwins {
         keepOnRails(twin.carId(), linear, angular);
         SableTrain jamTrain = SableTrainRegistry.bySubLevel(twin.carId());
         Vec3 jamAlong = jamTrain == null || jamTrain.car().carriage() == null ? null : jamTrain.car().carriage().forward();
-        LoconauticsConstants.LOGGER.info("[xjam] feedback twin={} master={} raw={} sent={} masterV={} alongV={} railed={}",
+        LoconauticsConstants.LOGGER.debug("[xjam] feedback twin={} master={} raw={} sent={} masterV={} alongV={} railed={}",
                 PortalTrace.id(twin.twinId()), PortalTrace.id(twin.masterId()), PortalTrace.f(rawLinear.length()),
                 PortalTrace.f(linear.length()), PortalTrace.f(masterVelocity.length()),
                 jamAlong == null ? "n/a" : PortalTrace.f(masterVelocity.dot(jamAlong.x, jamAlong.y, jamAlong.z)),
@@ -682,7 +682,7 @@ public final class PortalTwins {
                     + " at plot " + slot.x() + ", " + slot.z());
         }
         long afterLoad = System.nanoTime();
-        LoconauticsConstants.LOGGER.info("[twinload] clone master={} twin={} from={},{} slot={},{} shifted={} coldLanding={} "
+        LoconauticsConstants.LOGGER.debug("[twinload] clone master={} twin={} from={},{} slot={},{} shifted={} coldLanding={} "
                         + "pose={} rotationPoint={} worldBounds={}", PortalTrace.id(masterId), PortalTrace.id(twinId),
                 from.x(), from.z(), slot.x(), slot.z(), !from.equals(slot), coldLanding,
                 PortalTrace.f(twin.logicalPose().position().x()) + "," + PortalTrace.f(twin.logicalPose().position().z()),
@@ -831,7 +831,7 @@ public final class PortalTwins {
             wiped.add(sub.getUniqueId());
         }
         if (!wiped.isEmpty()) {
-            LoconauticsConstants.LOGGER.info("[portal] wiped {} leaked twin sub level(s) in {}", wiped.size(),
+            LoconauticsConstants.LOGGER.debug("[portal] wiped {} leaked twin sub level(s) in {}", wiped.size(),
                     level.dimension().location());
         }
         return wiped;
@@ -859,7 +859,7 @@ public final class PortalTwins {
                 }
                 SubLevelContacts.releaseAll(sub.getUniqueId());
                 wipe(level, sub);
-                LoconauticsConstants.LOGGER.info("[portal] reaped unclaimed twin {} in {}", sub.getUniqueId(),
+                LoconauticsConstants.LOGGER.debug("[portal] reaped unclaimed twin {} in {}", sub.getUniqueId(),
                         dim.location());
             }
         }
@@ -879,7 +879,7 @@ public final class PortalTwins {
             return;
         }
         clearBox(level, box);
-        LoconauticsConstants.LOGGER.info("[portal] cleared the blocks of twin {} in {}, its body had already left "
+        LoconauticsConstants.LOGGER.debug("[portal] cleared the blocks of twin {} in {}, its body had already left "
                 + "the container", bodyId, level.dimension().location());
     }
 

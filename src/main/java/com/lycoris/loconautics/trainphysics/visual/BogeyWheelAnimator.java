@@ -120,7 +120,7 @@ public final class BogeyWheelAnimator {
                 turn *= WheelSlip.bite(sub.getLevel().getGameTime(), local);
             }
             if (Math.abs(raw) < 0.05 && sub.getLevel().getGameTime() % 10 == 0) {
-                LoconauticsConstants.LOGGER.info("[wheelslow] bogey={} speed={} fraction={} rolled={} driven={} turn={}",
+                LoconauticsConstants.LOGGER.debug("[wheelslow] bogey={} speed={} fraction={} rolled={} driven={} turn={}",
                         local, raw, fraction, rolled, driven, turn);
             }
             if (driven == null && !marker.slippingBogeys().isEmpty()) {

@@ -35,7 +35,7 @@ public final class CartMoveTrace {
             return;
         }
         lines++;
-        LoconauticsConstants.LOGGER.info("[cartmove] {} tick={} {} ds={} speed={} target={} hold={} servo={} moved={} {}",
+        LoconauticsConstants.LOGGER.debug("[cartmove] {} tick={} {} ds={} speed={} target={} hold={} servo={} moved={} {}",
                 shortId(train.id()), train.level().getGameTime(), jump ? "JUMP" : "step", String.format("%.4f", ds),
                 String.format("%.4f", train.speed()), String.format("%.4f", train.targetSpeed()), train.scheduleHold(),
                 train.servoBrake(), String.format("%.4f", moved), rail.moveLine());

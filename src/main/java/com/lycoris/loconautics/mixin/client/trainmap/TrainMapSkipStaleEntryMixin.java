@@ -36,7 +36,7 @@ public abstract class TrainMapSkipStaleEntryMixin {
             return entry;
         }
         if (LOGGED.add(id)) {
-            LoconauticsConstants.LOGGER.info("[trainmap] skipped train {} on the map, client has {} carriages but the sync "
+            LoconauticsConstants.LOGGER.debug("[trainmap] skipped train {} on the map, client has {} carriages but the sync "
                     + "entry has {}", shortId(id), train.carriages.size(), sync.dimensions == null ? 0 : sync.dimensions.size());
         }
         return null;

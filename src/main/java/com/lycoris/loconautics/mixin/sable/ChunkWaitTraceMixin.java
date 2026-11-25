@@ -83,7 +83,7 @@ public abstract class ChunkWaitTraceMixin {
             holders.append(' ').append(LogFormat.shortId(entry.getKey())).append(entry.getValue().stream()
                     .map(SubLevelLoadingTicket::toCompactString).toList());
         }
-        LoconauticsConstants.LOGGER.info("[chunkwait] summary dim {} subLevels {} arbitraryObjects {} forceTickets {} forceLoaded {} holders{}",
+        LoconauticsConstants.LOGGER.debug("[chunkwait] summary dim {} subLevels {} arbitraryObjects {} forceTickets {} forceLoaded {} holders{}",
                 level.dimension().location(), container.getAllSubLevels().size(), com.google.common.collect.Iterables.size(system.getArbitraryObjects()),
                 tickets, container.collectForceLoadedSubLevels().size(), holders);
     }
@@ -101,7 +101,7 @@ public abstract class ChunkWaitTraceMixin {
             Set<SubLevelLoadingTicket<?>> held = container.collectForceLoadTickets().get(sub);
             tickets = held == null ? "none" : held.stream().map(SubLevelLoadingTicket::toCompactString).toList().toString();
         }
-        LoconauticsConstants.LOGGER.info("[chunkwait] {} chunk {},{} cold {} took {} ms sub {} tickets {} tick {}",
+        LoconauticsConstants.LOGGER.debug("[chunkwait] {} chunk {},{} cold {} took {} ms sub {} tickets {} tick {}",
                 kind, x, z, cold, String.format(java.util.Locale.ROOT, "%.2f", ms), LogFormat.shortId(subLevelId),
                 tickets, level.getGameTime());
     }

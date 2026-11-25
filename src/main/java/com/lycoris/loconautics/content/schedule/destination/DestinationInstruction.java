@@ -63,7 +63,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		}
 		if (plan.best == null) {
 			String why = plan.rejected.isEmpty() ? "no matching station" : String.join("; ", plan.rejected);
-			LoconauticsConstants.LOGGER.info("[schedule] {} no route to \"{}\" from {}, {}",
+			LoconauticsConstants.LOGGER.debug("[schedule] {} no route to \"{}\" from {}, {}",
 				CreateLang.translateDirect("train.status.no_path").getString(), getFilter(),
 				RouteDistance.describe(plan.nose), why);
 			runtime.noPath(getFilter(), why, plan.anyMatch);
@@ -71,7 +71,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		} else {
 			runtime.clearStatus();
 			if (!plan.rejected.isEmpty()) {
-				LoconauticsConstants.LOGGER.info("[schedule] \"{}\" picked {}, passed over {}", getFilter(),
+				LoconauticsConstants.LOGGER.debug("[schedule] \"{}\" picked {}, passed over {}", getFilter(),
 					plan.best.station() == null ? "a turntable" : plan.best.station().name,
 					String.join("; ", plan.rejected));
 			}

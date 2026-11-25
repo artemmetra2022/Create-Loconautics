@@ -99,7 +99,7 @@ public final class BarrelPipeConnector {
 
     // temporary, tag issue270, remove once the sneak placement is confirmed fixed
     private static void trace(Level level, String what, @Nullable Player player, BlockPos pos, @Nullable Direction face) {
-        com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[issue270] {} side={} sneak={} pos={} face={}",
+        com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[issue270] {} side={} sneak={} pos={} face={}",
                 what, level.isClientSide() ? "client" : "server", player != null && player.isShiftKeyDown(), pos, face);
     }
 

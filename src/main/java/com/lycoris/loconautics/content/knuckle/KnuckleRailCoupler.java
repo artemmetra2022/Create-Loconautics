@@ -167,7 +167,7 @@ public final class KnuckleRailCoupler {
         Vector3d worldB = subB.logicalPose().transformPosition(new Vector3d(hingeB));
         RailFrame frameA = RailFrame.of(subA, SableTrainRegistry.bySubLevel(subA.getUniqueId()));
         double out = worldB.sub(worldA, new Vector3d()).dot(worldA.sub(frameA.anchor(), new Vector3d()));
-        LoconauticsConstants.LOGGER.info("[iss308] pair {} {} branch={} gap={} crossed={} A[{}] B[{}]",
+        LoconauticsConstants.LOGGER.debug("[iss308] pair {} {} branch={} gap={} crossed={} A[{}] B[{}]",
                 shortId(subA.getUniqueId()), shortId(subB.getUniqueId()), bar ? "bar" : "joint",
                 KnuckleTuning.fmt(worldA.distance(worldB)), out < 0.0, state308(subA), state308(subB));
     }
@@ -357,7 +357,7 @@ public final class KnuckleRailCoupler {
         body.handle.applyForcesAndReset(forces);
         if (probe) {
             probed = true;
-            LoconauticsConstants.LOGGER.info("[knuckle] velocity before=" + KnuckleTuning.fmt(before) + " after="
+            LoconauticsConstants.LOGGER.debug("[knuckle] velocity before=" + KnuckleTuning.fmt(before) + " after="
                     + KnuckleTuning.fmt(alongRail(body)) + " expected change=" + KnuckleTuning.fmt(ds)
                     + " read straight after the impulse in the same substep");
         }
@@ -462,10 +462,10 @@ public final class KnuckleRailCoupler {
         String coefs = " aA=" + KnuckleTuning.fmt(link.coefA) + " aB=" + KnuckleTuning.fmt(link.coefB);
         if (link.effective <= 0.0) {
             boolean bothHeld = link.a.invM <= 0.0 && link.b.invM <= 0.0;
-            LoconauticsConstants.LOGGER.info("[knuckle] " + (bothHeld ? "both held" : "bar weak") + ids + coefs);
+            LoconauticsConstants.LOGGER.debug("[knuckle] " + (bothHeld ? "both held" : "bar weak") + ids + coefs);
             return;
         }
-        LoconauticsConstants.LOGGER.info("[knuckle] bar" + ids + " gap=" + KnuckleTuning.fmt(link.length + link.error)
+        LoconauticsConstants.LOGGER.debug("[knuckle] bar" + ids + " gap=" + KnuckleTuning.fmt(link.length + link.error)
                 + " L=" + KnuckleTuning.fmt(link.length) + " err=" + KnuckleTuning.fmt(link.error)
                 + " mode=" + (link.error >= 0.0 ? "draft" : "buff")
                 + " gdot=" + KnuckleTuning.fmt(link.rate()) + " bias=" + KnuckleTuning.fmt(link.target)
@@ -574,7 +574,7 @@ public final class KnuckleRailCoupler {
     private static void traceHold(UUID id, String why) {
         String before = why == null ? HELD_WHY.remove(id) : HELD_WHY.put(id, why);
         if (KnuckleTuning.trace && !java.util.Objects.equals(before, why)) {
-            LoconauticsConstants.LOGGER.info("[knuckle] hold " + shortId(id) + " " + before + " to " + why);
+            LoconauticsConstants.LOGGER.debug("[knuckle] hold " + shortId(id) + " " + before + " to " + why);
         }
     }
 

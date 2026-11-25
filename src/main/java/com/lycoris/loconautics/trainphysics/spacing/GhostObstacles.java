@@ -84,7 +84,7 @@ public final class GhostObstacles {
         }
         int after = store.size(pos.toLong());
         if (before != 0 || after != 0) {
-            LoconauticsConstants.LOGGER.info("[ghostblock] chunk {} {} cells {} to {} neighborsTouched={}", pos.x, pos.z,
+            LoconauticsConstants.LOGGER.debug("[ghostblock] chunk {} {} cells {} to {} neighborsTouched={}", pos.x, pos.z,
                     before, after, found.size());
         }
     }

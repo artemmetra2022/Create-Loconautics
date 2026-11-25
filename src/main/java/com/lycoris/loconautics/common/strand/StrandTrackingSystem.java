@@ -35,7 +35,7 @@ public final class StrandTrackingSystem<R extends AttachedRopePhysicsObject> imp
             for (R rope : manager.all()) {
                 StrandKnotGrab grab = rope.knotGrab();
                 if (grab.traceTicks > 0 && --grab.traceTicks % 10 == 0) {
-                    com.lycoris.loconautics.LoconauticsConstants.LOGGER.info(
+                    com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug(
                             "[knotgrab] after release id={} active={} midY={} engaged={}", rope.getUUID(),
                             rope.isActive(), rope.getPoints().get(rope.getPoints().size() / 2).y, grab.engaged());
                 }

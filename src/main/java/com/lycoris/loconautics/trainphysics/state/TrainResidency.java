@@ -729,7 +729,7 @@ public final class TrainResidency {
             state.deferUntil = now + DEFER_RECHECK_TICKS;
             if (!state.deferLogged) {
                 state.deferLogged = true;
-                LoconauticsConstants.LOGGER.info("[ghostedge] embody deferred train={} body={} reason={} target={} "
+                LoconauticsConstants.LOGGER.debug("[ghostedge] embody deferred train={} body={} reason={} target={} "
                                 + "bodyAt={}", shortId(train.id()), shortId(sub),
                         blind ? "the body its rail sits on is not loaded"
                                 : "a player is aboard and the cursor chunks are not loaded",
@@ -740,13 +740,13 @@ public final class TrainResidency {
         state.deferUntil = NONE;
         state.deferLogged = false;
         if (hasEmbodiedMate(train)) {
-            LoconauticsConstants.LOGGER.info("[ghostedge] park skipped train={} body={} reason=a mate is embodied",
+            LoconauticsConstants.LOGGER.debug("[ghostedge] park skipped train={} body={} reason=a mate is embodied",
                     shortId(train.id()), shortId(sub));
             return Target.PROCEED;
         }
         int chain = SubLevelHelper.getLoadingDependencyChain(sub).size();
         if (chain > 1) {
-            LoconauticsConstants.LOGGER.info("[ghostedge] park skipped train={} body={} reason=loading chain of {}",
+            LoconauticsConstants.LOGGER.debug("[ghostedge] park skipped train={} body={} reason=loading chain of {}",
                     shortId(train.id()), shortId(sub), chain);
             return Target.PROCEED;
         }
@@ -791,7 +791,7 @@ public final class TrainResidency {
         RigidBodyHandle handle = RigidBodyHandle.of(sub);
         RailFrame frame = RailFrame.of(sub, train);
         double raw = handle == null ? Double.NaN : handle.getLinearVelocity(new Vector3d()).length();
-        LoconauticsConstants.LOGGER.info("[ghostedge] velocity train={} mode={} bodySpeed={} alongRail={} railSpeed={} "
+        LoconauticsConstants.LOGGER.debug("[ghostedge] velocity train={} mode={} bodySpeed={} alongRail={} railSpeed={} "
                         + "blocks per second", shortId(train.id()), frame.mode(), f3(raw), f3(frame.speed()),
                 f3(train.speed() * 20.0));
     }
@@ -803,7 +803,7 @@ public final class TrainResidency {
             return;
         }
         HoldingSubLevel holding = container.getHoldingChunkMap().getHoldingSubLevel(sub.getUniqueId());
-        LoconauticsConstants.LOGGER.info("[ghostedge] unload train={} body={} bodyChunk={} pointer={} filed={} "
+        LoconauticsConstants.LOGGER.debug("[ghostedge] unload train={} body={} bodyChunk={} pointer={} filed={} "
                         + "storedBounds={} candidates={}", shortId(train.id()), shortId(sub), train.bodyChunk(),
                 train.bodyPointer(), holding != null,
                 holding == null ? "none" : boundsText(holding.data().bounds(), 0.0),

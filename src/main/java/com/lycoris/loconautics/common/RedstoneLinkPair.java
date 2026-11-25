@@ -39,7 +39,7 @@ public final class RedstoneLinkPair {
     public void register(Level level) {
         unregister(level);
         if (level instanceof ServerLevel server && PortalTwins.masterBlock(server, owner.getBlockPos()) != null) {
-            LoconauticsConstants.LOGGER.info("[linkreg] skipped twin block {} in {}", owner.getBlockPos().toShortString(),
+            LoconauticsConstants.LOGGER.debug("[linkreg] skipped twin block {} in {}", owner.getBlockPos().toShortString(),
                     level.dimension().location());
             return;
         }
@@ -56,7 +56,7 @@ public final class RedstoneLinkPair {
 
         if (hasFirst || hasSecond) {
             registeredIn = level;
-            LoconauticsConstants.LOGGER.info("[linkreg] register {} in {} first={} second={} id={}",
+            LoconauticsConstants.LOGGER.debug("[linkreg] register {} in {} first={} second={} id={}",
                     owner.getBlockPos().toShortString(), level.dimension().location(), hasFirst, hasSecond,
                     System.identityHashCode(owner));
         }
@@ -94,7 +94,7 @@ public final class RedstoneLinkPair {
             secondReceiver = null;
         }
         if (registeredIn != null) {
-            LoconauticsConstants.LOGGER.info("[linkreg] unregister {} from {} id={}", owner.getBlockPos().toShortString(),
+            LoconauticsConstants.LOGGER.debug("[linkreg] unregister {} from {} id={}", owner.getBlockPos().toShortString(),
                     registeredIn.dimension().location(), System.identityHashCode(owner));
             registeredIn = null;
         }

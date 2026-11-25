@@ -192,7 +192,7 @@ public final class WeldedBodies {
                 continue;
             }
             Vector3d current = leaderPose.transformPositionInverse(followerPose.position(), new Vector3d());
-            LoconauticsConstants.LOGGER.info("[dockseat] follower {} seated on the connector pose, {} blocks and {} deg from where it was",
+            LoconauticsConstants.LOGGER.debug("[dockseat] follower {} seated on the connector pose, {} blocks and {} deg from where it was",
                     partner.getUniqueId(), String.format("%.2f", local.distance(current)),
                     String.format("%.2f", Math.toDegrees(new Quaterniond(leaderPose.orientation()).conjugate()
                             .mul(followerPose.orientation()).difference(relative, new Quaterniond()).angle())));
@@ -293,7 +293,7 @@ public final class WeldedBodies {
                         new Vector3d(target).sub(partner.logicalPose().position()).add(car.logicalPose().position()),
                         new Vector3d());
                 Quaterniond yawGap = new Quaterniond(partner.logicalPose().orientation()).conjugate().mul(orientation);
-                LoconauticsConstants.LOGGER.info(
+                LoconauticsConstants.LOGGER.debug(
                         "[dock] carry of train body {} by {} jumped {} blocks, car speed {}, jump in car frame ({}, {}, {}), "
                                 + "orientation error {} deg, latch yaw {} deg, partner own speed {}",
                         entry.getKey(), car.getUniqueId(), jump, carVelocity.length(),

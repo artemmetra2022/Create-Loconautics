@@ -273,7 +273,7 @@ public final class TrainSignals {
             train.setSpeed(0.0);
         }
         if (HELD.put(train.id(), direction) == null) {
-            LoconauticsConstants.LOGGER.info("[nose2c] car {} holds at red, body direction {} flip {} gap {}",
+            LoconauticsConstants.LOGGER.debug("[nose2c] car {} holds at red, body direction {} flip {} gap {}",
                     ConsistNose.shortId(train.id()), direction, ConsistNose.frameFlip(train), fmt(gap));
             announce(train, "holding at a red signal");
             CcEvents.queue(train, "train_signal_red", gap);
@@ -545,7 +545,7 @@ public final class TrainSignals {
                 return;
             }
             MANEUVER_LOG.put(train.id(), key);
-            LoconauticsConstants.LOGGER.info("[maneuver] car {} group {}: {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] car {} group {}: {}",
                     ConsistNose.shortId(train.id()), ConsistNose.shortId(groupId), line);
         }
 

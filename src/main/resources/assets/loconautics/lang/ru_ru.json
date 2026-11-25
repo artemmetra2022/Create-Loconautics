@@ -1999,5 +1999,15 @@
   "loconautics.air_compressor.goggles.reservoir_missing": "Не обнаружен воздушный резервуар — качать воздух некуда",
   "loconautics.air_compressor.goggles.distributor_detected": "Воздухораспределитель: обнаружен",
   "loconautics.air_compressor.goggles.distributor_missing": "Не обнаружен воздухораспределитель",
-  "gui.loconautics.status_display.locomotive_mass": "Масса локомотива"
+  "gui.loconautics.status_display.locomotive_mass": "Масса локомотива",
+  "loconautics.train.status.bogeys_lost": "Вагон потерял все тележки и сошёл с путей",
+  "loconautics.train.status.command": "Вагон снят с путей командой",
+  "loconautics.train.status.teleport": "Вагон вышел из портала там, где нет путей",
+  "loconautics.configuration.track.derailment.bufferStopSpeed": "Скорость у упора",
+  "loconautics.configuration.track.derailment.bufferStopSpeed.tooltip": "Вагон, доехавший до конца пути медленнее этой скорости (блоков в секунду), останавливается, а не съезжает.",
+  "loconautics.configuration.track.derailment.externalLiftRatio": "Предел внешнего подъёма",
+  "loconautics.configuration.track.derailment.externalLiftRatio.tooltip": "Во сколько раз собственного веса вагона должна быть тяга вверх, чтобы он сошёл с рельса.",
+  "loconautics.configuration.track.derailment.staffLiftRatio": "Предел подъёма Физическим посохом",
+  "loconautics.configuration.track.derailment.staffLiftRatio.tooltip": "Предел подъёма, пока Физический посох тащит вагон. При 0 посох никогда не снимает вагон с рельса.",
+  "loconautics.track_switch.occupied": "Эта стрелка уже управляется другим приводом"
 }

@@ -74,7 +74,7 @@ final class StationBerth {
     private static void trace(TrackGraph graph, SableTrain parked, TravellingPoint end, double toNear, double back,
                               double reach, String junction) {
         Vec3 world = end == null ? null : end.getPosition(graph);
-        LoconauticsConstants.LOGGER.info("[maneuver] berth measure: train {} near wheel {} is {} from the lead end, "
+        LoconauticsConstants.LOGGER.debug("[maneuver] berth measure: train {} near wheel {} is {} from the lead end, "
                         + "stop is {} short of it, reach {}, last switch {}", ConsistNose.shortId(parked.id()),
                 world == null ? "unknown" : String.format("(%.1f,%.1f,%.1f)", world.x, world.y, world.z),
                 String.format("%.2f", toNear), String.format("%.2f", back), String.format("%.2f", reach), junction);

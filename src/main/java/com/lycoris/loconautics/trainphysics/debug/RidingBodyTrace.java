@@ -82,7 +82,7 @@ public final class RidingBodyTrace {
             Vector3d carAtRider = new Vector3d(carSpin).cross(new Vector3d(riderCenter).sub(carCenter)).add(carLinear);
             Vector3d slide = toCar.transform(riderHandle.getLinearVelocity(new Vector3d()).sub(carAtRider));
             Vector3d onCar = carPose.transformPositionInverse(riderCenter, new Vector3d());
-            LoconauticsConstants.LOGGER.info(
+            LoconauticsConstants.LOGGER.debug(
                     "[ridingbody] car={} rider={} riderMass={} carMass={} slideInCarFrame=({}, {}, {}) riderAtPlot=({}, {}, {}) "
                             + "depth={} axis={} glue={} lean={} deg sink sum={} max={} lifts={}/{} riderSpin={}",
                     shortId(car), shortId(rider), f(riderMass.getMass()), f(carMass.getMass()), f(slide.x), f(slide.y),

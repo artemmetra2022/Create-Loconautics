@@ -117,7 +117,7 @@ public final class GhostConsistTrace {
             return;
         }
         SNATCH_NOTES.put(train.id(), now);
-        LoconauticsConstants.LOGGER.info("[consisttrace] snatch {} {}", what, blockerText(train));
+        LoconauticsConstants.LOGGER.debug("[consisttrace] snatch {} {}", what, blockerText(train));
     }
 
     public static void noteUnload(SableTrain train, ServerSubLevel sub) {
@@ -129,7 +129,7 @@ public final class GhostConsistTrace {
         Vector3d rail = TrainResidency.railCursor(train.car());
         long now = level.getGameTime();
         Long since = EMBODIED_AT.get(train.id());
-        LoconauticsConstants.LOGGER.info("[consisttrace] UNLOAD car={} body={} rail={} bodyToRail={} speed={} target={} "
+        LoconauticsConstants.LOGGER.debug("[consisttrace] UNLOAD car={} body={} rail={} bodyToRail={} speed={} target={} "
                         + "embodiedForTicks={} chunks[{}] mates: {}", shortId(train.id()), v3(body), v3(rail),
                 rail == null ? "n/a" : f2(body.distance(rail)), f3(train.speed() * 20.0),
                 f3(train.targetSpeed() * 20.0), since == null ? "unknown" : String.valueOf(now - since),
@@ -151,7 +151,7 @@ public final class GhostConsistTrace {
         if (since == null || now - since > SUBSTEP_TICKS) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[consisttrace] substep car={} tick={} age={} {} dt={} speed={} slide={} "
+        LoconauticsConstants.LOGGER.debug("[consisttrace] substep car={} tick={} age={} {} dt={} speed={} slide={} "
                         + "stress={} settling={} target={} powered={}", shortId(sub.getUniqueId()), now, now - since, mode,
                 f3(dt), f3(train.speed() * 20.0), f3(slide), f3(TrainRailAdvance.peekStress(sub.getUniqueId())),
                 train.isPoseSettling(), f3(train.targetSpeed() * 20.0), train.isPowered());
@@ -159,7 +159,7 @@ public final class GhostConsistTrace {
 
     public static void noteSnap(SableTrain train, double gap) {
         if (enabled) {
-            LoconauticsConstants.LOGGER.info("[consisttrace] station snap train={} gap={} speed={} target={} settling={}",
+            LoconauticsConstants.LOGGER.debug("[consisttrace] station snap train={} gap={} speed={} target={} settling={}",
                     shortId(train.id()), f3(gap), f3(train.speed() * 20.0), f3(train.targetSpeed() * 20.0),
                     train.isPoseSettling());
         }
@@ -167,7 +167,7 @@ public final class GhostConsistTrace {
 
     public static void noteLever(SableTrain train, int power) {
         if (enabled) {
-            LoconauticsConstants.LOGGER.info("[consisttrace] lever of stopped ghost zeroed train={} power was {} speed={} "
+            LoconauticsConstants.LOGGER.debug("[consisttrace] lever of stopped ghost zeroed train={} power was {} speed={} "
                     + "target={}", shortId(train.id()), power, f3(train.speed() * 20.0), f3(train.targetSpeed() * 20.0));
         }
     }
@@ -188,7 +188,7 @@ public final class GhostConsistTrace {
         } catch (RuntimeException e) {
             chain.append("chain read failed: ").append(e);
         }
-        LoconauticsConstants.LOGGER.info("[consisttrace] UNLOADCHAIN first={} chain: {}", shortId(sub.getUniqueId()),
+        LoconauticsConstants.LOGGER.debug("[consisttrace] UNLOADCHAIN first={} chain: {}", shortId(sub.getUniqueId()),
                 chain);
     }
 
@@ -252,7 +252,7 @@ public final class GhostConsistTrace {
             }
             if (before != null && before.residency() != car.residency()) {
                 RECENT.put(car.car().subLevelId(), now);
-                LoconauticsConstants.LOGGER.info("[consisttrace] TRANSITION consist={} car={} {} to {} rail={} was={} "
+                LoconauticsConstants.LOGGER.debug("[consisttrace] TRANSITION consist={} car={} {} to {} rail={} was={} "
                                 + "body={} mates: {}", head, shortId(car.car().subLevelId()), before.residency(),
                         car.residency(), v3(TrainResidency.railCursor(car.car())), v3(before.rail()),
                         bodyText(level, car), matesText(level, car));
@@ -283,7 +283,7 @@ public final class GhostConsistTrace {
             String key = a.car().subLevelId() + ">" + b.car().subLevelId();
             if (railA == null || railB == null) {
                 if (log) {
-                    LoconauticsConstants.LOGGER.info("[consisttrace] pair {} to {} has no rail point, a={} b={}",
+                    LoconauticsConstants.LOGGER.debug("[consisttrace] pair {} to {} has no rail point, a={} b={}",
                             shortId(a.car().subLevelId()), shortId(b.car().subLevelId()), railA != null, railB != null);
                 }
                 continue;
@@ -323,7 +323,7 @@ public final class GhostConsistTrace {
             boolean changed = old != null && !old.flags().equals(flagText);
             PAIRS.put(key, new PairSnap(gap, side, loadedGap, flagText));
             if (log || jumped || flipped || changed) {
-                LoconauticsConstants.LOGGER.info("[consisttrace] pair consist={} {} {} to {} {} gap={} loadedGap={} "
+                LoconauticsConstants.LOGGER.debug("[consisttrace] pair consist={} {} {} to {} {} gap={} loadedGap={} "
                                 + "wantAtLeast={} behindA={} speedA={} speedB={} dv={} {}{}", head,
                         shortId(a.car().subLevelId()), a.residency(), shortId(b.car().subLevelId()), b.residency(),
                         f2(gap), f2(loadedGap), f2(sizes * OVERLAP_FRACTION), f2(side), f3(a.speed() * 20.0),
@@ -414,7 +414,7 @@ public final class GhostConsistTrace {
             Step step = STEPS.get(id);
             ChunkPos railChunk = rail == null ? null : new ChunkPos((int) Math.floor(rail.x) >> 4,
                     (int) Math.floor(rail.z) >> 4);
-            LoconauticsConstants.LOGGER.info("[consisttrace] car consist={} {}/{} car={} {} speed={} target={} cruise={} "
+            LoconauticsConstants.LOGGER.debug("[consisttrace] car consist={} {}/{} car={} {} speed={} target={} cruise={} "
                             + "derailed={} physics={} accel={} powered={} following={} servo={} brakeHold={} settling={} rail={} railChunk={} footprintLoaded={} plotGrid={} {} edge={} "
                             + "step={} resid={} tickets={}", head, i + 1, cars.size(), shortId(id), car.residency(),
                     f3(car.speed() * 20.0), f3(car.targetSpeed() * 20.0), f3(car.ghostCruise() * 20.0), car.isDerailed(),

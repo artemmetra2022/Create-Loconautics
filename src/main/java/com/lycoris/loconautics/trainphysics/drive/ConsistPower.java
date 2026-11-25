@@ -315,7 +315,7 @@ public final class ConsistPower {
         if (drivers < 2 || key == null || line.equals(LAST_PULL.put(key, line))) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[multidrive] consist {} {} target {}", shortId(key), line,
+        LoconauticsConstants.LOGGER.debug("[multidrive] consist {} {} target {}", shortId(key), line,
                 String.format("%.3f", pull.target()));
     }
 
@@ -380,7 +380,7 @@ public final class ConsistPower {
         boolean stopped = axle.rawRpm() != 0.0 && axle.effectiveRpm() == 0.0;
         if (stopped != OVERSTRESSED_SEEN.getOrDefault(axle.getBlockPos().asLong(), false)) {
             OVERSTRESSED_SEEN.put(axle.getBlockPos().asLong(), stopped);
-            LoconauticsConstants.LOGGER.info("[slipdbg] drive {} stopped {} speed {}",
+            LoconauticsConstants.LOGGER.debug("[slipdbg] drive {} stopped {} speed {}",
                     axle.getBlockPos().toShortString(), stopped, axle.rawRpm());
         }
         double rpm = axle.effectiveRpm();

@@ -501,7 +501,7 @@ public class HoseNozzleBlockEntity extends SmartBlockEntity
                     + " floor=" + level.getBlockState(bottom.below()) + " surfaceWorldY=" + surface.y
                     + " bottomWorldY=" + bottomWorldY + " gap=" + (bottomWorldY - surface.y);
         }
-        LoconauticsConstants.LOGGER.info(
+        LoconauticsConstants.LOGGER.debug(
                 "[hosefloat] vy={} speed={} mass={} volume={} hitSub={} hitPos={} column=[{}] ropes=[{}] docked={}",
                 velocity.y, velocity.length(), mass == null ? null : mass.getMass(),
                 dev.ryanhcode.sable.physics.config.block_properties.PhysicsBlockPropertyHelper.getVolume(getBlockState()),

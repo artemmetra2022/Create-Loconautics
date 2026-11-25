@@ -47,7 +47,7 @@ public abstract class MergingGlueTrainHostMixin {
         }
         ci.cancel();
         SubLevelContacts.enable(own.getUniqueId(), other.getUniqueId());
-        LoconauticsConstants.LOGGER.info("[gluemerge] piece {} goes into train body {}",
+        LoconauticsConstants.LOGGER.debug("[gluemerge] piece {} goes into train body {}",
                 (train == own ? other : own).getUniqueId(), train.getUniqueId());
         ((MergingGlueAccessor) self).loconautics$breakGlue();
         if (train == own) {

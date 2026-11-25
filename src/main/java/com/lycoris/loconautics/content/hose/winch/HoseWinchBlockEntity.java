@@ -383,7 +383,7 @@ public class HoseWinchBlockEntity extends GeneratingKineticBlockEntity implement
         if (nozzle != null && nozzle.isDocked() && level.getGameTime() % 5 == 0) {
             HoseRopeManager dbg = HoseRopeManager.get(level);
             HoseRope dbgRope = dbg == null ? null : dbg.get(strand.id);
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info(
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug(
                     "[undockdbg] winch tension canUndock={} stretch={} freeSpin={} payout={} ext={}",
                     nozzle.canUndock(), dbgRope == null ? "norope" : dbgRope.getStretchRatio(), isFreeSpin(),
                     smoothedPayout, dbgRope == null ? "norope" : dbgRope.getCurrentExtension());
@@ -593,7 +593,7 @@ public class HoseWinchBlockEntity extends GeneratingKineticBlockEntity implement
         Vec3 nozzle = resolveNozzlePoint(strand);
         double nozzleStep = nozzle == null || lastNozzleLog == null ? 0.0 : nozzle.distanceTo(lastNozzleLog);
         lastNozzleLog = nozzle;
-        LoconauticsConstants.LOGGER.info("[winchreel] t={} speed={} reel={} pts={}->{} goal={} desired={} cur={} stretch={} first={} maxSeg={} nozzleStep={} joint={} active={}",
+        LoconauticsConstants.LOGGER.debug("[winchreel] t={} speed={} reel={} pts={}->{} goal={} desired={} cur={} stretch={} first={} maxSeg={} nozzleStep={} joint={} active={}",
                 level.getGameTime(), getSpeed(), reelSpeed, pointsBefore, pts.size(), rope.getExtension(),
                 rope.getDesiredExtension(), rope.getCurrentExtension(), rope.getStretchRatio(), firstSegment,
                 maxSegment, nozzleStep, rope.hasJoint(), rope.isActive());

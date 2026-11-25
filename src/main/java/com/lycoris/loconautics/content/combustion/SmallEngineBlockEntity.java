@@ -454,7 +454,7 @@ public class SmallEngineBlockEntity extends GeneratingKineticBlockEntity impleme
         pistonPhasePrev = pistonPhase;
         if (running != spinLoggedRunning) {
             spinLoggedRunning = running;
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[enginespin] running flipped to {} at {} tick={}",
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[enginespin] running flipped to {} at {} tick={}",
                     running, worldPosition, level.getGameTime());
         }
         float spinTarget = running ? getRunningShare() : 0f;
@@ -465,7 +465,7 @@ public class SmallEngineBlockEntity extends GeneratingKineticBlockEntity impleme
         if (!spinStarted) {
             spinStarted = true;
             if (running) shownSpin = spinTarget;
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[enginespin] new client engine at {} running={} rpm={} spin={}",
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[enginespin] new client engine at {} running={} rpm={} spin={}",
                     worldPosition, running, ownRpm, shownSpin);
         }
         float spinStep = spinTarget > shownSpin ? SPIN_UP : SPIN_DOWN;

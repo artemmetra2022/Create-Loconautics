@@ -43,6 +43,6 @@ public final class VariantFamilyLoader extends SimpleJsonResourceReloadListener 
         }
         loaded = List.copyOf(parsed);
         BlockVariantRegistry.rebuild(loaded);
-        LoconauticsConstants.LOGGER.info("[VariantPicker] loaded {} datapack families", loaded.size());
+        LoconauticsConstants.LOGGER.debug("[VariantPicker] loaded {} datapack families", loaded.size());
     }
 }

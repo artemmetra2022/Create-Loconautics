@@ -185,7 +185,7 @@ public final class ScheduleCurveSpeed {
             return;
         }
         plan.lastCap = shown;
-        LoconauticsConstants.LOGGER.info(
+        LoconauticsConstants.LOGGER.debug(
                 "[curvespeed] train={} allowed={} b/s speed={} b/s ahead cap={} b/s in {} blocks cars={}",
                 shortId(train.id()), Double.isFinite(allowed) ? f(allowed * TICKS_PER_SECOND) : "none",
                 f(speed * TICKS_PER_SECOND),

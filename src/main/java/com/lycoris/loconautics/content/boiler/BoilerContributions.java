@@ -98,7 +98,7 @@ public final class BoilerContributions extends SimpleJsonResourceReloadListener 
         fireboxHeat = Map.copyOf(heat);
         boilerCapacity = Map.copyOf(capacity);
         waterCapacity = Map.copyOf(water);
-        LoconauticsConstants.LOGGER.info("[Boiler] loaded {} firebox, {} body and {} water contribution overrides",
+        LoconauticsConstants.LOGGER.debug("[Boiler] loaded {} firebox, {} body and {} water contribution overrides",
                 heat.size(), capacity.size(), water.size());
     }
 

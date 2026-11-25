@@ -32,6 +32,8 @@ public final class RetarderTracks {
     private static final double SEARCH_RADIUS = 40.0;
     /** the retarder blocks of a chunk are looked up again after this many ticks */
     private static final long CACHE_TICKS = 10L;
+    /** above this many cached chunks per level the stale entries are dropped */
+    private static final int MAX_CACHED_CHUNKS = 512;
     /** how far the rail point may be from the line of a connection and still count as on it */
     private static final double ON_CURVE_HORIZONTAL = 0.8;
     private static final double ON_CURVE_VERTICAL = 1.5;
@@ -119,6 +121,9 @@ public final class RetarderTracks {
         Cell cell = cells.get(key);
         if (cell != null && now - cell.scannedAt() < CACHE_TICKS && now >= cell.scannedAt()) {
             return cell.spans();
+        }
+        if (cells.size() > MAX_CACHED_CHUNKS) {
+            cells.entrySet().removeIf(e -> now - e.getValue().scannedAt() >= CACHE_TICKS || now < e.getValue().scannedAt());
         }
         List<Span> spans = scan(level, chunkX, chunkZ);
         cells.put(key, new Cell(now, spans));

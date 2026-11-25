@@ -92,7 +92,7 @@ public class TrainStatusChat {
             runtime.announcer().line(LoconauticsLang.translate("train.status.maneuver_dead_end", destinationName)
                     .component().withStyle(st -> st.withColor(BAD)));
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} dead end to \"{}\"", LogFormat.shortId(train.id()),
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} dead end to \"{}\"", LogFormat.shortId(train.id()),
                 destinationName);
     }
     public static Vector3d bodyPosition(SableTrain train) {

@@ -148,7 +148,7 @@ public final class StationRouting {
             traceHeading(runtime, graph, nose, sense);
         }
         if (maneuver) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} nose rule: cabs {} (cab way {} other way {}) heading leads axle {} "
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} nose rule: cabs {} (cab way {} other way {}) heading leads axle {} "
                 + "landFront {} so the nose must end along the station facing {}, any leg sense may get there",
                 shortId(runtime.train()), twoCabs ? "two" : "one", reach.forward(), reach.backward(), headingLeadsAxle,
                 landFront, noseAlong);
@@ -184,13 +184,13 @@ public final class StationRouting {
             runtime.maneuverPlanFailed(String.join("; ", new LinkedHashSet<>(plan.rejected)));
         }
         if (maneuver) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} plan gate: best={} waitFor={} anyMatch={} reversalAllowed={} forced={} reach={}/{} sense={} rejected={}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} plan gate: best={} waitFor={} anyMatch={} reversalAllowed={} forced={} reach={}/{} sense={} rejected={}",
                 shortId(runtime.train()), plan.best != null, plan.waitFor != null, plan.anyMatch,
                 runtime.reversalAllowed(), forced, reach.forward(), reach.backward(), sense, plan.rejected);
         }
         // no loop back, so reversing out and in would only fake a lap
         if (maneuver && plan.best == null && plan.waitFor == null && plan.stayPut != null) {
-            LoconauticsConstants.LOGGER.info("[maneuver-cycle] {} no loop back to {}, staying put instead of reversing out and in",
+            LoconauticsConstants.LOGGER.debug("[maneuver-cycle] {} no loop back to {}, staying put instead of reversing out and in",
                 shortId(runtime.train()), plan.stayPut.station().name);
             plan.best = plan.stayPut;
             plan.bestRel = plan.stayRel;
@@ -230,14 +230,14 @@ public final class StationRouting {
         TrackNode behind = sense >= 0 ? nose.node1 : nose.node2;
         int aheadWays = ahead == null ? -1 : graph.getConnectionsFrom(ahead).size() - 1;
         int behindWays = behind == null ? -1 : graph.getConnectionsFrom(behind).size() - 1;
-        LoconauticsConstants.LOGGER.info("[maneuver] {} start heading: cab end looks sense {} on edge {}->{}, ways on past the "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} start heading: cab end looks sense {} on edge {}->{}, ways on past the "
             + "cab end {} (dead end ahead {}), ways on past the tail end {}", shortId(runtime.train()), sense,
             nose.node1 == null ? "none" : nose.node1.getLocation(), nose.node2 == null ? "none" : nose.node2.getLocation(),
             aheadWays, aheadWays <= 0, behindWays);
     }
 
     private static void traceLeg(Plan plan, SableScheduleRuntime runtime, int rel, int sense) {
-        LoconauticsConstants.LOGGER.info("[maneuver] {} leg {} sense {} tried, best {} reason {}", shortId(runtime.train()),
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} leg {} sense {} tried, best {} reason {}", shortId(runtime.train()),
             rel > 0 ? "cab first" : "backing", sense, plan.best != null, plan.cause == null ? "none" : plan.cause.kind());
     }
 
@@ -245,10 +245,10 @@ public final class StationRouting {
         if (trace == null) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} plate exits offered {} times, {} distinct search lines follow",
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} plate exits offered {} times, {} distinct search lines follow",
             shortId(runtime.train()), trace.offered(), trace.lines().size());
         for (String line : trace.lines()) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} search {}", shortId(runtime.train()), line);
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} search {}", shortId(runtime.train()), line);
         }
     }
 
@@ -302,11 +302,11 @@ public final class StationRouting {
         planReversal(junction, runtime, graph, sense, length, routing, wanted, true);
         String id = shortId(runtime.train());
         if (junction.best == null) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} plate plan cost {} kept, no junction reversal reaches the station",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} plate plan cost {} kept, no junction reversal reaches the station",
                 id, String.format("%.1f", plan.bestCost));
             return;
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} junction reversal cost {} replaces the plate plan cost {}, "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} junction reversal cost {} replaces the plate plan cost {}, "
             + "the reversal needs no turn and the nose rule holds on its second leg", id,
             String.format("%.1f", junction.bestCost), String.format("%.1f", plan.bestCost));
         plan.best = junction.best;
@@ -342,11 +342,11 @@ public final class StationRouting {
             SchedulePathfinder.Routing second = routing.reversing(true).arriving(plan.noseAlong, -rel);
             List<SchedulePathfinder.Reversal> points =
                 SchedulePathfinder.reversalPoints(graph, leadEnd, travel, clearance);
-            LoconauticsConstants.LOGGER.info("[maneuver] {} reversal search sense {} found {} candidate points, clearance {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} reversal search sense {} found {} candidate points, clearance {}",
                 shortId(runtime.train()), rel > 0 ? "cab first" : "backing", points.size(), clearance);
             for (int i = 0; i < Math.min(points.size(), 6); i++) {
                 SchedulePathfinder.Reversal p = points.get(i);
-                LoconauticsConstants.LOGGER.info("[maneuver] {} point {} {} {}->{} stop {} cost {} past {} edges {}",
+                LoconauticsConstants.LOGGER.debug("[maneuver] {} point {} {} {}->{} stop {} cost {} past {} edges {}",
                     shortId(runtime.train()), rel > 0 ? "cab first" : "backing", i, p.from().getLocation(),
                     p.to().getLocation(), String.format("%.1f", p.position()), String.format("%.1f", p.cost()),
                     String.format("%.1f", p.past()), p.edges().size());
@@ -364,7 +364,7 @@ public final class StationRouting {
                     break;
                 }
                 if (++tries > LoconauticsConstants.MANEUVER_REVERSAL_MAX_TRIES) {
-                    LoconauticsConstants.LOGGER.info("[maneuver] {} reversal search stopped after {} points",
+                    LoconauticsConstants.LOGGER.debug("[maneuver] {} reversal search stopped after {} points",
                         shortId(runtime.train()), tries - 1);
                     break;
                 }
@@ -394,7 +394,7 @@ public final class StationRouting {
                     plan.bestRel = rel;
                     plan.bestCost = best;
                     plan.reversal = true;
-                    LoconauticsConstants.LOGGER.info("[maneuver] {} reversal chosen: leg one {} blocks then {} along the edge, "
+                    LoconauticsConstants.LOGGER.debug("[maneuver] {} reversal chosen: leg one {} blocks then {} along the edge, "
                         + "{} past the last switch (needs {}, wheel span {} plus {}), the {} end lands on the stop, "
                         + "leg two {} blocks to \"{}\", total {}",
                         shortId(runtime.train()), String.format("%.1f", point.cost()),
@@ -446,12 +446,12 @@ public final class StationRouting {
         if (tooShort && !roomEnough && !plateTurn) {
             plan.blame(new Cause(Why.NO_ROOM, "", " has no room to reverse", String.format("%.0f", clearance),
                 String.format("%.0f", roomFound)));
-            LoconauticsConstants.LOGGER.info("[maneuver] {} no room to reverse, needs {} past the switch, track has {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} no room to reverse, needs {} past the switch, track has {}",
                 id, String.format("%.1f", clearance), String.format("%.1f", roomFound));
         } else if (plan.cause == null) {
             plan.blame(new Cause(Why.NO_TURN, "", " has no way to turn the train"));
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} reversal found nothing, dead end, room short {} room enough {} "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} reversal found nothing, dead end, room short {} room enough {} "
             + "plate exits offered {} reason {}", id, tooShort, roomEnough, plateTurn,
             plan.cause == null ? "none" : plan.cause.kind());
     }
@@ -464,7 +464,7 @@ public final class StationRouting {
         TrackNode b = graph.locateNode(loc.edge.getSecond());
         String relName = rel > 0 ? "cab first" : "backing";
         if (back != null) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} return {} point {}->{} at {} lead {} station \"{}\" ok, back {} total {} best {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} return {} point {}->{} at {} lead {} station \"{}\" ok, back {} total {} best {}",
                 shortId(runtime.train()), relName, point.from().getLocation(), point.to().getLocation(),
                 String.format("%.1f", point.position()), String.format("%.1f", lead), station.name,
                 String.format("%.1f", back.cost()), String.format("%.1f", lead + back.cost()), best);
@@ -475,7 +475,7 @@ public final class StationRouting {
             SchedulePathfinder.Routing.NONE);
         SchedulePathfinder.Path forwardOn = SchedulePathfinder.findFrom(graph, point.from(), point.to(), a, b, false,
             SchedulePathfinder.Routing.NONE);
-        LoconauticsConstants.LOGGER.info("[maneuver] {} return {} point {}->{} at {} past {} lead {} station \"{}\" on edge {}->{} FAILED, "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} return {} point {}->{} at {} past {} lead {} station \"{}\" on edge {}->{} FAILED, "
             + "undirected={} noRouting={} sameWayNoRouting={} conn(from)={} conn(to)={}",
             shortId(runtime.train()), relName, point.from().getLocation(), point.to().getLocation(),
             String.format("%.1f", point.position()), String.format("%.1f", point.past()), String.format("%.1f", lead),
@@ -502,7 +502,7 @@ public final class StationRouting {
         for (UUID car : TrainConsist.orderedChain(level, id)) {
             chain.add(car.toString().substring(0, 8));
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} consist chain {} linked {} bodyLength {} bogeySpan {} clearance {}",
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} consist chain {} linked {} bodyLength {} bogeySpan {} clearance {}",
             shortId(runtime.train()), chain, TrainConsist.connectedSubLevels(level, id).size(),
             String.format("%.1f", length), String.format("%.1f", span), String.format("%.1f", clearance));
     }
@@ -615,7 +615,7 @@ public final class StationRouting {
         }
         plan.rejected.add(station.name + NOSE_AGAINST_TEXT);
         plan.blame(new Cause(Why.NOSE_AGAINST, station.name, NOSE_AGAINST_TEXT));
-        LoconauticsConstants.LOGGER.info("[maneuver] {} refused {}, the stop is on the current edge and backing there ends "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} refused {}, the stop is on the current edge and backing there ends "
             + "with the nose against the facing", shortId(runtime.train()), station.name);
         return true;
     }
@@ -640,7 +640,7 @@ public final class StationRouting {
         }
         double toEdgeEnd = along ? edge.getLength() - loc.position : loc.position;
         double room = roomPast(graph, along ? a : b, along ? b : a, toEdgeEnd, plan.backRoom);
-        LoconauticsConstants.LOGGER.info("[maneuver] backing into {} travels {} the facing, track past the mark {} blocks, "
+        LoconauticsConstants.LOGGER.debug("[maneuver] backing into {} travels {} the facing, track past the mark {} blocks, "
             + "the consist needs {}", station.name, along ? "along" : "against", String.format("%.1f", room),
             String.format("%.1f", plan.backRoom));
         if (room >= plan.backRoom) {
@@ -685,7 +685,7 @@ public final class StationRouting {
         if (!plan.noseAlong) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] {} no route to {} with the nose along its facing {}, leg {} sense {}, "
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} no route to {} with the nose along its facing {}, leg {} sense {}, "
             + "the reason is in the plan gate line", shortId(runtime.train()), station.name, facingOf(loc),
             rel > 0 ? "cab first" : "backing", sense);
     }
@@ -699,7 +699,7 @@ public final class StationRouting {
         String exit = hop == null ? "no plate" : hop.entry() ? "plate entry, leaves the choice to the turn"
             : (ManeuverPlan.backsOut(hop) ? "plate exit that backs out" : "plate exit that spins")
                 + ", the cab end leads after it " + (SchedulePathfinder.Routing.relAfter(hop, rel) > 0);
-        LoconauticsConstants.LOGGER.info("[maneuver] {} nose rule picked {} leg {} direction {} lands {} station faces {} via {}",
+        LoconauticsConstants.LOGGER.debug("[maneuver] {} nose rule picked {} leg {} direction {} lands {} station faces {} via {}",
             shortId(runtime.train()), station.name, rel > 0 ? "cab first" : "backing", found.direction(),
             hop != null ? "on a plate first" : found.landRel() > 0 ? "cab first, nose along the facing"
                 : "backing, nose along the facing", facingOf(loc), exit);
@@ -733,7 +733,7 @@ public final class StationRouting {
         StationBerth.Berth berth = plan.maneuver && route != null
             ? StationBerth.measure(graph, leadPoint(plan, train, rel), route, parked, consistLength(runtime)) : null;
         if (berth != null && berth.fits()) {
-            LoconauticsConstants.LOGGER.info("[maneuver] {} berth at {} behind train {}, {} free, needs {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} berth at {} behind train {}, {} free, needs {}",
                 shortId(train), station.name, shortId(parked), String.format("%.1f", berth.free()),
                 String.format("%.1f", berth.need()));
             return new Verdict(false, berth, null);
@@ -741,7 +741,7 @@ public final class StationRouting {
         if (berth != null) {
             String why = station.name + " has no room for " + Math.round(berth.need()) + " blocks, "
                 + Math.round(Math.min(berth.free(), 1.0e6)) + " free";
-            LoconauticsConstants.LOGGER.info("[maneuver] {} {}, train {} is parked there", shortId(train), why,
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} {}, train {} is parked there", shortId(train), why,
                 shortId(parked));
             rejected.add(why);
             return new Verdict(true, null, why);
@@ -781,7 +781,7 @@ public final class StationRouting {
             // the same search with the nose rule dropped, a route that only exists then ends with the nose against the facing
             boolean anyEnd = SchedulePathfinder.findAhead(graph, nose, a, b, sense, false,
                 routing.arriving(false, routing.rel()).tracing(null)) != null;
-            LoconauticsConstants.LOGGER.info("[maneuver] {} why {} sense {}: a route exists when the nose may point either way {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] {} why {} sense {}: a route exists when the nose may point either way {}",
                 shortId(runtime.train()), station, sense, anyEnd);
             if (anyEnd) {
                 return new Cause(Why.NOSE_AGAINST, station, NOSE_AGAINST_TEXT);

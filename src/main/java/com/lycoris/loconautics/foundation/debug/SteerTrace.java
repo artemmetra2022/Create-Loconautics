@@ -25,7 +25,7 @@ public final class SteerTrace {
 
     public static void mode(UUID car, String mode) {
         if (enabled && !mode.equals(LAST_MODE.put(car, mode))) {
-            LoconauticsConstants.LOGGER.info("[steer] car {} mode {}", car.toString().substring(0, 8), mode);
+            LoconauticsConstants.LOGGER.debug("[steer] car {} mode {}", car.toString().substring(0, 8), mode);
         }
     }
 
@@ -38,7 +38,7 @@ public final class SteerTrace {
     public static void pick(Object carriage, String how, int options, String picked) {
         if (enabled) {
             int id = System.identityHashCode(carriage);
-            LoconauticsConstants.LOGGER.info("[steer] junction {} car {} {} of {} options, {}",
+            LoconauticsConstants.LOGGER.debug("[steer] junction {} car {} {} of {} options, {}",
                     Integer.toHexString(id), OWNERS.getOrDefault(id, "?"), how, options, picked);
         }
     }

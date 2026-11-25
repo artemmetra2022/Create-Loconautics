@@ -279,7 +279,7 @@ public final class TrainTeleporter {
 
         ServerLevel sourceLevel = plan.get(0).sub().getLevel();
         TeleportStrands.Carry strands = TeleportStrands.capture(sourceLevel, moving);
-        LoconauticsConstants.LOGGER.info("[issue281] {} cars={} strands carried={} cut={} from {} to {}", mode, plan.size(),
+        LoconauticsConstants.LOGGER.debug("[issue281] {} cars={} strands carried={} cut={} from {} to {}", mode, plan.size(),
                 strands.carried(), strands.cut(), sourceLevel.dimension().location(), destLevel.dimension().location());
         Map<UUID, TeleportStrands.Shift> shifts = new HashMap<>();
         Map<UUID, ServerLevel> where = new HashMap<>();
@@ -322,14 +322,14 @@ public final class TrainTeleporter {
             land(train, body, moving, shifts.get(landing.sub().getUniqueId()), homes.get(i).drivers(),
                     mode == Mode.HANDOVER ? CartEvent.HANDED_OVER : CartEvent.TELEPORTED, trace);
             moved++;
-            LoconauticsConstants.LOGGER.info("[issue281] car={} landed {}/{} derailed={} speed={}", shortId(train), moved,
+            LoconauticsConstants.LOGGER.debug("[issue281] car={} landed {}/{} derailed={} speed={}", shortId(train), moved,
                     plan.size(), train.isDerailed(), train.speed());
             trace.accept("car " + shortId(train) + " landed at " + format(landing.origin()));
         }
         followPartnerPlots(plan, destLevel, shifts);
         holdCoupledContacts(plan, destLevel);
         TeleportStrands.restore(strands, where, sourceLevel, shifts);
-        LoconauticsConstants.LOGGER.info("[issue281] all {} cars landed, strands restored", moved);
+        LoconauticsConstants.LOGGER.debug("[issue281] all {} cars landed, strands restored", moved);
         if (strands.carried() > 0 || strands.cut() > 0) {
             trace.accept(strands.carried() + " strands respawned, " + strands.cut() + " cut loose");
         }
@@ -495,7 +495,7 @@ public final class TrainTeleporter {
             }
             knuckle.clearConnection();
             knuckle.clearPartner();
-            LoconauticsConstants.LOGGER.info("[teleport] uncoupled {} from {}, it is not coming along",
+            LoconauticsConstants.LOGGER.debug("[teleport] uncoupled {} from {}, it is not coming along",
                     sub.getUniqueId(), partner);
         }
     }

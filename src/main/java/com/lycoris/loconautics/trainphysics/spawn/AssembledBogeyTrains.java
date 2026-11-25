@@ -84,7 +84,7 @@ public final class AssembledBogeyTrains {
         SubLevelSplitWatcher.ensureObserver(level);
         SableTrainPersistence.persist(train);
         SableTrainSyncPacket.broadcast(train);
-        LoconauticsConstants.LOGGER.info("[sabletrain] assembled body {} became train {}, {} bogey(s), {}",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] assembled body {} became train {}, {} bogey(s), {}",
                 sub.getUniqueId(), train.id(), car.bogeys().size(), railed ? "on rail" : "trackless and derailed");
         return true;
     }

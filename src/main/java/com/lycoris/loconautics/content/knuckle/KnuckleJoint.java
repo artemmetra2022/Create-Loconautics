@@ -97,7 +97,7 @@ public final class KnuckleJoint {
         long now = subA.getLevel().getGameTime();
         if (KnuckleTuning.trace && now - current.traced >= TRACE_TICKS) {
             current.traced = now;
-            LoconauticsConstants.LOGGER.info("[knuckle] joint gap=" + KnuckleTuning.fmt(gap) + " length="
+            LoconauticsConstants.LOGGER.debug("[knuckle] joint gap=" + KnuckleTuning.fmt(gap) + " length="
                     + KnuckleTuning.fmt(length));
         }
         return current;

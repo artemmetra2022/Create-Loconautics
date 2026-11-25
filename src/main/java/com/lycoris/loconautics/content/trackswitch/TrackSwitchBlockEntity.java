@@ -3,6 +3,7 @@ package com.lycoris.loconautics.content.trackswitch;
 import com.lycoris.loconautics.common.railway.PointOverrides;
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -15,6 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Holds one junction and which of its branches trains are sent down. The choice lives in {@link PointOverrides}
@@ -22,11 +25,15 @@ import java.util.List;
  */
 public class TrackSwitchBlockEntity extends BlockEntity {
 
+    /** which stand holds each junction, so that two stands never fight over the same switch */
+    private static final Map<String, GlobalPos> STANDS = new ConcurrentHashMap<>();
+
     private String junction = "";
     /** node id of the branch trains are sent to, empty while the stand lets Create choose */
     private String toward = "";
     private int branchNumber;
     private int branchCount;
+    private boolean unloading;
 
     public int branchNumber() { return branchNumber; }
     public int branchCount() { return branchCount; }
@@ -38,15 +45,36 @@ public class TrackSwitchBlockEntity extends BlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        if (level instanceof ServerLevel) {
+        if (level instanceof ServerLevel server) {
+            if (!junction.isEmpty() && !claim(junction)) {
+                junction = "";
+                toward = "";
+                branchNumber = 0;
+                branchCount = 0;
+                setChanged();
+            }
             apply();
-            if (junction.isEmpty() || toward.isEmpty()) show(null, null);
+            if (junction.isEmpty() || toward.isEmpty()) {
+                // no block changes while the chunk is still loading, do it on the next server tick
+                server.getServer().execute(() -> {
+                    if (!isRemoved() && level != null && level.getBlockEntity(worldPosition) == this) {
+                        show(null, null);
+                    }
+                });
+            }
         }
     }
 
     @Override
+    public void onChunkUnloaded() {
+        // an unloading chunk keeps its stand locks, only a real removal lets go of the junction
+        unloading = true;
+        super.onChunkUnloaded();
+    }
+
+    @Override
     public void setRemoved() {
-        if (level instanceof ServerLevel) {
+        if (level instanceof ServerLevel && !unloading) {
             release();
         }
         super.setRemoved();
@@ -95,7 +123,17 @@ public class TrackSwitchBlockEntity extends BlockEntity {
             tell(player, "loconautics.track_switch.no_junction");
             return;
         }
-        release();
+        String previous = junction;
+        if (!claim(found.id())) {
+            tell(player, "loconautics.track_switch.occupied");
+            return;
+        }
+        if (previous.equals(found.id())) {
+            PointOverrides.clear(previous);
+            PointOverrides.unmarkAuto(previous);
+        } else {
+            release();
+        }
         junction = found.id();
         branchCount = found.branches().size();
         branchNumber = 0;
@@ -156,7 +194,6 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         }
     }
 
-    /** forced mode holds the branch, auto mode only marks the junction so that scheduled trains may set it */
     /** arrow toward the held branch, or the auto fork when there is none */
     private void show(Vec3 junctionAt, Vec3 branchAt) {
         if (level == null) {
@@ -182,7 +219,9 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         if (shown != state) {
             level.setBlock(worldPosition, shown, Block.UPDATE_CLIENTS);
         }
-        level.sendBlockUpdated(worldPosition, state, shown, Block.UPDATE_CLIENTS);
+        if (shown == state) {
+            level.sendBlockUpdated(worldPosition, state, shown, Block.UPDATE_CLIENTS);
+        }
     }
 
     private void apply() {
@@ -197,7 +236,34 @@ public class TrackSwitchBlockEntity extends BlockEntity {
         }
     }
 
+    /** takes the junction for this stand unless another live stand already holds it */
+    private boolean claim(String id) {
+        if (!(level instanceof ServerLevel server)) {
+            return true;
+        }
+        GlobalPos me = GlobalPos.of(server.dimension(), worldPosition);
+        GlobalPos owner = STANDS.putIfAbsent(id, me);
+        if (owner == null || owner.equals(me)) {
+            return true;
+        }
+        ServerLevel ownerLevel = server.getServer().getLevel(owner.dimension());
+        if (ownerLevel != null) {
+            if (!ownerLevel.isLoaded(owner.pos())) {
+                return false;
+            }
+            if (ownerLevel.getBlockEntity(owner.pos()) instanceof TrackSwitchBlockEntity other
+                    && !other.isRemoved() && id.equals(other.junction)) {
+                return false;
+            }
+        }
+        STANDS.put(id, me);
+        return true;
+    }
+
     private void release() {
+        if (!junction.isEmpty() && level != null) {
+            STANDS.remove(junction, GlobalPos.of(level.dimension(), worldPosition));
+        }
         if (!junction.isEmpty()) {
             PointOverrides.clear(junction);
             PointOverrides.unmarkAuto(junction);

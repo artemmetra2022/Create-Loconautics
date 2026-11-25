@@ -485,7 +485,7 @@ public final class SableTrainSpawner {
         for (int i = 0; i < behind.size(); i++) {
             behind.get(i).setName(base.isEmpty() ? base : base + LoconauticsConstants.CARRIAGE_NAME_INFIX + (i + 2));
         }
-        LoconauticsConstants.LOGGER.info("[sabletrain] named consist '{}' ({} car(s)) from station", base,
+        LoconauticsConstants.LOGGER.debug("[sabletrain] named consist '{}' ({} car(s)) from station", base,
                 behind.size() + 1);
     }
 
@@ -539,7 +539,7 @@ public final class SableTrainSpawner {
                 disassembled++;
             }
         }
-        LoconauticsConstants.LOGGER.info("[sabletrain] station at {} disassembled {} Sable car(s) of the parked consist",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] station at {} disassembled {} Sable car(s) of the parked consist",
                 stationPos, disassembled);
         return disassembled > 0;
     }
@@ -597,7 +597,7 @@ public final class SableTrainSpawner {
         if (container.getSubLevel(subId) == sub) {
             container.removeSubLevel(sub, SubLevelRemovalReason.REMOVED);
         }
-        LoconauticsConstants.LOGGER.info("[sabletrain] disassembled train {} (sub-level {}) at {} into {}",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] disassembled train {} (sub-level {}) at {} into {}",
                 train.id(), subId, goal, host == null ? "the world" : host.getUniqueId());
         return true;
     }
@@ -841,7 +841,7 @@ public final class SableTrainSpawner {
         }
         if (cars.get(0).level() != level) {
             TrainTeleporter.Result result = TrainTeleporter.teleportToRail(cars.get(0), level, spots.get(0), upNormal,
-                    plan.look(), line -> LoconauticsConstants.LOGGER.info("[sabletrain] relocate {}", line));
+                    plan.look(), line -> LoconauticsConstants.LOGGER.debug("[sabletrain] relocate {}", line));
             if (!result.ok()) {
                 refuseRelocation(true, player, result.failure(), result.failure());
                 return;
@@ -850,7 +850,7 @@ public final class SableTrainSpawner {
                 car.setSpeed(0.0);
                 car.setTargetSpeed(0.0);
             }
-            LoconauticsConstants.LOGGER.info("[sabletrain] relocated consist of {} car(s) from another dimension to "
+            LoconauticsConstants.LOGGER.debug("[sabletrain] relocated consist of {} car(s) from another dimension to "
                     + "{}", result.moved(), pos);
             return;
         }
@@ -867,7 +867,7 @@ public final class SableTrainSpawner {
                 return;
             }
             seats.add(seat);
-            LoconauticsConstants.LOGGER.info("[sabletrain] relocate car {} of {} {}", i + 1, cars.size(),
+            LoconauticsConstants.LOGGER.debug("[sabletrain] relocate car {} of {} {}", i + 1, cars.size(),
                     plan.reversed()[i] ? "turned around" : "kept its facing");
         }
 
@@ -886,7 +886,7 @@ public final class SableTrainSpawner {
         ArticulationLinks.resume(level, cars);
         TeleportStrands.restore(strands, Map.of(), level, Map.of());
         reengageKnuckles(level, cars);
-        LoconauticsConstants.LOGGER.info("[sabletrain] relocated consist of {}/{} car(s) starting at {}",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] relocated consist of {}/{} car(s) starting at {}",
                 placed, cars.size(), pos);
     }
 
@@ -924,7 +924,7 @@ public final class SableTrainSpawner {
                 cars.add(car);
                 continue;
             }
-            LoconauticsConstants.LOGGER.info("[issue278] chainCars dropped {} of {}: registered={} sameLevel={} hasCar={} "
+            LoconauticsConstants.LOGGER.debug("[issue278] chainCars dropped {} of {}: registered={} sameLevel={} hasCar={} "
                             + "hasCarriage={}", carId.toString().substring(0, 8), order.size(), car != null,
                     car != null && car.level() == level, car != null && car.car() != null,
                     car != null && car.car() != null && car.car().carriage() != null);
@@ -1214,10 +1214,10 @@ public final class SableTrainSpawner {
         SableTrainPersistence.persist(train);
         SableTrainSyncPacket.broadcast(train);
         // a seat origin out at the plot means a follower never lifted through its host, which reads as the car vanishing
-        LoconauticsConstants.LOGGER.info("[sabletrain] seated car {} on {} bogey(s) at {}",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] seated car {} on {} bogey(s) at {}",
                 train.id(), bogeys.size(), v3d(seat.origin()));
         if (com.lycoris.loconautics.content.knuckle.KnuckleTuning.trace) {
-            LoconauticsConstants.LOGGER.info("[knuckle] seated state car={} axleSign={} servo={} following={} "
+            LoconauticsConstants.LOGGER.debug("[knuckle] seated state car={} axleSign={} servo={} following={} "
                             + "brakeHold={} handbrake={} scheduleDriven={} lead={} trail={} settle={} bogeys={} railVsBody={}",
                     train.id(), train.axleSign(), train.servoBrake(), train.isFollowing(), train.brakeHold(),
                     train.handbrake(), train.isScheduleDriven(), train.car().localLead() != null,
@@ -1472,7 +1472,7 @@ public final class SableTrainSpawner {
 
         train.reseat(carriage, bogeys);
         CartLifecycle.fire(train, CartEvent.RESEATED_IN_PLACE);
-        LoconauticsConstants.LOGGER.info(
+        LoconauticsConstants.LOGGER.debug(
                 "[sabletrain] re-seated train {} on the live track graph (rail broken/rebuilt nearby)", train.id());
         return true;
     }
@@ -1533,7 +1533,7 @@ public final class SableTrainSpawner {
             updated.add(landed);
             train.clearOffTrackBogey(bogey.localPos());
             anyRecovered = true;
-            LoconauticsConstants.LOGGER.info("[sabletrain] car {} bogey {} found rail again, back on track",
+            LoconauticsConstants.LOGGER.debug("[sabletrain] car {} bogey {} found rail again, back on track",
                     train.id(), bogey.localPos().toShortString());
         }
         if (anyRecovered) {

@@ -92,7 +92,7 @@ public final class CcControl {
     public static void release(UUID trainId) {
         CcControl released = ACTIVE.remove(trainId);
         if (released != null) {
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[ccsteer] dropped control of {} steer={}", trainId, released.steer);
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[ccsteer] dropped control of {} steer={}", trainId, released.steer);
             released.abandonPark();
             released.clearTransmission();
         }
@@ -220,7 +220,7 @@ public final class CcControl {
         this.brakeSense = 0;
         this.brakeScale = null;
         if (nose != null && path.followsRoute()) {
-            nose.setPath(path.route());
+            nose.setPath(path.route() == null ? null : new java.util.ArrayList<>(path.route()));
         }
         return parkId;
     }

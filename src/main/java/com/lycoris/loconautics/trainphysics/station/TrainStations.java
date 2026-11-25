@@ -146,7 +146,7 @@ public final class TrainStations {
                 near = scoutDirection(noseRail(train), nosePoint(train), STATION_PARK_RADIUS, heading, null, 0.0);
             }
             if (near != null && (wantsStop || StationLanding.wheelOnMark(near.distance()))) {
-                LoconauticsConstants.LOGGER.info("[nose2c] car {} relatches {} at {} scan direction {} heading {}",
+                LoconauticsConstants.LOGGER.debug("[nose2c] car {} relatches {} at {} scan direction {} heading {}",
                         ConsistNose.shortId(train.id()), near.station().name,
                         String.format("%.3f", near.distance()), near.direction(), heading);
                 issue255(train, "relatch", near.station(), near.distance(), near.direction());
@@ -422,7 +422,7 @@ public final class TrainStations {
             bogeys.append(bogey.rail() == nose.rail() ? "NOSE " : "").append(bogey.rail().center() == null ? "none"
                     : String.format("%.2f,%.2f", bogey.rail().center().x, bogey.rail().center().z)).append(' ');
         }
-        LoconauticsConstants.LOGGER.info("[issue255] {} car={} station={} gap={} dir={} nowCar={} noseCar={} sense={} "
+        LoconauticsConstants.LOGGER.debug("[issue255] {} car={} station={} gap={} dir={} nowCar={} noseCar={} sense={} "
                         + "flip={} speed={} cars={} noseOnThisCar={} bogeysOfThisCar={}", how,
                 ConsistNose.shortId(train.id()), station == null ? "none" : station.name,
                 String.format("%.3f", gap), direction, ConsistNose.shortId(train.car().subLevelId()),

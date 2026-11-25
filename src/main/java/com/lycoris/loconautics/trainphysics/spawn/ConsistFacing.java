@@ -87,7 +87,7 @@ public final class ConsistFacing {
                 out[i] = SableTrainSpawner.facesAgainst(level, cars.get(i), nose);
             } else {
                 out[i] = i > 0 && out[i - 1];
-                LoconauticsConstants.LOGGER.info(
+                LoconauticsConstants.LOGGER.debug(
                         "[sabletrain] relocate: car {} of {} has no hinge or neighbor to say which way it faces, copying car {}",
                         i + 1, out.length, i);
             }

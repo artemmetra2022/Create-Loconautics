@@ -144,7 +144,7 @@ public final class ExternalForceDerail {
         double along = pull.accel().dot(tangent);
         double across = new Vector3d(pull.accel()).fma(-along, tangent).length();
         if (throttle(sub, now)) {
-            LoconauticsConstants.LOGGER.info("[plungerpull] car={} accel={} b/s2 along={} across={} limit={} derailed={}",
+            LoconauticsConstants.LOGGER.debug("[plungerpull] car={} accel={} b/s2 along={} across={} limit={} derailed={}",
                     shortId(train.id()), SableTrainDriver.f(pull.accel().length()), SableTrainDriver.f(along),
                     SableTrainDriver.f(across), SableTrainDriver.f(DimensionPhysicsData.getGravity(sub.getLevel()).length() * PLUNGER_RATIO),
                     train.isDerailed());
@@ -363,7 +363,7 @@ public final class ExternalForceDerail {
         if (!ForceTrace.enabled() || !throttle(sub, now)) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[extforce] car={} not sampled, {}", shortId(train.id()), why);
+        LoconauticsConstants.LOGGER.debug("[extforce] car={} not sampled, {}", shortId(train.id()), why);
     }
 
     private static boolean throttle(ServerSubLevel sub, long now) {
@@ -383,7 +383,7 @@ public final class ExternalForceDerail {
         }
         RigidBodyHandle handle = RigidBodyHandle.of(sub);
         double vUp = handle == null ? Double.NaN : handle.getLinearVelocity(new Vector3d()).dot(up);
-        LoconauticsConstants.LOGGER.info(
+        LoconauticsConstants.LOGGER.debug(
                 "[extforce] car={} glue={} offTrack={} mass={} vUp={} lift={} railJoint={} b/s2 staffDrag={} queuedForce={}",
                 shortId(train.id()), RailGlue.glueModeOf(sub), train.hasOffTrackBogey(),
                 SableTrainDriver.f(mass), SableTrainDriver.f(vUp), SableTrainDriver.f(lift),
@@ -449,7 +449,7 @@ public final class ExternalForceDerail {
         }
         clearLiftCount(train.id());
         train.setDerailed(true, DerailReason.LIFTED_OFF);
-        LoconauticsConstants.LOGGER.info("[sabletrain] car {} was lifted off the rail, {} b/s2 up against {}",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] car {} was lifted off the rail, {} b/s2 up against {}",
                 train.id(), SableTrainDriver.f(push.lift()), SableTrainDriver.f(limit));
         return true;
     }

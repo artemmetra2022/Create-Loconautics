@@ -25,7 +25,7 @@ public final class SubLevelFrames {
         }
         Vec3 local = lookToLocal(level, localPos, worldLook);
         if (!level.isClientSide && local != worldLook) {
-            LoconauticsConstants.LOGGER.info("[tracklook] pos {} world look {} local look {}", localPos, worldLook, local);
+            LoconauticsConstants.LOGGER.debug("[tracklook] pos {} world look {} local look {}", localPos, worldLook, local);
         }
         return local;
     }

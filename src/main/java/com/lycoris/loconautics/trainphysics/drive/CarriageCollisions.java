@@ -257,7 +257,7 @@ public final class CarriageCollisions {
         Vector3d kick = new Vector3d(hit.axis()).mul(separationRoom(a, b, hit) * 0.5);
         TrainImpacts.throwOff(a.train(), a.sub(), new Vector3d(kick).negate());
         TrainImpacts.throwOff(b.train(), b.sub(), kick);
-        LoconauticsConstants.LOGGER.info("[collision] cars {} and {} stayed inside each other at depth {}, derailed both",
+        LoconauticsConstants.LOGGER.debug("[collision] cars {} and {} stayed inside each other at depth {}, derailed both",
                 shortId(a.sub().getUniqueId()), shortId(b.sub().getUniqueId()),
                 String.format(Locale.ROOT, "%.2f", hit.depth()));
     }

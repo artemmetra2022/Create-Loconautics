@@ -71,7 +71,7 @@ final class ManeuverPriority {
         if (line.equals(LAST.put(self.id().toString() + other.id(), line))) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[maneuver] priority {} vs {} decided by {}, {} waits",
+        LoconauticsConstants.LOGGER.debug("[maneuver] priority {} vs {} decided by {}, {} waits",
                 ConsistNose.shortId(self.id()), ConsistNose.shortId(other.id()), rule,
                 wait ? ConsistNose.shortId(self.id()) : ConsistNose.shortId(other.id()));
     }

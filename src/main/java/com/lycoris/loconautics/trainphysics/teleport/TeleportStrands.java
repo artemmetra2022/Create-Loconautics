@@ -300,7 +300,7 @@ public final class TeleportStrands {
         }
         strand.points = null;
         strands.touch();
-        LoconauticsConstants.LOGGER.info("[strandcross] hose {} rebuilt in {} nozzle={}", strand.id,
+        LoconauticsConstants.LOGGER.debug("[strandcross] hose {} rebuilt in {} nozzle={}", strand.id,
                 level.dimension().location(), strand.nozzleLocalPos != null);
     }
 
@@ -316,7 +316,7 @@ public final class TeleportStrands {
         }
         strand.points = null;
         strands.touch();
-        LoconauticsConstants.LOGGER.info("[strandcross] screw link {} rebuilt in {} coupled={}", strand.id,
+        LoconauticsConstants.LOGGER.debug("[strandcross] screw link {} rebuilt in {} coupled={}", strand.id,
                 where.getOrDefault(strand.subA, fallback).dimension().location(), strand.isCoupled());
     }
 
@@ -335,7 +335,7 @@ public final class TeleportStrands {
         RopeStrandHolderBehavior to = where.getOrDefault(joint.subB(), fallback) == level
                 ? holderAt(level, container, joint.subB(), localB) : null;
         boolean made = from != null && to != null && from.createRope(to, false);
-        LoconauticsConstants.LOGGER.info("[strandcross] rope {} to {} holders={}/{} made={} in {}", joint.subA(),
+        LoconauticsConstants.LOGGER.debug("[strandcross] rope {} to {} holders={}/{} made={} in {}", joint.subA(),
                 joint.subB(), from != null, to != null, made, level.dimension().location());
         if (made) {
             restoreShape(from, joint, where, fallback, shifts);
@@ -426,7 +426,7 @@ public final class TeleportStrands {
             SteelCableStrandDriver.detach(level, strands, ropes, strand, null);
             return;
         }
-        LoconauticsConstants.LOGGER.info("[strandcross] cable {} rebuilt in {} length={}", strand.id,
+        LoconauticsConstants.LOGGER.debug("[strandcross] cable {} rebuilt in {} length={}", strand.id,
                 level.dimension().location(), length);
         strand.restLength = length;
         strand.points = null;

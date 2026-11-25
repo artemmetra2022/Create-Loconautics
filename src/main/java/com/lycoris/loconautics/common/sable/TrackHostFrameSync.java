@@ -73,7 +73,7 @@ public final class TrackHostFrameSync {
         TrackHostFrames.forget(host);
         syncNeeded = true;
         markDirty();
-        LoconauticsConstants.LOGGER.info("[turntableghost] host {} was removed, its saved frame is gone", shortId(host));
+        LoconauticsConstants.LOGGER.debug("[turntableghost] host {} was removed, its saved frame is gone", shortId(host));
     }
 
     public static void serverTick(MinecraftServer server) {

@@ -91,7 +91,7 @@ public final class StrandKnotGrab {
         boolean was = engaged;
         if (was) {
             traceTicks = TRACE_TICKS;
-            LoconauticsConstants.LOGGER.info("[knotgrab] released reason={} points={}", reason, previous.size());
+            LoconauticsConstants.LOGGER.debug("[knotgrab] released reason={} points={}", reason, previous.size());
         }
         request = null;
         engaged = false;
@@ -113,7 +113,7 @@ public final class StrandKnotGrab {
             }
         }
         engaged = true;
-        LoconauticsConstants.LOGGER.info("[knotgrab] engaged index={} points={}", knotIndex, points.size());
+        LoconauticsConstants.LOGGER.debug("[knotgrab] engaged index={} points={}", knotIndex, points.size());
         return true;
     }
 

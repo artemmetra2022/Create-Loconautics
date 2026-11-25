@@ -34,13 +34,13 @@ final class ScheduleGhostTrace {
     }
 
     static void log(SableTrain train, String text) {
-        LoconauticsConstants.LOGGER.info("[schedghost] {} ghost={} residency={} {}", shortId(train.id()),
+        LoconauticsConstants.LOGGER.debug("[schedghost] {} ghost={} residency={} {}", shortId(train.id()),
                 train.isGhost(), train.residency(), text);
     }
 
     static void event(@Nullable SableTrain train, String text) {
         if (train == null) {
-            LoconauticsConstants.LOGGER.info("[schedghost] event {}", text);
+            LoconauticsConstants.LOGGER.debug("[schedghost] event {}", text);
             return;
         }
         log(train, "event " + text);

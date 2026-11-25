@@ -147,7 +147,7 @@ public abstract class PanelBlockItem extends BlockItem {
         if (free == null || !panel.putPart(free, partFor(stack), center)) return InteractionResult.FAIL;
         panel.setLabel(free, stack.get(DataComponents.CUSTOM_NAME));
         CompoundTag picked = pickedConfig(stack);
-        LoconauticsConstants.LOGGER.info("[panelpick] putPartOnHost picked={}", picked);
+        LoconauticsConstants.LOGGER.debug("[panelpick] putPartOnHost picked={}", picked);
         if (picked != null) panel.applyPicked(free, picked, level.registryAccess());
 
         SoundType sound = clicked.getSoundType();
@@ -205,7 +205,7 @@ public abstract class PanelBlockItem extends BlockItem {
             boolean center = PanelBlock.aimedAtCenter(pos, context.getLevel().getBlockState(pos),
                     context.getClickLocation());
             CompoundTag picked = pickedConfig(stack);
-            LoconauticsConstants.LOGGER.info("[panelpick] placeBlock picked={}", picked);
+            LoconauticsConstants.LOGGER.debug("[panelpick] placeBlock picked={}", picked);
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
             if (panel.putPart(targeted, part, center)) {
                 panel.setLabel(targeted, stack.get(DataComponents.CUSTOM_NAME));

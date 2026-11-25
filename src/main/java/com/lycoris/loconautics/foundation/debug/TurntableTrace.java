@@ -30,7 +30,7 @@ public final class TurntableTrace {
             return;
         }
         lines++;
-        LoconauticsConstants.LOGGER.info("[turntrace] {}", text);
+        LoconauticsConstants.LOGGER.debug("[turntrace] {}", text);
     }
 
     public static String callers() {

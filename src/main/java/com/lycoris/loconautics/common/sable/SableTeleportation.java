@@ -353,7 +353,7 @@ public final class SableTeleportation {
             IN_FLIGHT.remove(subLevelId);
         }
 
-        LoconauticsConstants.LOGGER.info("[twinload] teleport body={} slot={},{} to {},{} pose={},{} rotationPoint={},{} "
+        LoconauticsConstants.LOGGER.debug("[twinload] teleport body={} slot={},{} to {},{} pose={},{} rotationPoint={},{} "
                         + "worldBounds x {}..{} z {}..{}", subLevelId, fromSlot == null ? -1 : fromSlot.x(),
                 fromSlot == null ? -1 : fromSlot.z(), targetSlot == null ? -1 : targetSlot.x(),
                 targetSlot == null ? -1 : targetSlot.z(), (int) moved.logicalPose().position().x(),

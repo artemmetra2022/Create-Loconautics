@@ -297,6 +297,6 @@ public final class SubLevelPassengers {
     }
 
     private static void trace(String message, Object... args) {
-        LoconauticsConstants.LOGGER.info("[rider] " + message, args);
+        LoconauticsConstants.LOGGER.debug("[rider] " + message, args);
     }
 }

@@ -2004,5 +2004,6 @@
   "loconautics.air_compressor.goggles.reservoir_missing": "Air reservoir not detected — no place to pump air",
   "loconautics.air_compressor.goggles.distributor_detected": "Air distributor: detected",
   "loconautics.air_compressor.goggles.distributor_missing": "Air distributor not detected",
-  "gui.loconautics.status_display.locomotive_mass": "Locomotive mass"
+  "gui.loconautics.status_display.locomotive_mass": "Locomotive mass",
+  "loconautics.track_switch.occupied": "This switch is already controlled by another stand"
 }

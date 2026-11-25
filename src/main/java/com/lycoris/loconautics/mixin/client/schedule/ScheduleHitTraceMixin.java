@@ -68,6 +68,6 @@ public abstract class ScheduleHitTraceMixin extends AbstractSimiContainerScreen<
             return;
         }
         loconautics$lastHit = line;
-        LoconauticsConstants.LOGGER.info("[schedhit] {}{}", click >= 0 ? "CLICK " : "hover ", line);
+        LoconauticsConstants.LOGGER.debug("[schedhit] {}{}", click >= 0 ? "CLICK " : "hover ", line);
     }
 }

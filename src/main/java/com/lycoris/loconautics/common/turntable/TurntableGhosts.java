@@ -84,7 +84,7 @@ public final class TurntableGhosts {
         }
         TrackHostFrameSync.requestSync();
         markDirty();
-        LoconauticsConstants.LOGGER.info("[turntableghost] plate {} ghosted at {} degrees, powered {}, schedule {}",
+        LoconauticsConstants.LOGGER.debug("[turntableghost] plate {} ghosted at {} degrees, powered {}, schedule {}",
                 shortId(ghost.plateSubLevelId()), String.format("%.2f", ghost.motion().targetAngleDegrees()),
                 ghost.turntablePowered(), ghost.turntableScheduleDriven());
     }
@@ -98,7 +98,7 @@ public final class TurntableGhosts {
         TurntableRegistry.dropGhost(ghost);
         TrackHostFrameSync.requestSync();
         markDirty();
-        LoconauticsConstants.LOGGER.info("[turntableghost] plate {} loaded again at {} degrees", shortId(plate),
+        LoconauticsConstants.LOGGER.debug("[turntableghost] plate {} loaded again at {} degrees", shortId(plate),
                 String.format("%.2f", ghost.motion().targetAngleDegrees()));
         return ghost;
     }
@@ -116,7 +116,7 @@ public final class TurntableGhosts {
         TurntableRegistry.forgetPlate(plate);
         FAILED.remove(plate);
         markDirty();
-        LoconauticsConstants.LOGGER.info("[turntableghost] plate {} ghost dropped, its body or bearing is gone",
+        LoconauticsConstants.LOGGER.debug("[turntableghost] plate {} ghost dropped, its body or bearing is gone",
                 shortId(plate));
     }
 
@@ -161,7 +161,7 @@ public final class TurntableGhosts {
             if (ghost.turntableScheduleDriven()) {
                 TurntableRegistry.register(ghost);
             }
-            LoconauticsConstants.LOGGER.info("[turntableghost] plate {} restored as a ghost at {} degrees",
+            LoconauticsConstants.LOGGER.debug("[turntableghost] plate {} restored as a ghost at {} degrees",
                     shortId(ghost.plateSubLevelId()), String.format("%.2f", ghost.motion().targetAngleDegrees()));
         }
         store.loaded().clear();

@@ -411,6 +411,6 @@ public final class TrainSpacing {
             return;
         }
         LAST_TRACE.put(train.id(), now);
-        LoconauticsConstants.LOGGER.info("[ghostcol] {} {} {}", shortId(train.id()), what, detail);
+        LoconauticsConstants.LOGGER.debug("[ghostcol] {} {} {}", shortId(train.id()), what, detail);
     }
 }

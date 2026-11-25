@@ -110,7 +110,7 @@ public final class SubLevelTrackPainter {
         }
         lastSignature = signature();
         draw(map, pixels);
-        LoconauticsConstants.LOGGER.info("[turntableghost] map paint {} pixels, {} tracked cells, {} ghost plates",
+        LoconauticsConstants.LOGGER.debug("[turntableghost] map paint {} pixels, {} tracked cells, {} ghost plates",
                 pixels.size(), TRACKED.size(), TrackHostFramesClient.frames().size());
     }
 

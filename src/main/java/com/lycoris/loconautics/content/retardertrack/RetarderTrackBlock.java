@@ -1,6 +1,10 @@
 package com.lycoris.loconautics.content.retardertrack;
 
+import com.lycoris.loconautics.LoconauticsConstants;
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.track.TrackMaterialFactory;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial;
@@ -35,10 +39,28 @@ public class RetarderTrackBlock extends TrackBlock {
     public static final int[] LIMITS = {5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 100, 120, 140, 160};
     public static final int DEFAULT_INDEX = 5; // 30 km/h
 
+    /**
+     * Create places the block of the held item's {@link TrackMaterial} when it lays several rails or a curve. With
+     * the andesite material every rail laid from this item came out as a plain andesite track, so the retarder has
+     * a material of its own that points back at this block. It uses the andesite look and the standard track type,
+     * so bogeys and connections to other tracks work as before.
+     */
+    public static final TrackMaterial MATERIAL = TrackMaterialFactory.make(LoconauticsConstants.id("retarder"))
+            .lang("Retarder")
+            .block(NonNullSupplier.lazy(RetarderTrackBlock::blockSupplier))
+            .particle(Create.asResource("block/palettes/stone_types/polished/andesite_cut_polished"))
+            .defaultModels()
+            .noRecipeGen()
+            .build();
+
+    private static NonNullSupplier<? extends TrackBlock> blockSupplier() {
+        return () -> LoconauticsRegistries.RETARDER_TRACK.get();
+    }
+
     public static final IntegerProperty LIMIT = IntegerProperty.create("limit", 0, LIMITS.length - 1);
 
     public RetarderTrackBlock(Properties properties) {
-        super(properties, TrackMaterial.ANDESITE);
+        super(properties, MATERIAL);
         registerDefaultState(defaultBlockState().setValue(LIMIT, DEFAULT_INDEX));
     }
 

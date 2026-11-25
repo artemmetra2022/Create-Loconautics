@@ -311,7 +311,7 @@ public final class ConsistNose {
         String key = how + heading.source() + nose.car().car().subLevelId() + nose.point().node1.getLocation()
                 + signKey(heading.dir());
         if (!key.equals(LOGGED.put(id, key))) {
-            LoconauticsConstants.LOGGER.info("[nose2c] consist {} {}", shortId(id), line);
+            LoconauticsConstants.LOGGER.debug("[nose2c] consist {} {}", shortId(id), line);
         }
     }
 

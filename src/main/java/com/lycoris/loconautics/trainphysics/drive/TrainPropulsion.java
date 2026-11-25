@@ -439,7 +439,7 @@ public final class TrainPropulsion {
         }
         com.lycoris.loconautics.content.analogcontroller.AnalogControllerBlockEntity controller =
                 SableTrainDriver.controllerIn(train);
-        com.lycoris.loconautics.LoconauticsConstants.LOGGER.info(
+        com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug(
                 "[reload301] train {} target {} speed {} scheduleDriven {} station {} stationState {} manual {} driven {} "
                         + "anyPowered {} controller {} power {} scheduleControlled {} ghostCruise {}",
                 train.id().toString().substring(0, 8), train.targetSpeed(), train.speed(), train.isScheduleDriven(),

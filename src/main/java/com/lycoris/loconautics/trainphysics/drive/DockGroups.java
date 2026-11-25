@@ -98,7 +98,7 @@ public final class DockGroups {
             }
         }
         if (!leaders.equals(leaderOf)) {
-            LoconauticsConstants.LOGGER.info("[dock] groups changed, leaders {}, followers {}", followers, leaders);
+            LoconauticsConstants.LOGGER.debug("[dock] groups changed, leaders {}, followers {}", followers, leaders);
             for (UUID follower : leaders.keySet()) {
                 if (!leaderOf.containsKey(follower)) {
                     reseatRails(bySub.get(follower));
@@ -120,7 +120,7 @@ public final class DockGroups {
             return;
         }
         boolean reseated = SableTrainSpawner.reseatOnRail(follower, sub);
-        LoconauticsConstants.LOGGER.info("[dockseat] follower {} rail cursor read back from its body, reseated {}",
+        LoconauticsConstants.LOGGER.debug("[dockseat] follower {} rail cursor read back from its body, reseated {}",
                 follower.car().subLevelId(), reseated);
     }
 

@@ -102,7 +102,7 @@ public final class SableTrainPersistence {
         dropShadowRecords(server, leakedShadows);
         restoreTicks = 0;
         snapshotCounter = 0;
-        LoconauticsConstants.LOGGER.info("[sabletrain] persistence active, {} saved train(s) to restore",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] persistence active, {} saved train(s) to restore",
                 pending.size());
     }
 
@@ -116,7 +116,7 @@ public final class SableTrainPersistence {
                 continue;
             }
             unpersist(server, id);
-            LoconauticsConstants.LOGGER.info("[portal] dropped saved train {}, its body was a leaked far side copy", id);
+            LoconauticsConstants.LOGGER.debug("[portal] dropped saved train {}, its body was a leaked far side copy", id);
         }
     }
 
@@ -213,7 +213,7 @@ public final class SableTrainPersistence {
                 TrainResidency.queueReconcile(train);
             }
             pending.remove(entry.getKey());
-            LoconauticsConstants.LOGGER.info("[sabletrain] restored cart {} in {}",
+            LoconauticsConstants.LOGGER.debug("[sabletrain] restored cart {} in {}",
                     train.id(), train.level().dimension().location());
         }
     }

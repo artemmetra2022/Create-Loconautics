@@ -133,7 +133,7 @@ public final class StationChunkTickets {
         }
         if (why < MAX_WHY_LINES) {
             why++;
-            LoconauticsConstants.LOGGER.info("[thrashwhy] release train={} reason={} chunks={}", shortId(trainId),
+            LoconauticsConstants.LOGGER.debug("[thrashwhy] release train={} reason={} chunks={}", shortId(trainId),
                     reason, held.chunks().size());
         }
         dropTickets(trainId, held);
@@ -199,7 +199,7 @@ public final class StationChunkTickets {
             if (capped && now - held.sinceTick() > MAX_DWELL_TICKS) {
                 CAPPED.add(train.id());
                 release(train.id(), "dwell cap of " + MAX_DWELL_TICKS + " ticks reached");
-                LoconauticsConstants.LOGGER.info("[ghostedge] chunk hold capped train={} ticks={} ghost={}",
+                LoconauticsConstants.LOGGER.debug("[ghostedge] chunk hold capped train={} ticks={} ghost={}",
                         shortId(train.id()), now - held.sinceTick(), train.isGhost());
             }
             return;
@@ -225,7 +225,7 @@ public final class StationChunkTickets {
             return;
         }
         why++;
-        LoconauticsConstants.LOGGER.info("[thrashwhy] {} train={} ghost={} stationState={} scheduleHold={} chunks={}",
+        LoconauticsConstants.LOGGER.debug("[thrashwhy] {} train={} ghost={} stationState={} scheduleHold={} chunks={}",
                 what, shortId(train.id()), train.isGhost(), train.stationState(), train.scheduleHold(), chunks);
     }
 

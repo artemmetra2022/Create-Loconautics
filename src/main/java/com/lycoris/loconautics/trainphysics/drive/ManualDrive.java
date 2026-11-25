@@ -118,7 +118,7 @@ public final class ManualDrive {
             }
             Boolean wasOnCurve = CURVE_TRACE.put(controller, onCurve);
             if (wasOnCurve == null || wasOnCurve != onCurve) {
-                LoconauticsConstants.LOGGER.info("[cruisecurve] onCurve {} input {} speed {} cruise {}", onCurve, input,
+                LoconauticsConstants.LOGGER.debug("[cruisecurve] onCurve {} input {} speed {} cruise {}", onCurve, input,
                         String.format("%.4f", car.speed()), String.format("%.4f", controller.cruiseSpeed()));
             }
             if (input == 0) {

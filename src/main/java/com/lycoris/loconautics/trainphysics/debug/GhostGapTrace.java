@@ -61,7 +61,7 @@ public final class GhostGapTrace {
         String own = String.format("ownCar=%.2f ownConsist=%.2f bodyless=%s", TrainLength.carLength(level, train),
                 TrainLength.consistLength(level, id), SubLevelData.resolve(level, id) == null);
         if (graph == null || front == null || front.edge == null) {
-            LoconauticsConstants.LOGGER.info("[ghostgap] ghost {} has no graph position, {}", shortId(id), own);
+            LoconauticsConstants.LOGGER.debug("[ghostgap] ghost {} has no graph position, {}", shortId(id), own);
             return;
         }
         List<Occupant> occupants = occupants(level, id);
@@ -71,7 +71,7 @@ public final class GhostGapTrace {
         while (walked <= LOOKAHEAD) {
             Occupant hit = hitAt(scout, occupants);
             if (hit != null) {
-                LoconauticsConstants.LOGGER.info("[ghostgap] ghost {} nose is {} blocks from {} ({}, half={}), {}",
+                LoconauticsConstants.LOGGER.debug("[ghostgap] ghost {} nose is {} blocks from {} ({}, half={}), {}",
                         shortId(id), String.format("%.1f", walked), shortId(hit.train()),
                         hit.ghost() ? "ghost" : "loaded", String.format("%.2f", hit.half()), own);
                 return;
@@ -79,13 +79,13 @@ public final class GhostGapTrace {
             double moved = scout.travel(graph, STEP, scout.steer(SteerDirection.NONE, nose.upNormal()),
                     scout.ignoreEdgePoints(), scout.ignoreTurns(), scout.ignorePortals());
             if (moved < STEP * 0.5 || scout.edge == null) {
-                LoconauticsConstants.LOGGER.info("[ghostgap] ghost {} track ends {} blocks ahead, no train, {}",
+                LoconauticsConstants.LOGGER.debug("[ghostgap] ghost {} track ends {} blocks ahead, no train, {}",
                         shortId(id), String.format("%.1f", walked), own);
                 return;
             }
             walked += moved;
         }
-        LoconauticsConstants.LOGGER.info("[ghostgap] ghost {} clear for {} blocks, {} other points checked, {}",
+        LoconauticsConstants.LOGGER.debug("[ghostgap] ghost {} clear for {} blocks, {} other points checked, {}",
                 shortId(id), (int) LOOKAHEAD, occupants.size(), own);
     }
 

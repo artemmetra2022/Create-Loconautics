@@ -102,7 +102,7 @@ public final class GraphDump {
     }
 
     private static void line(ServerPlayer player, String text) {
-        LoconauticsConstants.LOGGER.info("[graphdump] {}", text);
+        LoconauticsConstants.LOGGER.debug("[graphdump] {}", text);
         player.sendSystemMessage(Component.literal(text));
     }
 

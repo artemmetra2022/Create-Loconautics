@@ -52,6 +52,6 @@ public final class HostThrashTrace {
             return;
         }
         lines++;
-        LoconauticsConstants.LOGGER.info("[hostthrash] {}", text);
+        LoconauticsConstants.LOGGER.debug("[hostthrash] {}", text);
     }
 }

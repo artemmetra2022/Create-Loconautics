@@ -575,7 +575,7 @@ public final class ScheduleConductor {
         SableTrain car = data.hasUUID(ADV_TRAIN) ? SableTrainRegistry.get(data.getUUID(ADV_TRAIN)) : null;
         data.remove(TRAIN_HAT);
         if (car != null && stillDriven(car)) {
-            LoconauticsConstants.LOGGER.info("[schedshare] conductor on {} left, the consist schedule stays with the other drivers",
+            LoconauticsConstants.LOGGER.debug("[schedshare] conductor on {} left, the consist schedule stays with the other drivers",
                     shortId(car.id()));
             stripHat(mob);
             return;

@@ -136,7 +136,7 @@ public final class RailCarriage {
                     : followTarget != null && turnLog == null ? "follow" : "steer";
             ITrackSelector frontSelector = (g, pair) -> {
                 java.util.Map.Entry<TrackNode, TrackEdge> entry = chosenSelector.apply(g, pair);
-                LoconauticsConstants.LOGGER.info("[issue274] junction {} selector={} options={} picked={} of {} speed={} "
+                if (LoconauticsConstants.LOGGER.isDebugEnabled()) LoconauticsConstants.LOGGER.debug("[issue274] junction {} selector={} options={} picked={} of {} speed={} "
                         + "intent={} from={}", junctionTag, selectorKind, pair.getSecond().size(),
                         pair.getSecond().indexOf(entry), nodeList(pair.getSecond()), String.format("%.3f", speed),
                         String.format("%.3f", travelIntent), front.edge == null ? "none"
@@ -166,8 +166,6 @@ public final class RailCarriage {
             if (pendingPortal != null) {
                 reachedEnd = false;
             } else if (front.blocked) {
-                if (!reachedEnd) {
-                }
                 reachedEnd = true;
                 stopped = true;
             } else if (Math.abs(moved) > END_LATCH_TRAVEL) {
@@ -235,7 +233,7 @@ public final class RailCarriage {
         if (!onSeam && excess < 0.2 && kindBefore.equals(kindAfter)) {
             return;
         }
-        LoconauticsConstants.LOGGER.info("[hopsnap] rail={} kind {} -> {} moved={} centerJump={} excess={} gapSpan={} "
+        LoconauticsConstants.LOGGER.debug("[hopsnap] rail={} kind {} -> {} moved={} centerJump={} excess={} gapSpan={} "
                         + "lead[{}] trail[{}] centerBefore={} centerAfter={}", System.identityHashCode(this) & 0xffff,
                 kindBefore, kindAfter, String.format("%.4f", moved), String.format("%.4f", jump),
                 String.format("%.4f", excess), String.format("%.4f", leadingPos().distanceTo(trailingPos())),

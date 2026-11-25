@@ -70,7 +70,7 @@ public final class PortalLagTrace {
     public static void onTickPost(ServerTickEvent.Post event) {
         long ms = (System.nanoTime() - tickStart) / NANOS_PER_MS;
         if (ms >= TICK_SLOW_MS) {
-            LoconauticsConstants.LOGGER.info("[portallag] tick took {} ms, levels={} {}", ms, LEVEL_MS,
+            LoconauticsConstants.LOGGER.debug("[portallag] tick took {} ms, levels={} {}", ms, LEVEL_MS,
                     PortalTwins.debugCounts());
         }
     }
@@ -98,7 +98,7 @@ public final class PortalLagTrace {
             twins.append(String.format("%n  twin %s at (%.1f %.1f %.1f) footprintLoaded=%s overlaps=[%s ]",
                     shortId(sub), pos.x, pos.y, pos.z, TrainResidency.footprintLoaded(level, pos), touching));
         }
-        LoconauticsConstants.LOGGER.info("[portallag] {} level tick took {} ms, subLevels={} {}{}",
+        LoconauticsConstants.LOGGER.debug("[portallag] {} level tick took {} ms, subLevels={} {}{}",
                 level.dimension().location(), ms, bodies, PortalTwins.debugCounts(), twins);
     }
 }

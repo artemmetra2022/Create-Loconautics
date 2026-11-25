@@ -136,7 +136,7 @@ public class LoconauticsTrainPeripheral implements IPeripheral, CcEvents.Target 
         frequencyLinks.clear();
         UUID id = trainIdOrNull();
         // the train may not resolve any more once the computer is broken, so the claimed id is the fallback
-        LoconauticsConstants.LOGGER.info("[ccsteer] release resolved={} claimed={} held={}", id, claimedTrain,
+        LoconauticsConstants.LOGGER.debug("[ccsteer] release resolved={} claimed={} held={}", id, claimedTrain,
                 id != null && CcControl.held(id));
         if (id != null) {
             CcControl.release(id);
@@ -221,7 +221,7 @@ public class LoconauticsTrainPeripheral implements IPeripheral, CcEvents.Target 
     @LuaFunction(mainThread = true)
     public double getAccelLimit() throws LuaException {
         SableTrain train = train();
-        LoconauticsConstants.LOGGER.info("[ccaccel] limit={} speed={} target={} hold={} braked={} derailed={} physics={} mass={}",
+        LoconauticsConstants.LOGGER.debug("[ccaccel] limit={} speed={} target={} hold={} braked={} derailed={} physics={} mass={}",
                 train.accel(), train.speed(), train.targetSpeed(), train.brakeHold(), train.isBraked(),
                 train.isDerailed(), train.isPhysics(), TrainConsist.totalMass(train.level(), train.car().subLevelId()));
         return train.accel();
@@ -824,7 +824,7 @@ public class LoconauticsTrainPeripheral implements IPeripheral, CcEvents.Target 
     @LuaFunction(mainThread = true)
     public void steer(int dir) throws LuaException {
         if (dir < -1 || dir > 1) throw new LuaException("steer dir must be -1, 0, or 1");
-        LoconauticsConstants.LOGGER.info("[ccsteer] steer {} on {}", dir, trainIdOrNull());
+        LoconauticsConstants.LOGGER.debug("[ccsteer] steer {} on {}", dir, trainIdOrNull());
         held(train()).setSteer(dir);
     }
 

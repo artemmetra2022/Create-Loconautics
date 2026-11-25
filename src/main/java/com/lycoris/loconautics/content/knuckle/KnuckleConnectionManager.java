@@ -95,7 +95,7 @@ public final class KnuckleConnectionManager {
                     boolean alive = partner != null && container.getSubLevel(partner) instanceof ServerSubLevel live
                             && !live.isRemoved();
                     if (partner != null && removed.contains(partner) && !alive) {
-                        LoconauticsConstants.LOGGER.info("[iss234k] uncouple {} reason=partner was removed", be.getBlockPos());
+                        LoconauticsConstants.LOGGER.debug("[iss234k] uncouple {} reason=partner was removed", be.getBlockPos());
                         be.clearConnection();
                         be.clearPartner();
                     }
@@ -166,7 +166,7 @@ public final class KnuckleConnectionManager {
                 return true;
             }
             be.releaseHold();
-            LoconauticsConstants.LOGGER.info("[maneuver] decouple lock released {}", be.getBlockPos());
+            LoconauticsConstants.LOGGER.debug("[maneuver] decouple lock released {}", be.getBlockPos());
             return false;
         }
 
@@ -238,7 +238,7 @@ public final class KnuckleConnectionManager {
             UUID partnerId = be.getPartnerSubLevelId();
             BlockPos partnerPos = be.getPartnerLocalPos();
             if (partnerId == null || partnerPos == null) {
-                LoconauticsConstants.LOGGER.info("[iss234k] uncouple {} reason=no partner recorded", be.getBlockPos());
+                LoconauticsConstants.LOGGER.debug("[iss234k] uncouple {} reason=no partner recorded", be.getBlockPos());
                 be.clearConnection();
                 return;
             }
@@ -247,7 +247,7 @@ public final class KnuckleConnectionManager {
                 return;
             }
             if (!(loaded instanceof ServerSubLevel partnerSub) || partnerSub.isRemoved()) {
-                LoconauticsConstants.LOGGER.info("[iss234k] uncouple {} reason=partner removed or not a server sub level",
+                LoconauticsConstants.LOGGER.debug("[iss234k] uncouple {} reason=partner removed or not a server sub level",
                         be.getBlockPos());
                 be.clearConnection();
                 be.clearPartner();
@@ -258,7 +258,7 @@ public final class KnuckleConnectionManager {
                     || !sub.getUniqueId().equals(partnerBe.getPartnerSubLevelId())
                     || !be.getBlockPos().equals(partnerBe.getPartnerLocalPos())) {
                 if (be.partnerMissedTooLong()) {
-                    LoconauticsConstants.LOGGER.info("[iss234k] uncouple {} reason=partner block entity missing partnerPos={} "
+                    LoconauticsConstants.LOGGER.debug("[iss234k] uncouple {} reason=partner block entity missing partnerPos={} "
                             + "partnerBe={} partnerBack={} mePosOnPartner={} level={}", be.getBlockPos(), partnerPos,
                             partnerSub.getLevel().getBlockEntity(partnerPos),
                             partnerSub.getLevel().getBlockEntity(partnerPos) instanceof KnuckleBlockEntity back
@@ -273,7 +273,7 @@ public final class KnuckleConnectionManager {
             SubLevelContacts.disableCoupled(sub, partnerSub);
             double gap = hingeGap(sub, be, partnerSub, partnerBe);
             if (be.isRedstoneLocked() || partnerBe.isRedstoneLocked() || tornApart(be, sub, partnerSub, gap)) {
-                LoconauticsConstants.LOGGER.info("[iss234k] uncouple {} reason=torn or locked gap={} redstone={}/{} "
+                LoconauticsConstants.LOGGER.debug("[iss234k] uncouple {} reason=torn or locked gap={} redstone={}/{} "
                                 + "derailed={}/{}", be.getBlockPos(), gap, be.isRedstoneLocked(),
                         partnerBe.isRedstoneLocked(), KnuckleJoint.derailed(sub), KnuckleJoint.derailed(partnerSub));
                 disconnect(level, be.getBlockPos());

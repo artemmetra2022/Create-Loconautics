@@ -52,7 +52,7 @@ public final class KnuckleDetacher implements ConnectorDetacher {
             partner.clearPartner();
             knuckle.holdApartFrom(subB, partnerPos);
             partner.holdApartFrom(subA, ownPos);
-            LoconauticsConstants.LOGGER.info("[maneuver] decoupled knuckles {} on {} and {} on {}", ownPos, subA,
+            LoconauticsConstants.LOGGER.debug("[maneuver] decoupled knuckles {} on {} and {} on {}", ownPos, subA,
                     partnerPos, subB);
             split = true;
         }

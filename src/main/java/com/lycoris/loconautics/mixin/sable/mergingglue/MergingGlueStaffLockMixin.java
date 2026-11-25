@@ -51,7 +51,7 @@ public abstract class MergingGlueStaffLockMixin {
             return;
         }
         Quaterniond written = partnerSub.logicalPose().orientation();
-        LoconauticsConstants.LOGGER.info("[gluemerge] partner {} pose turned {} deg by startControlling, restored",
+        LoconauticsConstants.LOGGER.debug("[gluemerge] partner {} pose turned {} deg by startControlling, restored",
                 partnerSub.getUniqueId(), String.format("%.2f", Math.toDegrees(new Quaterniond(saved).difference(written,
                         new Quaterniond()).angle())));
         written.set(saved);

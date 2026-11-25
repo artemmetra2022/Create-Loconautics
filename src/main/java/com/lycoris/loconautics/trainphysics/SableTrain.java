@@ -559,7 +559,7 @@ public final class SableTrain {
             String caller = StackWalker.getInstance().walk(frames -> frames.skip(1).findFirst()
                     .map(frame -> frame.getClassName().substring(frame.getClassName().lastIndexOf('.') + 1) + "."
                             + frame.getMethodName() + ":" + frame.getLineNumber()).orElse("?"));
-            LoconauticsConstants.LOGGER.info("[maneuver] hold {} -> {} on {} speed {} by {}", this.scheduleHold, hold,
+            LoconauticsConstants.LOGGER.debug("[maneuver] hold {} -> {} on {} speed {} by {}", this.scheduleHold, hold,
                     id().toString().substring(0, 8), String.format("%.3f", speed()), caller);
         }
         this.scheduleHold = hold;

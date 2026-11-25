@@ -100,7 +100,7 @@ public abstract class AttachedRopePhysicsObject extends RopePhysicsObject {
         if (known != null && known.distanceSquared(point) < 1.0e-6) {
             return;
         }
-        com.lycoris.loconautics.LoconauticsConstants.LOGGER.info(
+        com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug(
                 "[issue215] anchor rope={} {} holder={} pos={} state={} point=({}, {}, {}) offFromCenter=({}, {}, {})",
                 id.toString().substring(0, 8), getClass().getSimpleName(),
                 blockEntity == null ? "none" : blockEntity.getClass().getSimpleName(), blockPos,
@@ -199,7 +199,7 @@ public abstract class AttachedRopePhysicsObject extends RopePhysicsObject {
             }
         }
         if (centerMoved) {
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info(
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug(
                     "[ropeanchor] {} rope={} center of mass moved, attachments reapplied", getClass().getSimpleName(),
                     id.toString().substring(0, 8));
             applyAttachments(level);
@@ -311,7 +311,7 @@ public abstract class AttachedRopePhysicsObject extends RopePhysicsObject {
     public void onAddition(SubLevelPhysicsSystem physicsSystem) {
         super.onAddition(physicsSystem);
         if (knotGrab.traceTicks > 0) {
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[knotgrab] rope added to system id={}", id);
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[knotgrab] rope added to system id={}", id);
         }
     }
 
@@ -320,7 +320,7 @@ public abstract class AttachedRopePhysicsObject extends RopePhysicsObject {
         super.onRemoved();
         knotGrab.reset();
         if (knotGrab.traceTicks > 0) {
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[knotgrab] rope removed from system id={}", id);
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[knotgrab] rope removed from system id={}", id);
         }
         removeConstraint();
     }

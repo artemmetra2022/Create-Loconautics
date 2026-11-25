@@ -60,7 +60,7 @@ public class CoupleInstruction extends ScheduleInstruction {
 		Vector3d from = at == null ? null : CREEP_START.computeIfAbsent(train.id(), id -> at);
 		if (from != null && from.distance(at) > limit()) {
 			CREEP_START.remove(train.id());
-			LoconauticsConstants.LOGGER.info("[maneuver] {} couple gave up after {} blocks",
+			LoconauticsConstants.LOGGER.debug("[maneuver] {} couple gave up after {} blocks",
 				LogFormat.shortId(train.id()), limit());
 			runtime.announcer().line(Component.literal("Could not couple within " + limit() + " blocks"));
 			runtime.endManeuver();
@@ -82,7 +82,7 @@ public class CoupleInstruction extends ScheduleInstruction {
 		}
 		runtime.clearFormer();
 		runtime.endManeuver();
-		LoconauticsConstants.LOGGER.info("[maneuver] couple done, former cleared");
+		LoconauticsConstants.LOGGER.debug("[maneuver] couple done, former cleared");
 	}
 
 	private static boolean coupled(ServerLevel level, SableTrain train, Set<UUID> former) {

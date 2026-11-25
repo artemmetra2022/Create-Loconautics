@@ -85,7 +85,7 @@ final class TrainSteering {
         Car car = train.car();
         String tag = car.subLevelId().toString().substring(0, 8) + " " + mode.substring(mode.indexOf("mode="));
         if (!tag.equals(ISSUE274_MODE.put(car.subLevelId(), tag))) {
-            com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[issue274] car {}", tag);
+            com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[issue274] car {}", tag);
         }
         for (SableTrain.Bogey bogey : car.bogeys()) {
             bogey.rail().setJunctionTag(tag);

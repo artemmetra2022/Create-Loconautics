@@ -493,19 +493,19 @@ public class PanelBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
             tag.remove("y");
             tag.remove("z");
         }
-        LoconauticsConstants.LOGGER.info("[panelpick] strip clientSide={} picked={} keys={} parts={}",
+        LoconauticsConstants.LOGGER.debug("[panelpick] strip clientSide={} picked={} keys={} parts={}",
                 level != null && level.isClientSide, picked, tag.getAllKeys(), tag.getCompound(PARTS_TAG));
     }
 
     public void applyPicked(PanelSlot target, CompoundTag picked, HolderLookup.Provider registries) {
         CompoundTag slots = picked.getCompound(PARTS_TAG);
-        LoconauticsConstants.LOGGER.info("[panelpick] apply target={} keys={} parts={}", target, picked.getAllKeys(), slots);
+        LoconauticsConstants.LOGGER.debug("[panelpick] apply target={} keys={} parts={}", target, picked.getAllKeys(), slots);
         if (slots.getAllKeys().size() != 1) return;
         String source = slots.getAllKeys().iterator().next();
         CompoundTag entry = slots.getCompound(source);
         PanelPart current = parts.get(target);
         PanelPartType type = PanelPartType.byName(entry.getString(TYPE_KEY));
-        LoconauticsConstants.LOGGER.info("[panelpick] types picked={} current={}", type, current == null ? null : current.type());
+        LoconauticsConstants.LOGGER.debug("[panelpick] types picked={} current={}", type, current == null ? null : current.type());
         if (current == null || type != current.type()) return;
         PanelPart part = type.read(entry);
         if (part != null) replacePart(target, part);
@@ -592,12 +592,12 @@ public class PanelBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
         }
 
         // panelcopy temporary, remove once schematic placement is confirmed
-        LoconauticsConstants.LOGGER.info("[panelcopy] read pos={} clientPacket={} level={} clientSide={} parts={} state={}",
+        LoconauticsConstants.LOGGER.debug("[panelcopy] read pos={} clientPacket={} level={} clientSide={} parts={} state={}",
                 worldPosition, clientPacket, level != null, level != null && level.isClientSide, parts.keySet(), getBlockState());
         // a schematic print loads the tag into a live block entity, so the client never hears about the parts
         if (!clientPacket && level != null && !level.isClientSide) notifyUpdate();
         if (!clientPacket && level != null && !level.isClientSide && parts.isEmpty()) {
-            LoconauticsConstants.LOGGER.info("[panelcopy] empty server read keys={}", tag.getAllKeys(), new Throwable());
+            LoconauticsConstants.LOGGER.debug("[panelcopy] empty server read keys={}", tag.getAllKeys(), new Throwable());
         }
     }
 }

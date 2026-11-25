@@ -139,7 +139,7 @@ public final class GrabClientHandler {
         rotating = false;
         sawFree = false;
         grabOrientation.set(sub.logicalPose().orientation());
-        com.lycoris.loconautics.LoconauticsConstants.LOGGER.info("[undockdbg] client grab pos={} powered={}",
+        com.lycoris.loconautics.LoconauticsConstants.LOGGER.debug("[undockdbg] client grab pos={} powered={}",
                 hitPos, isPowered(sub, hitPos));
         if (isPowered(sub, hitPos)) {
             PacketDistributor.sendToServer(new com.lycoris.loconautics.network.packets.attachment.GrabUndockPacket(

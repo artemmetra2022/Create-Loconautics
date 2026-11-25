@@ -131,7 +131,7 @@ public abstract class MergingGlueTrainDriveMixin {
             Quaterniond heavyRot = new Quaterniond(heavy.logicalPose().orientation());
             Quaterniond lightRot = new Quaterniond(light.logicalPose().orientation());
             double yawGapDeg = Math.toDegrees(heavyRot.difference(lightRot, new Quaterniond()).angle());
-            LoconauticsConstants.LOGGER.info(
+            LoconauticsConstants.LOGGER.debug(
                     "[slimemerge] age={} ease={} heavy={} light={} bodyGap={} relPos={} endRel={} yawGapDeg={} endRotDeg={} "
                             + "heavyLin={} lightLin={} lightAng={} heldLin={} kickLin={} kickAng={}",
                     ageTicks, fmt(ease), heavy.getUniqueId(), light.getUniqueId(),
@@ -200,7 +200,7 @@ public abstract class MergingGlueTrainDriveMixin {
         }
         if (ageTicks != loconautics$lastTraceAge) {
             loconautics$lastTraceAge = ageTicks;
-            LoconauticsConstants.LOGGER.info("[gluemerge] age={} ease={} piece={} train={} pieceSpeed={} trainSpeed={}",
+            LoconauticsConstants.LOGGER.debug("[gluemerge] age={} ease={} piece={} train={} pieceSpeed={} trainSpeed={}",
                     ageTicks, fmt(ease), piece.getUniqueId(), train.getUniqueId(), fmt(linear.length()),
                     fmt(pipeline.getLinearVelocity(train, new Vector3d()).length()));
         }
@@ -236,7 +236,7 @@ public abstract class MergingGlueTrainDriveMixin {
                 new Quaterniond(train.logicalPose().orientation()).conjugate().transform(new Vector3d(impulse)));
         pipeline.wakeUp(train);
         trainHandle.applyForcesAndReset(forces);
-        LoconauticsConstants.LOGGER.info("[gluemerge] landed on {} impulse={} shared mass={} contact={}",
+        LoconauticsConstants.LOGGER.debug("[gluemerge] landed on {} impulse={} shared mass={} contact={}",
                 train.getUniqueId(), fmt(impulse.length()), fmt(sharedMass), contact);
     }
 

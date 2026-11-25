@@ -26,7 +26,7 @@ public final class PortalTrace {
 
     public static void log(String message, Object... args) {
         if (on) {
-            LoconauticsConstants.LOGGER.info("[portal/trace] " + message, args);
+            LoconauticsConstants.LOGGER.debug("[portal/trace] " + message, args);
         }
     }
 

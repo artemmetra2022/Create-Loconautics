@@ -152,7 +152,7 @@ public final class SubLevelSplitWatcher {
                     newCar = TracklessCars.build(island);
                 }
                 if (newCar == null) {
-                    LoconauticsConstants.LOGGER.info(
+                    LoconauticsConstants.LOGGER.debug(
                             "[sabletrain] split island {} has no railed bogey, left as a bodyless sub-level",
                             island.getUniqueId());
                     continue;
@@ -176,7 +176,7 @@ public final class SubLevelSplitWatcher {
                 CartLifecycle.fire(newTrain, CartEvent.SPLIT);
                 SableTrainPersistence.persist(newTrain);
                 SableTrainSyncPacket.broadcast(newTrain);
-                LoconauticsConstants.LOGGER.info(
+                LoconauticsConstants.LOGGER.debug(
                         "[sabletrain] split island {} became new train {} (split from {}), {} bogey(s), {} already off track",
                         island.getUniqueId(), id, origId, newCar.bogeys().size(), offTrackLocal.size());
             }
@@ -205,7 +205,7 @@ public final class SubLevelSplitWatcher {
             }
             seen.add(train.id());
             if (BOGEYLESS_SUSPECTS.contains(train.id())) {
-                LoconauticsConstants.LOGGER.info("[sabletrain] train {} has no bogey block left, dropped", train.id());
+                LoconauticsConstants.LOGGER.debug("[sabletrain] train {} has no bogey block left, dropped", train.id());
                 SubLevelMergeWatcher.dropTrain(train.level(), train);
                 seen.remove(train.id());
             }
@@ -283,7 +283,7 @@ public final class SubLevelSplitWatcher {
             logPivot("after", train, sub);
             SableTrainPersistence.persist(train);
             SableTrainSyncPacket.broadcast(train);
-            LoconauticsConstants.LOGGER.info("[sabletrain] train {} took a new bogey, now {} bogey(s), pivot on the outer two",
+            LoconauticsConstants.LOGGER.debug("[sabletrain] train {} took a new bogey, now {} bogey(s), pivot on the outer two",
                     train.id(), rebuilt.bogeys().size());
         }
         IGNORED_BOGEYS.keySet().removeIf(id -> SableTrainRegistry.get(id) == null);
@@ -309,7 +309,7 @@ public final class SubLevelSplitWatcher {
         Vector3d[] reference = com.lycoris.loconautics.trainphysics.drive.TrainRailAdvance.bogeyReference(sub, rebuilt);
         Vector3d gap = reference == null ? null
                 : new Vector3d(reference[0]).sub(SableTrainSpawner.bogeyAnchorWorld(sub, rebuilt));
-        LoconauticsConstants.LOGGER.info("[bogeyedit] car {} refit after drop, {} bogey(s), spacing {}, anchor to rail point {}, lead {}, trail {}",
+        LoconauticsConstants.LOGGER.debug("[bogeyedit] car {} refit after drop, {} bogey(s), spacing {}, anchor to rail point {}, lead {}, trail {}",
                 train.id(), rebuilt.bogeys().size(), rebuilt.carriage().bogeySpacing(),
                 gap == null ? "none" : String.format("%.3f %.3f %.3f", gap.x, gap.y, gap.z),
                 rebuilt.localLead(), rebuilt.localTrail());
@@ -492,7 +492,7 @@ public final class SubLevelSplitWatcher {
             CartLifecycle.fire(originalTrain, CartEvent.SPLIT);
             SableTrainPersistence.persist(originalTrain);
             SableTrainSyncPacket.broadcast(originalTrain);
-            LoconauticsConstants.LOGGER.info(
+            LoconauticsConstants.LOGGER.debug(
                     "[sabletrain] rebuilt train {} after split: now {} bogey(s), keptMotion={}, {} already off track",
                     originalTrain.id(), rebuilt.bogeys().size(), keepMotion, offTrackLocal.size());
         } else if (scanBogeyPlotPositions(sub.getPlot()).isEmpty()) {
@@ -501,7 +501,7 @@ public final class SubLevelSplitWatcher {
             originalTrain.setDerailed(true, DerailReason.BOGEYS_LOST);
             SableTrainPersistence.persist(originalTrain);
             SableTrainSyncPacket.broadcast(originalTrain);
-            LoconauticsConstants.LOGGER.info(
+            LoconauticsConstants.LOGGER.debug(
                     "[sabletrain] train {} lost all bogeys after split, derailed (free body)", originalTrain.id());
         }
     }

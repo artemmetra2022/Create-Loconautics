@@ -73,7 +73,7 @@ public final class HoseSprayLoader extends SimpleJsonResourceReloadListener {
             }
         });
         HoseSprayColors.setDatapack(loadedColors);
-        LoconauticsConstants.LOGGER.info("[HoseSpray] loaded {} bindings, {} color overrides",
+        LoconauticsConstants.LOGGER.debug("[HoseSpray] loaded {} bindings, {} color overrides",
                 prepared.size(), loadedColors.size());
     }
 

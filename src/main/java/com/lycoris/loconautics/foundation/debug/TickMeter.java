@@ -127,7 +127,7 @@ public final class TickMeter {
             levels.append(' ').append(entry.getKey().location()).append('=')
                     .append(String.format("%.1f", entry.getValue())).append("ms");
         }
-        LoconauticsConstants.LOGGER.info("[tickmeter] {} gap {} ms, tick work {} ms, gc since last log {} ms, tps {},{}",
+        LoconauticsConstants.LOGGER.debug("[tickmeter] {} gap {} ms, tick work {} ms, gc since last log {} ms, tps {},{}",
                 gapMs < RED_GAP_MS ? "YELLOW" : "RED", String.format("%.1f", gapMs), String.format("%.1f", workMs),
                 gc - lastGcMs, String.format("%.1f", tps), levels);
         lastGcMs = gc;
@@ -135,7 +135,7 @@ public final class TickMeter {
         top.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
         SAMPLES.clear();
         for (int i = 0; i < Math.min(TOP_STACKS, top.size()); i++) {
-            LoconauticsConstants.LOGGER.info("[tickmeter]   cause {} samples at {}", top.get(i).getValue(), top.get(i).getKey());
+            LoconauticsConstants.LOGGER.debug("[tickmeter]   cause {} samples at {}", top.get(i).getValue(), top.get(i).getKey());
         }
     }
 

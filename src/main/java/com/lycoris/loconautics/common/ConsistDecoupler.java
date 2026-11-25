@@ -25,13 +25,13 @@ public final class ConsistDecoupler {
         Cut cut = cutOf(level, trainId, afterCar);
         if (cut == null) {
             SableTrain loco = SableTrainRegistry.get(trainId);
-            LoconauticsConstants.LOGGER.info("[maneuver] split train {} after car {} found no cut, chain {} nose {}",
+            LoconauticsConstants.LOGGER.debug("[maneuver] split train {} after car {} found no cut, chain {} nose {}",
                     trainId, afterCar, loco == null ? "no loco" : TrainConsist.orderedChain(level, loco.car().subLevelId()).size(),
                     loco == null || SableTrainDriver.axleNose(loco) == null ? "none" : "ok");
             return false;
         }
         boolean split = ConnectorDetachers.decoupleBetween(level, cut.keptEnd, cut.firstOut);
-        LoconauticsConstants.LOGGER.info("[maneuver] split train {} after car {} between {} and {} result={}",
+        LoconauticsConstants.LOGGER.debug("[maneuver] split train {} after car {} between {} and {} result={}",
                 trainId, afterCar, cut.keptEnd, cut.firstOut, split);
         return split;
     }

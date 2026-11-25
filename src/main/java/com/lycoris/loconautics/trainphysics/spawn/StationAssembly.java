@@ -190,7 +190,7 @@ public final class StationAssembly {
         acc.loconautics$exception(null, -1);
         station.exitAssemblyMode();
         TrainAdvancements.assembled(player, built, blockBreakers);
-        LoconauticsConstants.LOGGER.info("[sabletrain] station at {} assembled {} independent Sable car(s) (idle)",
+        LoconauticsConstants.LOGGER.debug("[sabletrain] station at {} assembled {} independent Sable car(s) (idle)",
                 stationPos, built);
     }
 
