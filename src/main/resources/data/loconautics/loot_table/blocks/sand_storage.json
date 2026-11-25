@@ -3,5 +3,17 @@
   "pools": [
     {
       "rolls": 1,
-      "entries": [ { "type": "minecraft:item", "name": "loconautics:sand_storage" } ],
-      "conditions": [ { "condition": "minecraft:survives_explosion" } ]
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "loconautics:sand_storage"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}
