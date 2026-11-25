@@ -24,6 +24,7 @@ import com.lycoris.loconautics.trainphysics.state.CartEvent;
 import com.lycoris.loconautics.trainphysics.state.CartLifecycle;
 import com.lycoris.loconautics.trainphysics.state.SableTrainPersistence;
 import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
+import com.lycoris.loconautics.trainphysics.state.StationChunkTickets;
 import com.lycoris.loconautics.trainphysics.teleport.TeleportStrands;
 import com.lycoris.loconautics.trainphysics.teleport.TrainTeleporter;
 import com.lycoris.loconautics.trainphysics.wheels.GhostWheelBodies;
@@ -849,6 +850,7 @@ public final class SableTrainSpawner {
             for (SableTrain car : result.cars()) {
                 car.setSpeed(0.0);
                 car.setTargetSpeed(0.0);
+                StationChunkTickets.holdRelocated(car);
             }
             LoconauticsConstants.LOGGER.debug("[sabletrain] relocated consist of {} car(s) from another dimension to "
                     + "{}", result.moved(), pos);
@@ -881,6 +883,7 @@ public final class SableTrainSpawner {
         for (int i = 0; i < cars.size(); i++) {
             if (settleSeat(level, cars.get(i), seats.get(i), true)) {
                 placed++;
+                StationChunkTickets.holdRelocated(cars.get(i));
             }
         }
         ArticulationLinks.resume(level, cars);
