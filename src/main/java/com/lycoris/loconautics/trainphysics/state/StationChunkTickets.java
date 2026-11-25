@@ -8,6 +8,7 @@ import com.lycoris.loconautics.trainphysics.SableTrain.StationState;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
@@ -29,6 +30,9 @@ public final class StationChunkTickets {
     public static final int MAX_DWELL_TICKS = 6000;
 
     private static final Map<UUID, Held> HELD = new HashMap<>();
+
+    // Creative relocation deliberately keeps the destination simulated even when no player is nearby.
+    private static final Set<UUID> RELOCATED = new HashSet<>();
 
     // a train that hit the dwell cap must not force the same square again next tick, it stays capped until it leaves
     private static final Set<UUID> CAPPED = new HashSet<>();
@@ -57,6 +61,15 @@ public final class StationChunkTickets {
     }
 
     public static void update(SableTrain train) {
+        if (RELOCATED.contains(train.id())) {
+            Vector3d cursor = TrainResidency.railCursor(train.car());
+            if (cursor == null || TrainResidency.inPlotGrid(train.level(), cursor)) {
+                release(train.id(), "relocated train has no world rail anchor");
+                return;
+            }
+            acquire(train, new ChunkPos(Mth.floor(cursor.x) >> 4, Mth.floor(cursor.z) >> 4), false);
+            return;
+        }
         BlockPos ghostHold = TrainResidency.ghostHoldAnchor(train);
         BlockPos anchor = ghostHold != null ? ghostHold : stationAnchorIfEnabled(train);
         if (anchor == null) {
@@ -122,11 +135,24 @@ public final class StationChunkTickets {
         return true;
     }
 
+    public static void holdRelocated(SableTrain train) {
+        if (controller == null || train == null || train.car() == null) {
+            return;
+        }
+        Vector3d cursor = TrainResidency.railCursor(train.car());
+        if (cursor == null || TrainResidency.inPlotGrid(train.level(), cursor)) {
+            return;
+        }
+        RELOCATED.add(train.id());
+        acquire(train, new ChunkPos(Mth.floor(cursor.x) >> 4, Mth.floor(cursor.z) >> 4), false);
+    }
+
     public static void clearCap(UUID trainId) {
         CAPPED.remove(trainId);
     }
 
     public static void release(UUID trainId, String reason) {
+        RELOCATED.remove(trainId);
         Held held = HELD.remove(trainId);
         if (held == null) {
             return;
@@ -145,10 +171,12 @@ public final class StationChunkTickets {
         }
         HELD.clear();
         CAPPED.clear();
+        RELOCATED.clear();
     }
 
     public static void retain(Set<UUID> live) {
         CAPPED.retainAll(live);
+        RELOCATED.retainAll(live);
         for (UUID id : new HashMap<>(HELD).keySet()) {
             if (live.contains(id)) {
                 continue;
