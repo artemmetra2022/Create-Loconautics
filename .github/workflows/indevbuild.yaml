@@ -1,4 +1,5 @@
 name: Indev build
+run-name: Loconautics indev build (${{ github.sha }})
 
 on:
   push:
