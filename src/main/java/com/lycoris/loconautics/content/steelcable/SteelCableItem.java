@@ -52,7 +52,11 @@ public class SteelCableItem extends Item {
 
     @Nullable
     public static SteelCableHolder getHolder(Level level, BlockPos pos) {
-        BlockEntity be = level.getBlockEntity(pos);
+        // Blocks mounted on a moving Sable sub-level are stored in that sub-level,
+        // not in the outer ServerLevel/ClientLevel block-entity map.
+        SubLevel subLevel = Sable.HELPER.getContaining(level, pos);
+        Level holderLevel = subLevel != null ? subLevel.getLevel() : level;
+        BlockEntity be = holderLevel.getBlockEntity(pos);
         return be instanceof SteelCableHolder holder ? holder : null;
     }
 
