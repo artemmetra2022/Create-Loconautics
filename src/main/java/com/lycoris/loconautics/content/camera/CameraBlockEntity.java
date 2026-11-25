@@ -4,6 +4,7 @@ import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -14,8 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class CameraBlockEntity extends BlockEntity {
 
-    public CameraBlockEntity(BlockPos pos, BlockState state) {
-        super(LoconauticsRegistries.CAMERA_BE.get(), pos, state);
+    public CameraBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     public Direction facing() {
