@@ -2011,5 +2011,7 @@
   "loconautics.configuration.track.derailment.externalLiftRatio.tooltip": "Во сколько раз собственного веса вагона должна быть тяга вверх, чтобы он сошёл с рельса.",
   "loconautics.configuration.track.derailment.staffLiftRatio": "Предел подъёма Физическим посохом",
   "loconautics.configuration.track.derailment.staffLiftRatio.tooltip": "Предел подъёма, пока Физический посох тащит вагон. При 0 посох никогда не снимает вагон с рельса.",
-  "loconautics.track_switch.occupied": "Эта стрелка уже управляется другим приводом"
+  "loconautics.track_switch.occupied": "Эта стрелка уже управляется другим приводом",
+  "block.loconautics.security_camera": "Камера наблюдения",
+  "item.loconautics.security_camera": "Камера наблюдения"
 }
