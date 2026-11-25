@@ -130,7 +130,9 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
         float target = AirBrakeTuning.targetPipeBarForNotch(notch);
 
         boolean exhausting = false;
-        if (notch >= AirBrakeTuning.MAX_NOTCH) {
+        if (notch == 0) {
+            // Lap: close both supply and exhaust valves; retain current pipe pressure.
+        } else if (notch >= AirBrakeTuning.MAX_NOTCH) {
             if (current > 0.05f) exhausting = true;
             current = Math.max(0f, current - EMERGENCY_EXHAUST_PER_TICK);
         } else if (current < target) {
@@ -224,12 +226,14 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
                         String.format(Locale.ROOT, "%.2f", pipePressure)))
                 .withStyle(ChatFormatting.AQUA));
         String modeKey = notch >= AirBrakeTuning.EMERGENCY_NOTCH ? "emergency"
-                : notch > 0 ? "service" : "charge";
+                : notch >= AirBrakeTuning.FIRST_SERVICE_NOTCH ? "service"
+                : notch == AirBrakeTuning.CHARGE_NOTCH ? "charge" : "lap";
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable("loconautics.driver_brake_valve.goggles.mode",
                         Component.translatable("loconautics.driver_brake_valve.mode." + modeKey)))
                 .withStyle(notch >= AirBrakeTuning.EMERGENCY_NOTCH ? ChatFormatting.RED
-                        : notch > 0 ? ChatFormatting.GOLD : ChatFormatting.GREEN));
+                        : notch >= AirBrakeTuning.FIRST_SERVICE_NOTCH ? ChatFormatting.GOLD
+                        : ChatFormatting.GREEN));
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable("loconautics.driver_brake_valve.goggles.main",
                         String.format(Locale.ROOT, "%.2f", mainPressure)))
@@ -251,8 +255,11 @@ public class DriverBrakeValveBlockEntity extends SmartBlockEntity implements IHa
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         int savedNotch = tag.getInt("Notch");
-        if (tag.getInt("NotchVersion") < AirBrakeTuning.NOTCH_DATA_VERSION) {
-            savedNotch = AirBrakeTuning.migrateLegacyNotch(savedNotch);
+        int notchVersion = tag.getInt("NotchVersion");
+        if (notchVersion < AirBrakeTuning.NOTCH_DATA_VERSION) {
+            savedNotch = notchVersion <= 0
+                    ? AirBrakeTuning.migrateLegacyNotch(savedNotch)
+                    : AirBrakeTuning.migratePreviousNotch(savedNotch);
         }
         notch = Mth.clamp(savedNotch, 0, AirBrakeTuning.MAX_NOTCH);
         isolated = tag.getBoolean("Isolated");
