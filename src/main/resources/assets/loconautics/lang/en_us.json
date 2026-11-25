@@ -2023,5 +2023,21 @@
   "loconautics.gui.goggles.signal_lamp.high_acceleration": "High acceleration or deceleration",
   "loconautics.gui.goggles.signal_lamp.safety_warning": "Safety system warning",
   "loconautics.gui.goggles.signal_lamp.safety_emergency": "Safety system emergency",
-  "loconautics.gui.goggles.signal_lamp.service_braking": "Service braking"
+  "loconautics.gui.goggles.signal_lamp.service_braking": "Service braking",
+  "block.loconautics.rail_signal": "Railway Signal",
+  "block.loconautics.rail_signal.tooltip.summary": "A three-aspect track signal. It automatically protects a block section using the railway graph.",
+  "block.loconautics.rail_signal.tooltip.condition1": "Placement — hold the signal item:",
+  "block.loconautics.rail_signal.tooltip.behaviour1": "Right-click a rail to select the track and direction, then place the signal beside it. The head automatically faces approaching trains. Place another signal farther along to create the next block boundary.",
+  "block.loconautics.rail_signal.tooltip.condition2": "When Powered by Redstone",
+  "block.loconautics.rail_signal.tooltip.behaviour2": "The signal is forced to red until the redstone input is removed.",
+  "block.loconautics.rail_signal.tooltip.condition3": "When Right-Clicked with a Wrench",
+  "block.loconautics.rail_signal.tooltip.behaviour3": "Cycle between Entry Signal and Cross Signal. Cross Signals can show yellow when the next signal chain is restrictive.",
+  "loconautics.ponder.rail_signal.header": "Automatic block sections and three-aspect signals",
+  "loconautics.ponder.rail_signal.text_1": "A block section is the stretch of connected railway between signal boundaries. You do not need to mark every rail block by hand.",
+  "loconautics.ponder.rail_signal.text_2": "With the Railway Signal item, right-click the exact rail first. This selects its track graph edge and the direction protected by the signal.",
+  "loconautics.ponder.rail_signal.text_3": "Place the signal beside the track. Repeat farther along the route: each signal boundary splits the route into a new automatically tracked section.",
+  "loconautics.ponder.rail_signal.text_4": "Green means the protected section is clear. The signal follows Create track reservations and Loconautics train occupancy.",
+  "loconautics.ponder.rail_signal.text_5": "Yellow is used by a Cross Signal when the following signal chain is restrictive: proceed only according to the next signal.",
+  "loconautics.ponder.rail_signal.text_6": "A redstone signal forces the signal to red. The wrench cycles between Entry Signal and Cross Signal modes.",
+  "loconautics.ponder.rail_signal.text_7": "Red means stop: the protected section is occupied or reserved, the signal is forced by redstone, or its track link is invalid. Scheduled trains brake and wait at red signals."
 }

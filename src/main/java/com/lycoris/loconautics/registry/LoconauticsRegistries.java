@@ -370,6 +370,29 @@ public final class LoconauticsRegistries {
             ITEMS.register("track_switch", () ->
                     new BlockItem(TRACK_SWITCH.get(), new Item.Properties().stacksTo(64)));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsignal.RailwaySignalBlock>
+            RAIL_SIGNAL = BLOCKS.register("rail_signal", () ->
+            new com.lycoris.loconautics.content.railsignal.RailwaySignalBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(2.0f)
+                            .sound(SoundType.METAL)
+                            .requiresCorrectToolForDrops()
+                            .noOcclusion()
+            ));
+
+    public static final DeferredHolder<Item, com.simibubi.create.content.trains.track.TrackTargetingBlockItem>
+            RAIL_SIGNAL_ITEM = ITEMS.register("rail_signal", () ->
+            new com.simibubi.create.content.trains.track.TrackTargetingBlockItem(
+                    RAIL_SIGNAL.get(), new Item.Properties().stacksTo(64),
+                    com.simibubi.create.content.trains.graph.EdgePointType.SIGNAL));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<
+            com.lycoris.loconautics.content.railsignal.RailwaySignalBlockEntity>>
+            RAIL_SIGNAL_BE = BLOCK_ENTITIES.register("rail_signal", () ->
+            BlockEntityType.Builder.of(LoconauticsRegistries::createRailSignalBE,
+                    RAIL_SIGNAL.get()).build(null));
+
     public static final DeferredHolder<BlockEntityType<?>,
             BlockEntityType<com.lycoris.loconautics.content.trackswitch.TrackSwitchBlockEntity>>
             TRACK_SWITCH_BE = BLOCK_ENTITIES.register("track_switch", () ->
@@ -782,6 +805,7 @@ public final class LoconauticsRegistries {
 
                         output.accept(com.simibubi.create.AllBlocks.TRACK_STATION.asStack());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_SIGNAL.asStack());
+                        output.accept(RAIL_SIGNAL_ITEM.get());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_OBSERVER.asStack());
                         output.accept(com.simibubi.create.AllBlocks.PACKAGE_POSTBOXES
                                 .get(net.minecraft.world.item.DyeColor.RED).asStack());
@@ -926,6 +950,12 @@ public final class LoconauticsRegistries {
             int id, Inventory inv, RegistryFriendlyByteBuf buf) {
         return new com.lycoris.loconautics.content.brakes.BrakeControllerMenu(
                 BRAKE_CONTROLLER_MENU.get(), id, inv, buf);
+    }
+
+    static com.lycoris.loconautics.content.railsignal.RailwaySignalBlockEntity createRailSignalBE(
+            BlockPos pos, BlockState state) {
+        return new com.lycoris.loconautics.content.railsignal.RailwaySignalBlockEntity(
+                RAIL_SIGNAL_BE.get(), pos, state);
     }
 
     static com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity createSpeedometerBE(

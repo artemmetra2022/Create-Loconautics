@@ -25,6 +25,10 @@ public final class LoconauticsCCPlugin {
                 PeripheralCapability.get(),
                 LoconauticsRegistries.TURNTABLE_BEARING_BE.get(),
                 (bearing, side) -> TurntableBearingPeripheral.of(bearing));
+        event.registerBlockEntity(
+                PeripheralCapability.get(),
+                LoconauticsRegistries.RAIL_SIGNAL_BE.get(),
+                (signal, side) -> signal.computerBehaviour.getPeripheralCapability());
     }
 
     public static void install() {

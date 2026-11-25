@@ -2029,5 +2029,21 @@
   "loconautics.gui.goggles.signal_lamp.high_acceleration": "Сильное ускорение или замедление",
   "loconautics.gui.goggles.signal_lamp.safety_warning": "Предупреждение системы безопасности",
   "loconautics.gui.goggles.signal_lamp.safety_emergency": "Аварийное срабатывание защиты",
-  "loconautics.gui.goggles.signal_lamp.service_braking": "Служебное торможение"
+  "loconautics.gui.goggles.signal_lamp.service_braking": "Служебное торможение",
+  "block.loconautics.rail_signal": "Железнодорожный светофор",
+  "block.loconautics.rail_signal.tooltip.summary": "Трёхзначный железнодорожный светофор. Автоматически защищает блок-участок по графу железной дороги.",
+  "block.loconautics.rail_signal.tooltip.condition1": "Установка — используйте предмет светофора:",
+  "block.loconautics.rail_signal.tooltip.behaviour1": "Нажмите ПКМ по рельсу, чтобы выбрать путь и направление, затем установите светофор рядом. Его головка автоматически повернётся к приближающимся поездам. Следующий светофор дальше по пути создаст новую границу блок-участка.",
+  "block.loconautics.rail_signal.tooltip.condition2": "При подаче сигнала редстоуна",
+  "block.loconautics.rail_signal.tooltip.behaviour2": "Светофор принудительно показывает красный, пока подан сигнал редстоуна.",
+  "block.loconautics.rail_signal.tooltip.condition3": "При клике гаечным ключом",
+  "block.loconautics.rail_signal.tooltip.behaviour3": "Переключает режимы «Входной» и «Проходной». Проходной светофор может показывать жёлтый, если следующий сигнал в цепочке ограничивает движение.",
+  "loconautics.ponder.rail_signal.header": "Автоматические блок-участки и трёхзначные светофоры",
+  "loconautics.ponder.rail_signal.text_1": "Блок-участок — отрезок связанного пути между границами светофоров. Не нужно вручную отмечать каждый рельсовый блок.",
+  "loconautics.ponder.rail_signal.text_2": "Возьмите светофор и нажмите ПКМ по нужному рельсу. Так выбираются ребро графа пути и направление, которое будет защищать светофор.",
+  "loconautics.ponder.rail_signal.text_3": "Поставьте светофор рядом с путём. Повторите действие дальше по маршруту: каждая граница автоматически отделяет новый блок-участок.",
+  "loconautics.ponder.rail_signal.text_4": "Зелёный означает, что защищаемый участок свободен. Светофор учитывает резервации Create и занятость пути поездами Loconautics.",
+  "loconautics.ponder.rail_signal.text_5": "Жёлтый сигнал Cross Signal означает ограничение на следующем светофоре в цепочке: ориентируйтесь на следующий сигнал.",
+  "loconautics.ponder.rail_signal.text_6": "Редстоун-сигнал принудительно включает красный. Гаечный ключ переключает режимы «Входной» и «Проходной».",
+  "loconautics.ponder.rail_signal.text_7": "Красный означает остановку: участок занят или зарезервирован, светофор принудительно закрыт редстоуном либо связь с путём недействительна. Поезда под управлением расписания тормозят и ждут разрешающего сигнала."
 }

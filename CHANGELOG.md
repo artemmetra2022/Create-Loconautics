@@ -1,5 +1,16 @@
 # Loconautics Changelog
 
+## Ver 0.1.13BETA
+
+### Added
+- A dedicated three-aspect railway signal that uses Create's native track-signal boundaries and signal-edge groups to split a route into automatically detected block sections.
+- Signal aspects show red for occupied/reserved Sable-train sections and invalid/unlinked signal boundaries, yellow for restrictive cross-signal paths, and green for clear sections. Redstone power can hold a signal at danger; a wrench cycles entry/cross-signal mode.
+- Ponder training for selecting a track with the signal item, placing block-section boundaries, understanding signal aspects, and using redstone and the wrench.
+
+### Changed
+- Increased the mod version for the railway-signalling feature.
+
+
 ## Ver 0.1.10BETA
 
 ### Fixed

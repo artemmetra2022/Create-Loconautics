@@ -21,6 +21,8 @@ public class TrainPonderPlugin implements PonderPlugin {
 
     @Override
     public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+        helper.forComponents(LoconauticsRegistries.RAIL_SIGNAL.getId())
+                .addStoryBoard("train/train", RailSignalScenes::blockSections);
         helper.forComponents(LoconauticsRegistries.TRANSMISSION.getId())
                 .addStoryBoard("transmission/transmission", TransmissionScenes::single)
                 .addStoryBoard("transmission/transmission", TransmissionScenes::direction)
