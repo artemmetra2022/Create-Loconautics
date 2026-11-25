@@ -1609,6 +1609,8 @@
   "item.loconautics.brake_hose.tooltip.summary": "Соединяет два _адаптера тормозных рукавов_ на соседних вагонах в общую магистраль.",
   "block.loconautics.emergency_brake.tooltip.summary": "При срыве сбрасывает давление в _тормозной магистрали_ до _0 бар_, останавливая весь сцепленный состав.",
   "loconautics.gui.goggles.knuckle_stats": "Состояние автосцепки",
+  "loconautics.gui.goggles.knuckle_connected": "Статус: соединена",
+  "loconautics.gui.goggles.knuckle_disconnected": "Статус: не соединена",
   "loconautics.gui.goggles.knuckle_load": "Нагрузка сцепки: %s м/с²",
   "loconautics.gui.goggles.knuckle_fatigue": "Износ: %s%%",
   "loconautics.gui.goggles.knuckle_broken": "Разрушена перегрузкой — отремонтируйте ключом",
