@@ -2013,5 +2013,9 @@
   "loconautics.configuration.track.derailment.staffLiftRatio.tooltip": "Предел подъёма, пока Физический посох тащит вагон. При 0 посох никогда не снимает вагон с рельса.",
   "loconautics.track_switch.occupied": "Эта стрелка уже управляется другим приводом",
   "block.loconautics.security_camera": "Камера наблюдения",
-  "item.loconautics.security_camera": "Камера наблюдения"
+  "item.loconautics.security_camera": "Камера наблюдения",
+  "item.loconautics.camera_monitor": "Монитор камеры",
+  "gui.loconautics.camera_monitor.linked": "Привязана камера:",
+  "gui.loconautics.camera_monitor.unbound": "Монитор отвязан от камеры",
+  "gui.loconautics.camera_monitor.bind_first": "Сначала нажмите ПКМ по установленной камере, чтобы привязать монитор"
 }
