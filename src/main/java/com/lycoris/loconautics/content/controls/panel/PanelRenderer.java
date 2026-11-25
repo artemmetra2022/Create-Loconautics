@@ -51,6 +51,9 @@ public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRen
                         ms, buffers, packedLight, state);
                 case ValvePart valve -> ValvePartRenderer.render(animation, ms, buffers, packedLight, state,
                         valve.wheelColor());
+                case com.lycoris.loconautics.content.camera.CameraMonitorPart monitor ->
+                        com.lycoris.loconautics.content.camera.CameraMonitorPartRenderer.render(
+                                ms, buffers, packedLight, state, monitor, partialTick);
                 case com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPart display ->
                         com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPartRenderer.render(
                                 ms, buffers, packedLight, state);
