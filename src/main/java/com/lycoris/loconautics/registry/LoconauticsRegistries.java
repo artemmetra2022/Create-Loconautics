@@ -770,6 +770,7 @@ public final class LoconauticsRegistries {
                                                 : net.minecraft.world.item.CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY));
 
                         output.accept(com.lycoris.loconautics.content.camera.CameraBlocks.CAMERA_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.camera.CameraBlocks.CAMERA_MONITOR_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_GAUGE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.SIGNAL_LAMP_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_STATUS_DISPLAY_ITEM.get());
