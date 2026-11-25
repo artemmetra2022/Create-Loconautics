@@ -32,11 +32,11 @@ public final class KnuckleTuning {
     public static final double BUFF_MAX_BIAS = 1.8;
 
     // Specific-force ratings are independent of wagon mass.
-    public static double draftRatingAccel = 28.0;
-    public static double buffRatingAccel = 34.0;
-    public static double failureLoadRatio = 1.85;
-    public static final double FATIGUE_START_RATIO = 0.65;
-    public static final double FATIGUE_LIFE_SECONDS = 240.0;
+    public static double draftRatingAccel = 45.0;
+    public static double buffRatingAccel = 52.0;
+    public static double failureLoadRatio = 2.2;
+    public static final double FATIGUE_START_RATIO = 0.80;
+    public static final double FATIGUE_LIFE_SECONDS = 600.0;
 
     public static final int ENGAGE_TICKS = 8;
     public static final int ROTATE_LOCK_TICKS = 40;
@@ -109,9 +109,9 @@ public final class KnuckleTuning {
                             positionLerp = DEFAULT_POSITION_LERP;
                             springStiffness = DEFAULT_SPRING_STIFFNESS;
                             maxBiasSpeed = DEFAULT_MAX_BIAS_SPEED;
-                            draftRatingAccel = 28.0;
-                            buffRatingAccel = 34.0;
-                            failureLoadRatio = 1.85;
+                            draftRatingAccel = 45.0;
+                            buffRatingAccel = 52.0;
+                            failureLoadRatio = 2.2;
                             return report(ctx.getSource(), "knuckle tuning reset");
                         })));
     }
