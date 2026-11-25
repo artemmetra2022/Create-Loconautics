@@ -2,6 +2,7 @@ package com.lycoris.loconautics.content.camera;
 
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
 import com.simibubi.create.foundation.block.IBE;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,6 +20,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public final class CameraBlock extends HorizontalDirectionalBlock implements IBE<CameraBlockEntity> {
+
+    public static final MapCodec<CameraBlock> CODEC = simpleCodec(CameraBlock::new);
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
 
     public CameraBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -57,6 +65,6 @@ public final class CameraBlock extends HorizontalDirectionalBlock implements IBE
 
     @Override
     public BlockEntityType<? extends CameraBlockEntity> getBlockEntityType() {
-        return LoconauticsRegistries.CAMERA_BE.get();
+        return CameraBlocks.CAMERA_BE.get();
     }
 }
