@@ -62,6 +62,7 @@ public final class LoconauticsClient {
         modBus.addListener(this::onRegisterSpriteSources);
         modBus.addListener(this::onRegisterClientExtensions);
         modBus.addListener(this::onRegisterBlockColors);
+        modBus.addListener(com.lycoris.loconautics.content.camera.CameraFeedManager::registerShaders);
         modBus.addListener(com.lycoris.loconautics.content.retardertrack.RetarderTrackClient::onModifyBakingResult);
         modBus.addListener(this::onAddPackFinders);
 
@@ -660,7 +661,8 @@ public final class LoconauticsClient {
             com.lycoris.loconautics.trainphysics.portal.PortalCutsClient.onLevelUnload(level);
             com.lycoris.loconautics.foundation.particle.LateParticles.clear();
             com.lycoris.loconautics.content.analogcontroller.AnalogControllerClientHandler.clear();
-        com.lycoris.loconautics.content.safety.SafetyAlertHUD.clear();
+            com.lycoris.loconautics.content.camera.CameraFeedManager.clear();
+            com.lycoris.loconautics.content.safety.SafetyAlertHUD.clear();
             com.lycoris.loconautics.content.safety.SafetyAlertHUD.clear();
         }
     }
@@ -677,5 +679,6 @@ public final class LoconauticsClient {
         com.lycoris.loconautics.foundation.debug.DebugLinesClient.clear();
         com.lycoris.loconautics.client.scrollmenu.ScrollMenuHandler.forceClose();
         com.lycoris.loconautics.content.analogcontroller.AnalogControllerClientHandler.clear();
+        com.lycoris.loconautics.content.camera.CameraFeedManager.clear();
     }
 }
