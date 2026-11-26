@@ -86,6 +86,19 @@ public final class AirPipeBus {
         node.lastTick = now;
     }
 
+    /** Opens the emergency exhaust on the shared train pipe. Every distributor on
+     * this car/consist sees the pressure collapse and applies its own cylinder. */
+    public static void emergencyVent(BlockEntity trigger) {
+        PipeNode node = getOrCreateNode(trigger);
+        if (node == null || !(trigger.getLevel() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        long now = serverLevel.getGameTime();
+        node.pressureBar = 0.0f;
+        node.lastVentTick = now;
+        node.lastTick = now;
+    }
+
     public static void markVented(BlockEntity connector) {
         PipeNode node = getOrCreateNode(connector);
         if (node == null || !(connector.getLevel() instanceof ServerLevel serverLevel)) {

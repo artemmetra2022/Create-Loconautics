@@ -4,6 +4,7 @@ import com.lycoris.loconautics.trainphysics.debug.force.ForceSource;
 import com.lycoris.loconautics.trainphysics.debug.force.ForceTrace;
 import com.lycoris.loconautics.config.LoconauticsConfig;
 import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
+import com.lycoris.loconautics.content.airbrake.AirPipeBus;
 import com.lycoris.loconautics.content.airbrake.TripleValveBlock;
 import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
 import com.lycoris.loconautics.content.brakes.BrakeControllerBlock;
@@ -77,7 +78,6 @@ public final class TrainBrakes {
         double pipe = Math.min(1.0, consist.decel() / BRAKE_DECEL);
         // a schedule hold must not full brake here or an arrived train never pulls away
         double air = airBrakeScale(sub);
-        boolean airEmergency = airEmergency(sub);
         double soft = Math.max(pipe, train.brakePulseActive() ? 1.0 : 0.0);
         // The dispatcher uses a graduated service-brake demand. It never sets brakeHold
         // while the train is moving, so the consist decelerates through the normal brake path.
@@ -96,9 +96,10 @@ public final class TrainBrakes {
         // Pneumatic emergency braking must follow the cylinder pressure ramp. A brake hold here
         // would replace that ramp with the full mechanical stop force and make notch 15 instant.
         boolean dispatcherAtStandstill = dispatch > 0.0 && Math.abs(train.speed()) <= 0.001;
-        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub)
-                || dispatcherAtStandstill);
-        train.setBrakeHard(locked || airEmergency);
+        // A safety trip is stopped by the brake-pipe emergency application below;
+        // brakeHold would bypass the pneumatic pressure ramp and behave like a hard lock.
+        train.setBrakeHold(consist.hold() || train.brakePulseActive() || dispatcherAtStandstill);
+        train.setBrakeHard(locked);
     }
 
     static final double WHEEL_GRIP_DECEL = 30.0;
@@ -122,20 +123,10 @@ public final class TrainBrakes {
     private static final Map<ServerSubLevel, BrakeScan> BRAKE_SCANS = new WeakHashMap<>();
 
     // set by handbrakeStrength, true while a Safety Unit on the carriage holds the emergency brake
-    private static final Map<ServerSubLevel, Boolean> SAFETY_STOPS = new WeakHashMap<>();
     private static final Map<ServerSubLevel, Double> AIR_BRAKE_SCALES = new WeakHashMap<>();
-    private static final Map<ServerSubLevel, Boolean> AIR_EMERGENCY_STOPS = new WeakHashMap<>();
-
-    private static boolean safetyStop(ServerSubLevel sub) {
-        return Boolean.TRUE.equals(SAFETY_STOPS.get(sub));
-    }
 
     private static double airBrakeScale(ServerSubLevel sub) {
         return AIR_BRAKE_SCALES.getOrDefault(sub, 0.0);
-    }
-
-    private static boolean airEmergency(ServerSubLevel sub) {
-        return Boolean.TRUE.equals(AIR_EMERGENCY_STOPS.get(sub));
     }
 
     public static double handbrakeStrength(ServerSubLevel sub) {
@@ -154,12 +145,10 @@ public final class TrainBrakes {
             scan = new BrakeScan(now, found);
             BRAKE_SCANS.put(sub, scan);
         }
-        boolean safetyStop = false;
         int bestHandbrake = 0;
         int bestController = 0;
         boolean emergency = false;
         double bestAir = 0.0;
-        boolean airEmergency = false;
         for (BlockPos pos : scan.positions()) {
             BlockState state = subLevel.getBlockState(pos);
             if (state.getBlock() instanceof HandbrakeBlock && state.getValue(HandbrakeBlock.POWERED)) {
@@ -172,16 +161,15 @@ public final class TrainBrakes {
                 emergency |= brake.isEmergency();
             } else if (state.getBlock() instanceof SafetyBlock
                     && subLevel.getBlockEntity(pos) instanceof SafetyBlockEntity safety && safety.isEmergency()) {
-                // a tripped Safety Unit brakes like the emergency switch and also cuts the drive
-                emergency = true;
-                safetyStop = true;
+                // Safety trips operate the pneumatic emergency exhaust, not a synthetic
+                // instant mechanical stop. All triple valves then build full cylinder pressure.
+                AirPipeBus.emergencyVent(safety);
             } else if (state.getBlock() instanceof TripleValveBlock
                     && subLevel.getBlockEntity(pos) instanceof TripleValveBlockEntity valve) {
                 double cylinderFraction = valve.getCylinderFraction();
                 if (valve.isEmergency()) {
                     // Emergency braking is stronger, but still follows the pressure actually
                     // built in this car's cylinder rather than forcing an immediate stop.
-                    airEmergency |= cylinderFraction > 0.03;
                     bestAir = Math.max(bestAir, cylinderFraction
                             * AirBrakeTuning.EMERGENCY_BRAKE_MAX_DECEL_MPS2 / BRAKE_DECEL);
                 } else {
@@ -191,9 +179,7 @@ public final class TrainBrakes {
                 }
             }
         }
-        SAFETY_STOPS.put(sub, safetyStop);
         AIR_BRAKE_SCALES.put(sub, bestAir);
-        AIR_EMERGENCY_STOPS.put(sub, airEmergency);
         double handbrakeFraction = bestHandbrake / 15.0;
         double handbrakeStrength = handbrakeFraction * handbrakeFraction;
 

@@ -1,3 +1,13 @@
+# Loconautics Changelog
+
+## Ver 0.1.18BETA
+
+### Fixed
+- Safety Unit emergency trips now open the shared brake-pipe emergency exhaust; each triple valve detects the pressure collapse and applies emergency cylinder pressure up to 4.5 bar (100%).
+- Emergency cylinder pressure now uses the full emergency-cylinder range for its percentage and braking-force calculation.
+- Driver HUD no longer treats a stale train-physics `isBraked` flag as proof that the brakes are still applied; it checks actual cylinder pressure and active brake controls.
+- Added the redesigned signal lamp item texture.
+
 ## Ver 0.1.17BETA
 
 ### Fixed
