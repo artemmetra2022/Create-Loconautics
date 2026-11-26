@@ -2019,6 +2019,7 @@
   "gui.loconautics.camera_monitor.linked": "Привязана камера:",
   "gui.loconautics.camera_monitor.unbound": "Монитор отвязан от камеры",
   "gui.loconautics.camera_monitor.bind_first": "Сначала нажмите ПКМ по установленной камере, чтобы привязать монитор",
+  "gui.loconautics.camera_monitor.use_monitor": "Чтобы подключить монитор, возьмите предмет «Монитор камеры» и нажмите ПКМ по этой камере",
   "gui.loconautics.signal_lamp_selector": "Настройка сигнальной лампы",
   "gui.loconautics.signal_lamp_selector.done": "Готово",
   "gui.loconautics.signal_lamp_selector.mode": "Что отслеживать",
