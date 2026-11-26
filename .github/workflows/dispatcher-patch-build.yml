@@ -28,9 +28,125 @@ jobs:
         run: |
           set -euo pipefail
           base64 -d .github/patches/dispatcher.patch.gz.b64 | gzip -d > /tmp/dispatcher.patch
-          git apply --check /tmp/dispatcher.patch
-          git apply /tmp/dispatcher.patch
-          rm .github/patches/dispatcher.patch.gz.b64
+          git apply --reject /tmp/dispatcher.patch || true
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+
+          plugin = Path("src/main/java/com/lycoris/loconautics/client/ponder/TrainPonderPlugin.java")
+          source = plugin.read_text(encoding="utf-8")
+          if "LoconauticsRegistries.DISPATCHER.getId()" not in source:
+              needle = ('        helper.forComponents(LoconauticsRegistries.RAIL_SIGNAL.getId())\n'
+                        '                .addStoryBoard("train/train", RailSignalScenes::blockSections);')
+              addition = (needle + '\n\n'
+                          '        helper.forComponents(LoconauticsRegistries.DISPATCHER.getId())\n'
+                          '                .addStoryBoard("train/train", DispatcherScenes::overview);')
+              if needle not in source:
+                  raise SystemExit("Could not find the railway-signal Ponder registration")
+              plugin.write_text(source.replace(needle, addition, 1), encoding="utf-8")
+
+          translations = {
+              "en_us": {
+                  "block.loconautics.dispatcher": "Dispatcher Console",
+                  "gui.loconautics.dispatcher.title": "Railway Dispatcher",
+                  "gui.loconautics.dispatcher.live": "● LIVE",
+                  "gui.loconautics.dispatcher.tab_trains": "Trains",
+                  "gui.loconautics.dispatcher.tab_sections": "Sections",
+                  "gui.loconautics.dispatcher.tab_events": "Events",
+                  "gui.loconautics.dispatcher.refresh": "Refresh",
+                  "gui.loconautics.dispatcher.hold": "Hold",
+                  "gui.loconautics.dispatcher.release": "Release",
+                  "gui.loconautics.dispatcher.close": "Close",
+                  "gui.loconautics.dispatcher.col_name": "Train",
+                  "gui.loconautics.dispatcher.col_speed": "Speed",
+                  "gui.loconautics.dispatcher.col_position": "X, Z",
+                  "gui.loconautics.dispatcher.col_state": "State",
+                  "gui.loconautics.dispatcher.no_trains": "No trains detected on the network",
+                  "gui.loconautics.dispatcher.scroll_hint": "Select a train; use the mouse wheel to scroll",
+                  "gui.loconautics.dispatcher.sections_total": "Known sections: %s",
+                  "gui.loconautics.dispatcher.sections_occupied": "Occupied: %s",
+                  "gui.loconautics.dispatcher.sections_reserved": "Reserved: %s",
+                  "gui.loconautics.dispatcher.sections_conflicts": "Conflicts: %s",
+                  "gui.loconautics.dispatcher.sections_info_1": "Status includes Create signal groups and Loconautics block sections.",
+                  "gui.loconautics.dispatcher.sections_info_2": "Unknown or untracked sections are never treated as clear.",
+                  "gui.loconautics.dispatcher.sections_info_3": "Automation never changes occupied routes or bypasses Create protection.",
+                  "gui.loconautics.dispatcher.event_conflicts": "Section conflicts detected: %s",
+                  "gui.loconautics.dispatcher.event_derailed": "Derailed: %s",
+                  "gui.loconautics.dispatcher.event_waiting": "Waiting for signal: %s",
+                  "gui.loconautics.dispatcher.event_held": "Dispatcher hold: %s",
+                  "gui.loconautics.dispatcher.no_events": "No active alerts",
+                  "gui.loconautics.dispatcher.events_hint": "The list refreshes automatically once per second",
+                  "gui.loconautics.dispatcher.command_scope": "Hold commands are currently available for Loconautics trains",
+                  "gui.loconautics.dispatcher.occupied_short": "occupied",
+                  "gui.loconautics.dispatcher.reserved_short": "reserved",
+                  "gui.loconautics.dispatcher.state_moving": "Moving",
+                  "gui.loconautics.dispatcher.state_waiting": "Waiting",
+                  "gui.loconautics.dispatcher.state_derailed": "Derailed",
+                  "gui.loconautics.dispatcher.state_held": "Held",
+                  "gui.loconautics.dispatcher.state_stopped": "Stopped",
+                  "gui.loconautics.dispatcher.create_hold_unsupported": "Hold is not yet supported for native Create trains. Create remains in control of their movement and signals.",
+                  "gui.loconautics.dispatcher.command_failed": "Could not apply the command to this consist.",
+                  "loconautics.ponder.dispatcher.header": "Railway Dispatcher",
+                  "loconautics.ponder.dispatcher.text_1": "Place the dispatcher console where it is convenient. Right-click it to open the network overview.",
+                  "loconautics.ponder.dispatcher.text_2": "The Trains tab lists Create and Loconautics consists with their speed, position and state. Data refreshes automatically.",
+                  "loconautics.ponder.dispatcher.text_3": "Select a Loconautics train and choose Hold or Release. The command uses service braking while normal train physics and signal protection remain active."
+              },
+              "ru_ru": {
+                  "block.loconautics.dispatcher": "Диспетчерская",
+                  "gui.loconautics.dispatcher.title": "Диспетчерская система",
+                  "gui.loconautics.dispatcher.live": "● В ЭФИРЕ",
+                  "gui.loconautics.dispatcher.tab_trains": "Поезда",
+                  "gui.loconautics.dispatcher.tab_sections": "Блок-участки",
+                  "gui.loconautics.dispatcher.tab_events": "События",
+                  "gui.loconautics.dispatcher.refresh": "Обновить",
+                  "gui.loconautics.dispatcher.hold": "Задержать",
+                  "gui.loconautics.dispatcher.release": "Отпустить",
+                  "gui.loconautics.dispatcher.close": "Закрыть",
+                  "gui.loconautics.dispatcher.col_name": "Поезд",
+                  "gui.loconautics.dispatcher.col_speed": "Скорость",
+                  "gui.loconautics.dispatcher.col_position": "X, Z",
+                  "gui.loconautics.dispatcher.col_state": "Состояние",
+                  "gui.loconautics.dispatcher.no_trains": "Поезда не обнаружены в сети",
+                  "gui.loconautics.dispatcher.scroll_hint": "Выберите поезд; колесо мыши — прокрутка списка",
+                  "gui.loconautics.dispatcher.sections_total": "Всего известных участков: %s",
+                  "gui.loconautics.dispatcher.sections_occupied": "Занято: %s",
+                  "gui.loconautics.dispatcher.sections_reserved": "Зарезервировано: %s",
+                  "gui.loconautics.dispatcher.sections_conflicts": "Конфликтов: %s",
+                  "gui.loconautics.dispatcher.sections_info_1": "Состояние учитывает сигнальные группы Create и блок-участки Loconautics.",
+                  "gui.loconautics.dispatcher.sections_info_2": "Неизвестные или неотслеживаемые участки не считаются свободными.",
+                  "gui.loconautics.dispatcher.sections_info_3": "Решения автоматики не переключают занятые пути и не обходят защиту Create.",
+                  "gui.loconautics.dispatcher.event_conflicts": "Обнаружены конфликты на участках: %s",
+                  "gui.loconautics.dispatcher.event_derailed": "Сход с рельсов: %s",
+                  "gui.loconautics.dispatcher.event_waiting": "Ожидание сигнала: %s",
+                  "gui.loconautics.dispatcher.event_held": "Диспетчерская задержка: %s",
+                  "gui.loconautics.dispatcher.no_events": "Активных предупреждений нет",
+                  "gui.loconautics.dispatcher.events_hint": "Список обновляется автоматически раз в секунду",
+                  "gui.loconautics.dispatcher.command_scope": "Команды удержания доступны для поездов Loconautics",
+                  "gui.loconautics.dispatcher.occupied_short": "занято",
+                  "gui.loconautics.dispatcher.reserved_short": "резерв",
+                  "gui.loconautics.dispatcher.state_moving": "В пути",
+                  "gui.loconautics.dispatcher.state_waiting": "Ждёт",
+                  "gui.loconautics.dispatcher.state_derailed": "Сход",
+                  "gui.loconautics.dispatcher.state_held": "Задержан",
+                  "gui.loconautics.dispatcher.state_stopped": "Стоит",
+                  "gui.loconautics.dispatcher.create_hold_unsupported": "У поездов Create удержание пока не поддерживается. Их движение и сигналы остаются под управлением Create.",
+                  "gui.loconautics.dispatcher.command_failed": "Не удалось применить команду к этому составу.",
+                  "loconautics.ponder.dispatcher.header": "Диспетчерская система",
+                  "loconautics.ponder.dispatcher.text_1": "Поставьте диспетчерскую в удобном месте. ПКМ открывает общую панель железнодорожной сети.",
+                  "loconautics.ponder.dispatcher.text_2": "На вкладке «Поезда» отображаются составы Create и Loconautics, их скорость, положение и состояние. Данные обновляются автоматически.",
+                  "loconautics.ponder.dispatcher.text_3": "Выберите поезд Loconautics и используйте «Задержать» или «Отпустить». Команда применяет служебное торможение; защита сигналов и физика состава продолжают работать."
+              }
+          }
+          for locale, additions in translations.items():
+              path = Path(f"src/main/resources/assets/loconautics/lang/{locale}.json")
+              data = json.loads(path.read_text(encoding="utf-8"))
+              data.update(additions)
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          for reject in Path(".").rglob("*.rej"):
+              reject.unlink()
+          Path(".github/patches/dispatcher.patch.gz.b64").unlink()
+          PY
 
       - name: Download required runtime dependencies
         env:
