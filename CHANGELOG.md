@@ -1,3 +1,10 @@
+## Ver 0.1.17BETA
+
+### Fixed
+- Replaced damaged red, yellow and green railway-signal textures with valid complete textures.
+- Added an interaction hint when a player right-clicks a security camera with an empty hand, explaining how to bind the camera monitor.
+
+
 # Loconautics Changelog
 
 ## Ver 0.1.16BETA

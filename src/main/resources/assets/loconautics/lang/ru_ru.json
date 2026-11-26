@@ -2120,5 +2120,6 @@
   "loconautics.driver_hint.signal_hold": "Ожидание красного сигнала",
   "loconautics.driver_hint.brake_applied": "Тормоза не отпущены",
   "loconautics.driver_hint.low_pipe": "Низкое давление в ТМ",
-  "loconautics.driver_hint.doors_open": "Двери открыты"
+  "loconautics.driver_hint.doors_open": "Двери открыты",
+  "gui.loconautics.camera_monitor.use_monitor": "Чтобы подключить монитор, возьмите предмет «Монитор камеры» и нажмите ПКМ по этой камере"
 }
