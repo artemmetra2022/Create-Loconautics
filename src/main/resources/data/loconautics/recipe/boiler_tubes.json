@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "boilerworks"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "AAA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "create:fluid_pipe"
+    }
+  },
+  "result": {
+    "id": "loconautics:boiler_tubes",
+    "count": 1
+  }
+}

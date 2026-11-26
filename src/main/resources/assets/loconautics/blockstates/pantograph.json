@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=north,contact=false,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_folded"
+    },
+    "facing=north,contact=false,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_folded"
+    },
+    "facing=north,contact=false,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_folded"
+    },
+    "facing=north,contact=true,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_raised_short"
+    },
+    "facing=north,contact=true,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_raised_standard"
+    },
+    "facing=north,contact=true,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_raised_tall"
+    },
+    "facing=east,contact=false,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 90
+    },
+    "facing=east,contact=false,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 90
+    },
+    "facing=east,contact=false,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 90
+    },
+    "facing=east,contact=true,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_raised_short",
+      "y": 90
+    },
+    "facing=east,contact=true,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_raised_standard",
+      "y": 90
+    },
+    "facing=east,contact=true,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_raised_tall",
+      "y": 90
+    },
+    "facing=south,contact=false,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 180
+    },
+    "facing=south,contact=false,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 180
+    },
+    "facing=south,contact=false,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 180
+    },
+    "facing=south,contact=true,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_raised_short",
+      "y": 180
+    },
+    "facing=south,contact=true,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_raised_standard",
+      "y": 180
+    },
+    "facing=south,contact=true,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_raised_tall",
+      "y": 180
+    },
+    "facing=west,contact=false,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 270
+    },
+    "facing=west,contact=false,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 270
+    },
+    "facing=west,contact=false,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_folded",
+      "y": 270
+    },
+    "facing=west,contact=true,reach=0": {
+      "model": "loconautics:block/overhead/pantograph_raised_short",
+      "y": 270
+    },
+    "facing=west,contact=true,reach=1": {
+      "model": "loconautics:block/overhead/pantograph_raised_standard",
+      "y": 270
+    },
+    "facing=west,contact=true,reach=2": {
+      "model": "loconautics:block/overhead/pantograph_raised_tall",
+      "y": 270
+    }
+  }
+}

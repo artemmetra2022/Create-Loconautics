@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "airBrakes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " R ",
+    " I ",
+    " P "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:red_dye"
+    },
+    "I": {
+      "item": "create:iron_sheet"
+    },
+    "P": {
+      "item": "create:fluid_pipe"
+    }
+  },
+  "result": {
+    "id": "loconautics:emergency_brake",
+    "count": 1
+  }
+}

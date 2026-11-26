@@ -1,0 +1,12 @@
+{
+    "parent": "minecraft:block/block",
+    "render_type": "minecraft:cutout",
+    "loader": "neoforge:obj",
+    "flip_v": true,
+    "ambientocclusion": false,
+    "model": "loconautics:models/block/boiler/bogey/gear/obj/wheels.obj",
+    "textures": {
+        "0": "loconautics:block/boiler/bogey/gear/wheel",
+        "particle": "loconautics:block/boiler/bogey/gear/wheel"
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "industrialFluids"
+    }
+  ],
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "loconautics:raw_cerisene"
+    },
+    {
+      "item": "loconautics:raw_cerisene"
+    },
+    {
+      "item": "loconautics:raw_cerisene"
+    },
+    {
+      "item": "loconautics:raw_cerisene"
+    }
+  ],
+  "processing_time": 200,
+  "results": [
+    {
+      "id": "loconautics:cerisene_block"
+    }
+  ]
+}

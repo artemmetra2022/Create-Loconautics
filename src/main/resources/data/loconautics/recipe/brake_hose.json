@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "airBrakes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " K ",
+    "IHI",
+    " K "
+  ],
+  "key": {
+    "K": {
+      "item": "minecraft:dried_kelp"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "H": {
+      "item": "loconautics:hose"
+    }
+  },
+  "result": {
+    "id": "loconautics:brake_hose",
+    "count": 2
+  }
+}

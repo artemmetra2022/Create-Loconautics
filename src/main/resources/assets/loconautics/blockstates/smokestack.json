@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "raised=false,stacked=false": { "model": "loconautics:block/smokestack/top" },
+    "raised=false,stacked=true": { "model": "loconautics:block/smokestack/bottom" },
+    "raised=true,stacked=false": { "model": "loconautics:block/smokestack/top_raised" },
+    "raised=true,stacked=true": { "model": "loconautics:block/smokestack/bottom_raised" }
+  }
+}

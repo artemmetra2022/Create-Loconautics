@@ -1,0 +1,148 @@
+{
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "t": "loconautics:block/airbrake/driver_brake_valve",
+    "particle": "loconautics:block/airbrake/driver_brake_valve"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.5
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            2.5
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            4.0,
+            0.0,
+            6.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            6.0,
+            0.0,
+            8.0,
+            2.0
+          ],
+          "texture": "#t"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        2
+      ],
+      "to": [
+        9,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            10.0,
+            0.0,
+            10.5,
+            0.5
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            10.0,
+            0.0,
+            10.5,
+            0.5
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            8.0,
+            0.0,
+            10.0,
+            0.5
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            8.0,
+            0.0,
+            10.0,
+            0.5
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            10.5,
+            0.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            10.5,
+            0.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ]
+}

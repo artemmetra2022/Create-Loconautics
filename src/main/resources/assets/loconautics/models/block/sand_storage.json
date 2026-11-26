@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/barrel",
+  "textures": {
+    "side": "minecraft:block/gray_concrete",
+    "top": "minecraft:block/sand",
+    "bottom": "minecraft:block/iron_block",
+    "particle": "minecraft:block/gray_concrete"
+  }
+}

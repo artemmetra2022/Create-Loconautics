@@ -1,0 +1,6 @@
+{
+  "parent": "loconautics:block/rail_sign/upper",
+  "textures": {
+    "sign": "loconautics:block/rail_sign/station_border_sign"
+  }
+}

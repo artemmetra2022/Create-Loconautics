@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,sounding=false": {
+      "model": "loconautics:block/typhon"
+    },
+    "facing=north,sounding=true": {
+      "model": "loconautics:block/typhon_sounding"
+    },
+    "facing=east,sounding=false": {
+      "model": "loconautics:block/typhon",
+      "y": 90
+    },
+    "facing=east,sounding=true": {
+      "model": "loconautics:block/typhon_sounding",
+      "y": 90
+    },
+    "facing=south,sounding=false": {
+      "model": "loconautics:block/typhon",
+      "y": 180
+    },
+    "facing=south,sounding=true": {
+      "model": "loconautics:block/typhon_sounding",
+      "y": 180
+    },
+    "facing=west,sounding=false": {
+      "model": "loconautics:block/typhon",
+      "y": 270
+    },
+    "facing=west,sounding=true": {
+      "model": "loconautics:block/typhon_sounding",
+      "y": 270
+    }
+  }
+}

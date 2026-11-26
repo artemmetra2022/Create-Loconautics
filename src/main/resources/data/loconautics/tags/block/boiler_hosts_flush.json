@@ -1,0 +1,8 @@
+{
+    "values": [
+        {"id": "#railways:palettes/dye_groups/smokebox", "required": false},
+        {"id": "#railways:palettes/dye_groups/brass_wrapped_smokebox", "required": false},
+        {"id": "#railways:palettes/dye_groups/copper_wrapped_smokebox", "required": false},
+        {"id": "#railways:palettes/dye_groups/iron_wrapped_smokebox", "required": false}
+    ]
+}

@@ -1,0 +1,184 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/small_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "small",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_small_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "small",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/small_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "small",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_small_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "small",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/small_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "small",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_small_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "small",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/medium_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "medium",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_medium_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "medium",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/medium_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "medium",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_medium_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "medium",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/medium_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "medium",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_medium_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "medium",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/large_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "large",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_large_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "large",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/large_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "large",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_large_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "large",
+        "raised": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/steam_whistle/extension/large_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "large",
+        "raised": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "loconautics:block/steam_whistle/extension/raised_large_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "large",
+        "raised": "true"
+      }
+    }
+  ]
+}

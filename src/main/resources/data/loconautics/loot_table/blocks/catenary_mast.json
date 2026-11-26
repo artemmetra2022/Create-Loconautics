@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [ { "type": "minecraft:item", "name": "loconautics:catenary_pole_standard" } ],
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "loconautics:catenary_mast", "properties": { "part": "base" } },
+        { "condition": "minecraft:survives_explosion" }
+      ]
+    }
+  ]
+}

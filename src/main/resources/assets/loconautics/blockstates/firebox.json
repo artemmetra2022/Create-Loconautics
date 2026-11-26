@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "loconautics:block/boiler/firebox/body_joined" },
+    "facing=east": { "model": "loconautics:block/boiler/firebox/body_joined", "y": 90 },
+    "facing=south": { "model": "loconautics:block/boiler/firebox/body_joined", "y": 180 },
+    "facing=west": { "model": "loconautics:block/boiler/firebox/body_joined", "y": 270 }
+  }
+}

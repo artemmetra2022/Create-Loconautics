@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "loconautics:block/security_camera" },
+    "facing=south": { "model": "loconautics:block/security_camera", "y": 180 },
+    "facing=west": { "model": "loconautics:block/security_camera", "y": 270 },
+    "facing=east": { "model": "loconautics:block/security_camera", "y": 90 }
+  }
+}

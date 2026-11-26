@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "loconautics:block/airbrake/driver_brake_valve"
+    },
+    "facing=south": {
+      "model": "loconautics:block/airbrake/driver_brake_valve",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "loconautics:block/airbrake/driver_brake_valve",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "loconautics:block/airbrake/driver_brake_valve",
+      "y": 90
+    }
+  }
+}

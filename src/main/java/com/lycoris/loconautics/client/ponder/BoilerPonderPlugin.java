@@ -1,0 +1,69 @@
+package com.lycoris.loconautics.client.ponder;
+
+import com.lycoris.loconautics.LoconauticsConstants;
+import com.lycoris.loconautics.content.boiler.BoilerBlocks;
+import com.lycoris.loconautics.content.dashboard.DashboardBlocks;
+import net.createmod.ponder.api.registration.PonderPlugin;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.registries.DeferredHolder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BoilerPonderPlugin implements PonderPlugin {
+
+    @Override
+    public String getModId() {
+        return LoconauticsConstants.MOD_ID;
+    }
+
+    @Override
+    public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+        helper.forComponents(BoilerBlocks.FIREBOX.getId(), BoilerBlocks.FIREBOX_STOCKER.getId())
+                .addStoryBoard("boiler/firebox", BoilerScenes::firebox)
+                .addStoryBoard("boiler/barrel", BoilerScenes::assembly)
+                .addStoryBoard("boiler/barrel", BoilerScenes::ratio)
+                .addStoryBoard("boiler/barrel", BoilerScenes::failure);
+
+        helper.forComponents(bodyIds())
+                .addStoryBoard("boiler/barrel", BoilerScenes::assembly)
+                .addStoryBoard("boiler/water", BoilerScenes::water)
+                .addStoryBoard("boiler/barrel", BoilerScenes::ratio)
+                .addStoryBoard("boiler/barrel", BoilerScenes::smokestack)
+                .addStoryBoard("boiler/barrel", BoilerScenes::takeoff);
+
+        helper.forComponents(BoilerBlocks.STEAM_TAKEOFF.getId())
+                .addStoryBoard("boiler/barrel", BoilerScenes::takeoff)
+                .addStoryBoard("boiler/barrel", BoilerScenes::pressure);
+
+        helper.forComponents(BoilerBlocks.SMART_SAFETY_VALVE.getId(),
+                        BoilerBlocks.VALVE_ITEM.getId())
+                .addStoryBoard("boiler/barrel", BoilerScenes::pressure)
+                .addStoryBoard("boiler/barrel", BoilerScenes::failure);
+
+        helper.forComponents(BoilerBlocks.LOCOMOTIVE_GAUGE.getId())
+                .addStoryBoard("boiler/barrel", BoilerScenes::gauge)
+                .addStoryBoard("panel/panel", PanelScenes::parts);
+
+        helper.forComponents(BoilerBlocks.GAUGE_BUTTON_ITEM.getId(), BoilerBlocks.GAUGE_LEVER_ITEM.getId(),
+                        BoilerBlocks.GAUGE_SWITCH_ITEM.getId(), BoilerBlocks.GAUGE_REVERSER_ITEM.getId())
+                .addStoryBoard("panel/panel", PanelScenes::parts)
+                .addStoryBoard("panel/panel", PanelScenes::controls)
+                .addStoryBoard("panel/panel", PanelScenes::gui)
+                .addStoryBoard("panel/panel", PanelScenes::look)
+                .addStoryBoard("panel/panel", PanelScenes::glass)
+                .addStoryBoard("panel/panel_targets", PanelScenes::targets);
+
+        helper.forComponents(DashboardBlocks.DASHBOARDS.values().stream().map(DeferredHolder::getId).toList())
+                .addStoryBoard("dashboard/dashboard", DashboardScenes::desk);
+    }
+
+    private static List<ResourceLocation> bodyIds() {
+        List<ResourceLocation> ids = new ArrayList<>();
+        ids.add(com.lycoris.loconautics.registry.LoconauticsRegistries.SMOKESTACK.getId());
+        BoilerBlocks.DYED_BODIES.values().forEach(byColor -> byColor.values().forEach(block -> ids.add(block.getId())));
+        BoilerBlocks.EXTRA_BODIES.values().forEach(byKind -> byKind.values().forEach(block -> ids.add(block.getId())));
+        return ids;
+    }
+}

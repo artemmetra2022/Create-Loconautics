@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "loconautics:block/bearingaxle/bogey/top",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "loconautics:block/bearingaxle/bogey/top"
+    }
+  }
+}

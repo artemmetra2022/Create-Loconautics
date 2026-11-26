@@ -1,0 +1,121 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "aspect": "red",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_red"
+      }
+    },
+    {
+      "when": {
+        "aspect": "red",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_red",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "aspect": "red",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_red",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "aspect": "red",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_red",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow"
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "aspect": "green",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_green"
+      }
+    },
+    {
+      "when": {
+        "aspect": "green",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_green",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "aspect": "green",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_green",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "aspect": "green",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_green",
+        "y": 270
+      }
+    }
+  ]
+}

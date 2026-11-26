@@ -1,0 +1,61 @@
+name: Indev build
+run-name: Loconautics indev build (${{ github.sha }})
+
+on:
+  push:
+    branches: [ "indev" ]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: indev-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v5
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@11d4d83c63a6ce61b32d8a9c4faddbdb04fe9917 # v6
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
+
+    - name: Publish indev-latest
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        SHORT=$(git rev-parse --short HEAD)
+        VERSION=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
+        TAG="indev-${VERSION}-${SHORT}"
+        JARS=$(find build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print)
+        if gh release view "$TAG" >/dev/null 2>&1; then
+          for JAR in $JARS; do
+            ASSET=$(basename "$JAR")
+            if ! gh release view "$TAG" --json assets --jq '.assets[].name' | grep -Fxq "$ASSET"; then
+              gh release upload "$TAG" "$JAR"
+            fi
+          done
+        else
+          gh release create "$TAG" $JARS \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Loconautics ${VERSION} (${SHORT})" \
+            --notes "Versioned indev build ${VERSION} at ${SHORT}. Previous releases are preserved. Unstable, back up your worlds."
+        fi

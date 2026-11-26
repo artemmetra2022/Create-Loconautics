@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "loconautics:block/speedometer"
+    },
+    "facing=east": {
+      "model": "loconautics:block/speedometer",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "loconautics:block/speedometer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "loconautics:block/speedometer",
+      "y": 270
+    }
+  }
+}

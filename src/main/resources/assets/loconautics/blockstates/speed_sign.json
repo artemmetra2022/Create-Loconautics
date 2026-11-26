@@ -1,0 +1,484 @@
+{
+  "variants": {
+    "facing=north,half=lower,speed=0": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=0": {
+      "model": "loconautics:block/speed_sign/upper_10"
+    },
+    "facing=north,half=lower,speed=1": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=1": {
+      "model": "loconautics:block/speed_sign/upper_20"
+    },
+    "facing=north,half=lower,speed=2": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=2": {
+      "model": "loconautics:block/speed_sign/upper_25"
+    },
+    "facing=north,half=lower,speed=3": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=3": {
+      "model": "loconautics:block/speed_sign/upper_30"
+    },
+    "facing=north,half=lower,speed=4": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=4": {
+      "model": "loconautics:block/speed_sign/upper_40"
+    },
+    "facing=north,half=lower,speed=5": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=5": {
+      "model": "loconautics:block/speed_sign/upper_50"
+    },
+    "facing=north,half=lower,speed=6": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=6": {
+      "model": "loconautics:block/speed_sign/upper_60"
+    },
+    "facing=north,half=lower,speed=7": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=7": {
+      "model": "loconautics:block/speed_sign/upper_70"
+    },
+    "facing=north,half=lower,speed=8": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=8": {
+      "model": "loconautics:block/speed_sign/upper_80"
+    },
+    "facing=north,half=lower,speed=9": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=9": {
+      "model": "loconautics:block/speed_sign/upper_90"
+    },
+    "facing=north,half=lower,speed=10": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=10": {
+      "model": "loconautics:block/speed_sign/upper_100"
+    },
+    "facing=north,half=lower,speed=11": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=11": {
+      "model": "loconautics:block/speed_sign/upper_110"
+    },
+    "facing=north,half=lower,speed=12": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=12": {
+      "model": "loconautics:block/speed_sign/upper_120"
+    },
+    "facing=north,half=lower,speed=13": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=13": {
+      "model": "loconautics:block/speed_sign/upper_140"
+    },
+    "facing=north,half=lower,speed=14": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=14": {
+      "model": "loconautics:block/speed_sign/upper_160"
+    },
+    "facing=north,half=lower,speed=15": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper,speed=15": {
+      "model": "loconautics:block/speed_sign/upper_180"
+    },
+    "facing=east,half=lower,speed=0": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=0": {
+      "model": "loconautics:block/speed_sign/upper_10",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=1": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=1": {
+      "model": "loconautics:block/speed_sign/upper_20",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=2": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=2": {
+      "model": "loconautics:block/speed_sign/upper_25",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=3": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=3": {
+      "model": "loconautics:block/speed_sign/upper_30",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=4": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=4": {
+      "model": "loconautics:block/speed_sign/upper_40",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=5": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=5": {
+      "model": "loconautics:block/speed_sign/upper_50",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=6": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=6": {
+      "model": "loconautics:block/speed_sign/upper_60",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=7": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=7": {
+      "model": "loconautics:block/speed_sign/upper_70",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=8": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=8": {
+      "model": "loconautics:block/speed_sign/upper_80",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=9": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=9": {
+      "model": "loconautics:block/speed_sign/upper_90",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=10": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=10": {
+      "model": "loconautics:block/speed_sign/upper_100",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=11": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=11": {
+      "model": "loconautics:block/speed_sign/upper_110",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=12": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=12": {
+      "model": "loconautics:block/speed_sign/upper_120",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=13": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=13": {
+      "model": "loconautics:block/speed_sign/upper_140",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=14": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=14": {
+      "model": "loconautics:block/speed_sign/upper_160",
+      "y": 90
+    },
+    "facing=east,half=lower,speed=15": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper,speed=15": {
+      "model": "loconautics:block/speed_sign/upper_180",
+      "y": 90
+    },
+    "facing=south,half=lower,speed=0": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=0": {
+      "model": "loconautics:block/speed_sign/upper_10",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=1": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=1": {
+      "model": "loconautics:block/speed_sign/upper_20",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=2": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=2": {
+      "model": "loconautics:block/speed_sign/upper_25",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=3": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=3": {
+      "model": "loconautics:block/speed_sign/upper_30",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=4": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=4": {
+      "model": "loconautics:block/speed_sign/upper_40",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=5": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=5": {
+      "model": "loconautics:block/speed_sign/upper_50",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=6": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=6": {
+      "model": "loconautics:block/speed_sign/upper_60",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=7": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=7": {
+      "model": "loconautics:block/speed_sign/upper_70",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=8": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=8": {
+      "model": "loconautics:block/speed_sign/upper_80",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=9": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=9": {
+      "model": "loconautics:block/speed_sign/upper_90",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=10": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=10": {
+      "model": "loconautics:block/speed_sign/upper_100",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=11": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=11": {
+      "model": "loconautics:block/speed_sign/upper_110",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=12": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=12": {
+      "model": "loconautics:block/speed_sign/upper_120",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=13": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=13": {
+      "model": "loconautics:block/speed_sign/upper_140",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=14": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=14": {
+      "model": "loconautics:block/speed_sign/upper_160",
+      "y": 180
+    },
+    "facing=south,half=lower,speed=15": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper,speed=15": {
+      "model": "loconautics:block/speed_sign/upper_180",
+      "y": 180
+    },
+    "facing=west,half=lower,speed=0": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=0": {
+      "model": "loconautics:block/speed_sign/upper_10",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=1": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=1": {
+      "model": "loconautics:block/speed_sign/upper_20",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=2": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=2": {
+      "model": "loconautics:block/speed_sign/upper_25",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=3": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=3": {
+      "model": "loconautics:block/speed_sign/upper_30",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=4": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=4": {
+      "model": "loconautics:block/speed_sign/upper_40",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=5": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=5": {
+      "model": "loconautics:block/speed_sign/upper_50",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=6": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=6": {
+      "model": "loconautics:block/speed_sign/upper_60",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=7": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=7": {
+      "model": "loconautics:block/speed_sign/upper_70",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=8": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=8": {
+      "model": "loconautics:block/speed_sign/upper_80",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=9": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=9": {
+      "model": "loconautics:block/speed_sign/upper_90",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=10": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=10": {
+      "model": "loconautics:block/speed_sign/upper_100",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=11": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=11": {
+      "model": "loconautics:block/speed_sign/upper_110",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=12": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=12": {
+      "model": "loconautics:block/speed_sign/upper_120",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=13": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=13": {
+      "model": "loconautics:block/speed_sign/upper_140",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=14": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=14": {
+      "model": "loconautics:block/speed_sign/upper_160",
+      "y": 270
+    },
+    "facing=west,half=lower,speed=15": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper,speed=15": {
+      "model": "loconautics:block/speed_sign/upper_180",
+      "y": 270
+    }
+  }
+}

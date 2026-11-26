@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "part=base,facing=north": {
+      "model": "loconautics:block/overhead/mast_base"
+    },
+    "part=base,facing=east": {
+      "model": "loconautics:block/overhead/mast_base",
+      "y": 90
+    },
+    "part=base,facing=south": {
+      "model": "loconautics:block/overhead/mast_base",
+      "y": 180
+    },
+    "part=base,facing=west": {
+      "model": "loconautics:block/overhead/mast_base",
+      "y": 270
+    },
+    "part=shaft,facing=north": {
+      "model": "loconautics:block/overhead/mast_shaft"
+    },
+    "part=shaft,facing=east": {
+      "model": "loconautics:block/overhead/mast_shaft",
+      "y": 90
+    },
+    "part=shaft,facing=south": {
+      "model": "loconautics:block/overhead/mast_shaft",
+      "y": 180
+    },
+    "part=shaft,facing=west": {
+      "model": "loconautics:block/overhead/mast_shaft",
+      "y": 270
+    },
+    "part=head,facing=north": {
+      "model": "loconautics:block/overhead/mast_head"
+    },
+    "part=head,facing=east": {
+      "model": "loconautics:block/overhead/mast_head",
+      "y": 90
+    },
+    "part=head,facing=south": {
+      "model": "loconautics:block/overhead/mast_head",
+      "y": 180
+    },
+    "part=head,facing=west": {
+      "model": "loconautics:block/overhead/mast_head",
+      "y": 270
+    }
+  }
+}
