@@ -1,9 +1,11 @@
 package com.lycoris.loconautics.network.packets.dispatcher;
 
 import com.lycoris.loconautics.LoconauticsConstants;
+import com.lycoris.loconautics.content.dispatcher.DispatcherEventEntry;
+import com.lycoris.loconautics.content.dispatcher.DispatcherScreen;
+import com.lycoris.loconautics.content.dispatcher.DispatcherSectionEntry;
 import com.lycoris.loconautics.content.dispatcher.DispatcherService;
 import com.lycoris.loconautics.content.dispatcher.DispatcherTrainEntry;
-import com.lycoris.loconautics.content.dispatcher.DispatcherScreen;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,10 +18,14 @@ import java.util.List;
 import java.util.UUID;
 
 public record DispatcherSnapshotPacket(BlockPos pos, List<DispatcherTrainEntry> trains,
+                                       List<DispatcherSectionEntry> sections,
+                                       List<DispatcherEventEntry> events,
                                        int occupiedSections, int reservedSections,
                                        int conflicts, int totalSections) implements CustomPacketPayload {
 
     public static final int MAX_TRAINS = 256;
+    public static final int MAX_SECTIONS = 64;
+    public static final int MAX_EVENTS = 48;
     public static final CustomPacketPayload.Type<DispatcherSnapshotPacket> TYPE =
             new CustomPacketPayload.Type<>(LoconauticsConstants.id("dispatcher_snapshot"));
 
@@ -42,6 +48,23 @@ public record DispatcherSnapshotPacket(BlockPos pos, List<DispatcherTrainEntry> 
             buf.writeVarInt(entry.occupiedSections());
             buf.writeVarInt(entry.reservedSections());
             buf.writeBoolean(entry.dispatcherHeld());
+        }
+        buf.writeVarInt(packet.sections.size());
+        for (DispatcherSectionEntry section : packet.sections) {
+            buf.writeUUID(section.id());
+            buf.writeVarInt(section.state());
+            buf.writeUtf(section.trains(), 96);
+            buf.writeUtf(section.dimension(), 128);
+            buf.writeInt(section.x());
+            buf.writeInt(section.y());
+            buf.writeInt(section.z());
+            buf.writeBoolean(section.held());
+        }
+        buf.writeVarInt(packet.events.size());
+        for (DispatcherEventEntry event : packet.events) {
+            buf.writeVarInt(event.kind());
+            buf.writeUtf(event.subject(), 96);
+            buf.writeVarInt(event.ageTicks());
         }
         buf.writeVarInt(packet.occupiedSections);
         buf.writeVarInt(packet.reservedSections);
@@ -69,7 +92,26 @@ public record DispatcherSnapshotPacket(BlockPos pos, List<DispatcherTrainEntry> 
             entries.add(new DispatcherTrainEntry(id, type, name, dimension, x, y, z, speed,
                     state, occupied, reserved, held));
         }
-        return new DispatcherSnapshotPacket(pos, List.copyOf(entries),
+        int sectionCount = buf.readVarInt();
+        if (sectionCount < 0 || sectionCount > MAX_SECTIONS) {
+            throw new DecoderException("dispatcher section count " + sectionCount);
+        }
+        List<DispatcherSectionEntry> sections = new ArrayList<>(sectionCount);
+        for (int i = 0; i < sectionCount; i++) {
+            sections.add(new DispatcherSectionEntry(buf.readUUID(), buf.readVarInt(), buf.readUtf(96),
+                    buf.readUtf(128), buf.readInt(), buf.readInt(), buf.readInt(), buf.readBoolean()));
+        }
+        int eventCount = buf.readVarInt();
+        if (eventCount < 0 || eventCount > MAX_EVENTS) {
+            throw new DecoderException("dispatcher event count " + eventCount);
+        }
+        List<DispatcherEventEntry> events = new ArrayList<>(eventCount);
+        for (int i = 0; i < eventCount; i++) {
+            events.add(new DispatcherEventEntry(nonNegative(buf.readVarInt()), buf.readUtf(96),
+                    nonNegative(buf.readVarInt())));
+        }
+        return new DispatcherSnapshotPacket(pos, List.copyOf(entries), List.copyOf(sections),
+                List.copyOf(events),
                 nonNegative(buf.readVarInt()), nonNegative(buf.readVarInt()),
                 nonNegative(buf.readVarInt()), nonNegative(buf.readVarInt()));
     }
@@ -82,7 +124,11 @@ public record DispatcherSnapshotPacket(BlockPos pos, List<DispatcherTrainEntry> 
     public static DispatcherSnapshotPacket of(BlockPos pos, DispatcherService.Snapshot snapshot) {
         List<DispatcherTrainEntry> entries = snapshot.trains().size() > MAX_TRAINS
                 ? snapshot.trains().subList(0, MAX_TRAINS) : snapshot.trains();
-        return new DispatcherSnapshotPacket(pos, entries, snapshot.occupiedSections(),
+        List<DispatcherSectionEntry> sections = snapshot.sections().size() > MAX_SECTIONS
+                ? snapshot.sections().subList(0, MAX_SECTIONS) : snapshot.sections();
+        List<DispatcherEventEntry> events = snapshot.events().size() > MAX_EVENTS
+                ? snapshot.events().subList(0, MAX_EVENTS) : snapshot.events();
+        return new DispatcherSnapshotPacket(pos, entries, sections, events, snapshot.occupiedSections(),
                 snapshot.reservedSections(), snapshot.conflicts(), snapshot.totalSections());
     }
 
