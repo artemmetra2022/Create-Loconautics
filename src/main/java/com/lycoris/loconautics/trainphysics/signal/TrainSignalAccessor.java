@@ -7,6 +7,7 @@ import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 
 public final class TrainSignalAccessor {
@@ -57,6 +58,17 @@ public final class TrainSignalAccessor {
     public static double gapToAnySignal(SableTrain train) {
         SignalAhead ahead = nextSignal(train);
         return ahead == null ? Double.NaN : ahead.distance();
+    }
+
+    public static boolean isDanger(SignalAhead ahead) {
+        if (ahead == null || ahead.signal() == null) {
+            return false;
+        }
+        if (ahead.signal().isForcedRed(ahead.primary())) {
+            return true;
+        }
+        SignalState state = ahead.signal().cachedStates.get(ahead.primary());
+        return state == null || state == SignalState.RED || state == SignalState.INVALID;
     }
 
     public static SignalAhead nextSignal(SableTrain train) {
