@@ -10,8 +10,8 @@ public enum SafetyDevice {
     /** the reverser says forward and the train rolls back (or the other way round): emergency brake */
     ANTI_ROLLBACK("anti_rollback", true),
 
-    /** placeholder, will brake for a red signal once signals can be read from the carriage */
-    RED_SIGNAL("red_signal", false),
+    /** nose reaches or jumps past a red signal while still moving: emergency brake */
+    RED_SIGNAL("red_signal", true),
 
     /** the speedometer reads more than the set limit: emergency brake */
     OVERSPEED("overspeed", true),
