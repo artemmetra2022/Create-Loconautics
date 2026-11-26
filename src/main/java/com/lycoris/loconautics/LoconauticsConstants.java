@@ -16,7 +16,7 @@ public final class LoconauticsConstants {
 
     public static final Logger TRACE = LoggerFactory.getLogger("com.lycoris.loconautics.trace");
 
-    public static final int NETWORK_VERSION = 86;
+    public static final int NETWORK_VERSION = 88;
 
     public static final String CARRIAGE_NAME_INFIX = " Carriage ";
 
