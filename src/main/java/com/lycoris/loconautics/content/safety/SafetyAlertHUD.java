@@ -66,6 +66,8 @@ public final class SafetyAlertHUD {
                     Component.translatable("loconautics.safety.alert.overspeed");
             case SafetyBlockEntity.ALARM_DERAILMENT ->
                     Component.translatable("loconautics.safety.alert.derailment");
+            case SafetyBlockEntity.ALARM_RED_SIGNAL ->
+                    Component.translatable("loconautics.safety.alert.red_signal");
             default -> null;
         };
     }
