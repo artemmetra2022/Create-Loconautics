@@ -79,7 +79,10 @@ public final class TrainBrakes {
         double air = airBrakeScale(sub);
         boolean airEmergency = airEmergency(sub);
         double soft = Math.max(pipe, train.brakePulseActive() ? 1.0 : 0.0);
-        double scale = Math.max(handScale, Math.max(soft, air));
+        // The dispatcher uses a graduated service-brake demand. It never sets brakeHold
+        // while the train is moving, so the consist decelerates through the normal brake path.
+        double dispatch = com.lycoris.loconautics.content.dispatcher.DispatcherTrainControl.brakeDemand(train.id());
+        double scale = Math.max(dispatch, Math.max(handScale, Math.max(soft, air)));
         TripleValveBlockEntity padValve = brakePadValve(sub);
         if (padValve != null) {
             padValve.tickBrakePadCondition(Math.abs(train.speed()), scale);
@@ -92,7 +95,9 @@ public final class TrainBrakes {
         // the handbrake never cuts drive, the engine pulls against it and its drag shows up as axle stress instead
         // Pneumatic emergency braking must follow the cylinder pressure ramp. A brake hold here
         // would replace that ramp with the full mechanical stop force and make notch 15 instant.
-        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub));
+        boolean dispatcherAtStandstill = dispatch > 0.0 && Math.abs(train.speed()) <= 0.001;
+        train.setBrakeHold(consist.hold() || train.brakePulseActive() || safetyStop(sub)
+                || dispatcherAtStandstill);
         train.setBrakeHard(locked || airEmergency);
     }
 

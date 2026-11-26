@@ -122,6 +122,7 @@
     "loconautics:dead_end_sign",
     "loconautics:gradient_sign",
     "loconautics:station_border_sign",
-    "loconautics:rail_signal"
+    "loconautics:rail_signal",
+    "loconautics:dispatcher"
   ]
 }

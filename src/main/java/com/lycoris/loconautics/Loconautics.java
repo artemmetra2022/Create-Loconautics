@@ -264,6 +264,7 @@ public final class Loconautics {
         runStopHook("CreateTrainShadow", com.lycoris.loconautics.trainphysics.state.CreateTrainShadow::clear);
         runStopHook("SableTrainDriver", com.lycoris.loconautics.trainphysics.drive.SableTrainDriver::clearAll);
         runStopHook("TrainResidency", com.lycoris.loconautics.trainphysics.state.TrainResidency::clear);
+        runStopHook("DispatcherTrainControl", com.lycoris.loconautics.content.dispatcher.DispatcherTrainControl::clear);
     }
 
     private void runStopHook(String name, Runnable hook) {

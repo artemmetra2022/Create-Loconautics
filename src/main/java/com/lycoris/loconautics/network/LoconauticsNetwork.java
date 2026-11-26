@@ -197,6 +197,16 @@ public final class LoconauticsNetwork {
         r.playToClient(com.lycoris.loconautics.network.packets.schedule.BlazeConductorHatPacket.TYPE,
                 com.lycoris.loconautics.network.packets.schedule.BlazeConductorHatPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.schedule.BlazeConductorHatPacket::handle);
+
+        r.playToServer(com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket.TYPE,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket::handle);
+        r.playToServer(com.lycoris.loconautics.network.packets.dispatcher.DispatcherCommandPacket.TYPE,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherCommandPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherCommandPacket::handle);
+        r.playToClient(com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket.TYPE,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket::handle);
     }
 
     public static void sendMount(ServerPlayer player, boolean mounted, BlockPos pos) {
@@ -209,5 +219,6 @@ public final class LoconauticsNetwork {
 
     public static void sendDismount(BlockPos pos) {
         CatnipServices.NETWORK.sendToServer(new AnalogControllerDismountPacket(pos));
+
     }
 }

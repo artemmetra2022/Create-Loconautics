@@ -387,6 +387,19 @@ public final class LoconauticsRegistries {
                     RAIL_SIGNAL.get(), new Item.Properties().stacksTo(64),
                     com.simibubi.create.content.trains.graph.EdgePointType.SIGNAL));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.dispatcher.DispatcherBlock>
+            DISPATCHER = BLOCKS.register("dispatcher", () ->
+            new com.lycoris.loconautics.content.dispatcher.DispatcherBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(3.5f)
+                            .sound(SoundType.NETHERITE_BLOCK)
+                            .requiresCorrectToolForDrops()
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> DISPATCHER_ITEM = ITEMS.register("dispatcher", () ->
+            new BlockItem(DISPATCHER.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<
             com.lycoris.loconautics.content.railsignal.RailwaySignalBlockEntity>>
             RAIL_SIGNAL_BE = BLOCK_ENTITIES.register("rail_signal", () ->
@@ -806,6 +819,7 @@ public final class LoconauticsRegistries {
                         output.accept(com.simibubi.create.AllBlocks.TRACK_STATION.asStack());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_SIGNAL.asStack());
                         output.accept(RAIL_SIGNAL_ITEM.get());
+                        output.accept(DISPATCHER_ITEM.get());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_OBSERVER.asStack());
                         output.accept(com.simibubi.create.AllBlocks.PACKAGE_POSTBOXES
                                 .get(net.minecraft.world.item.DyeColor.RED).asStack());

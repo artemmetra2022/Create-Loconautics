@@ -111,6 +111,49 @@ public final class TrainSignals {
         return out;
     }
 
+    public static Set<UUID> reservedGroupsOf(UUID trainId) {
+        Set<UUID> out = new HashSet<>();
+        RESERVED.forEach((groupId, reservation) -> {
+            if (reservation.train().equals(trainId)) out.add(groupId);
+        });
+        PREVIOUS.forEach((groupId, reservation) -> {
+            if (reservation.train().equals(trainId)) out.add(groupId);
+        });
+        return out;
+    }
+
+    public static int occupiedSectionCount() {
+        return (int) OCCUPANTS.values().stream().filter(set -> !set.isEmpty()).count();
+    }
+
+    public static int reservedSectionCount() {
+        return RESERVED.size();
+    }
+
+    public static int conflictSectionCount() {
+        int conflicts = 0;
+        for (Map.Entry<UUID, Set<UUID>> entry : OCCUPANTS.entrySet()) {
+            Set<UUID> occupants = entry.getValue();
+            Reservation reservation = reservationOf(entry.getKey());
+            if (occupants.size() > 1 || reservation != null && !occupants.contains(reservation.train())) {
+                conflicts++;
+            }
+        }
+        return conflicts;
+    }
+
+    public static int trackedSectionCount() {
+        return trackedGroups().size();
+    }
+
+    /** Returns the section IDs currently known to the Loconautics signal tracker. */
+    public static Set<UUID> trackedGroups() {
+        Set<UUID> groups = new HashSet<>(OCCUPANTS.keySet());
+        groups.addAll(RESERVED.keySet());
+        groups.addAll(PREVIOUS.keySet());
+        return Set.copyOf(groups);
+    }
+
     public static boolean occupiedByOther(UUID groupId, UUID trainId) {
         Set<UUID> trains = OCCUPANTS.get(groupId);
         if (trains == null) {
