@@ -3,6 +3,7 @@ package com.lycoris.loconautics.content.dispatcher;
 import com.lycoris.loconautics.foundation.ui.NoBlurScreen;
 import com.lycoris.loconautics.network.packets.dispatcher.DispatcherCommandPacket;
 import com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket;
+import com.lycoris.loconautics.network.packets.dispatcher.DispatcherSignalPacket;
 import com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,12 +13,11 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-/** Live dispatcher console. All train state and commands are validated on the server. */
+/** Live dispatcher console. Trains, block sections, signal hold and event journal. */
 public final class DispatcherScreen extends NoBlurScreen {
 
     private static final int WIDTH = 520;
@@ -28,7 +28,9 @@ public final class DispatcherScreen extends NoBlurScreen {
     private static DispatcherScreen active;
 
     private final BlockPos pos;
-    private List<DispatcherTrainEntry> trains;
+    private List<DispatcherTrainEntry> trains = List.of();
+    private List<DispatcherSectionEntry> sections = List.of();
+    private List<DispatcherEventEntry> events = List.of();
     private int occupiedSections;
     private int reservedSections;
     private int conflicts;
@@ -36,7 +38,10 @@ public final class DispatcherScreen extends NoBlurScreen {
     private int page = PAGE_TRAINS;
     private int scroll;
     private UUID selectedId;
+    private UUID selectedSectionId;
     private int refreshTicks;
+    private Button holdButton;
+    private Button releaseButton;
 
     private DispatcherScreen(DispatcherSnapshotPacket packet) {
         super(Component.translatable("gui.loconautics.dispatcher.title"));
@@ -56,6 +61,8 @@ public final class DispatcherScreen extends NoBlurScreen {
 
     private void accept(DispatcherSnapshotPacket packet) {
         trains = new ArrayList<>(packet.trains());
+        sections = new ArrayList<>(packet.sections());
+        events = new ArrayList<>(packet.events());
         occupiedSections = packet.occupiedSections();
         reservedSections = packet.reservedSections();
         conflicts = packet.conflicts();
@@ -63,8 +70,14 @@ public final class DispatcherScreen extends NoBlurScreen {
         if (selectedId != null && trains.stream().noneMatch(t -> t.id().equals(selectedId))) {
             selectedId = null;
         }
+        if (selectedSectionId != null && sections.stream().noneMatch(s -> s.id().equals(selectedSectionId))) {
+            selectedSectionId = null;
+        }
         if (selectedId == null && !trains.isEmpty()) selectedId = trains.get(0).id();
-        scroll = Math.min(scroll, Math.max(0, visibleTrains().size() - 8));
+        if (selectedSectionId == null && !sections.isEmpty()) selectedSectionId = sections.get(0).id();
+        scroll = Math.min(scroll, page == PAGE_SECTIONS
+                ? Math.max(0, sections.size() - 7)
+                : Math.max(0, trains.size() - 8));
     }
 
     @Override
@@ -73,22 +86,22 @@ public final class DispatcherScreen extends NoBlurScreen {
         int left = (width - WIDTH) / 2;
         int top = (height - HEIGHT) / 2;
         addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.tab_trains"),
-                        button -> page = PAGE_TRAINS)
+                        button -> { page = PAGE_TRAINS; scroll = 0; })
                 .bounds(left + 14, top + 39, 98, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.tab_sections"),
-                        button -> page = PAGE_SECTIONS)
+                        button -> { page = PAGE_SECTIONS; scroll = 0; })
                 .bounds(left + 116, top + 39, 98, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.tab_events"),
-                        button -> page = PAGE_EVENTS)
+                        button -> { page = PAGE_EVENTS; scroll = 0; })
                 .bounds(left + 218, top + 39, 98, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.refresh"),
                         button -> requestRefresh())
                 .bounds(left + WIDTH - 116, top + 39, 102, 20).build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.hold"),
-                        button -> sendHold(true))
+        holdButton = addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.hold"),
+                        button -> sendCommand(true))
                 .bounds(left + 14, top + HEIGHT - 31, 108, 20).build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.release"),
-                        button -> sendHold(false))
+        releaseButton = addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.release"),
+                        button -> sendCommand(false))
                 .bounds(left + 128, top + HEIGHT - 31, 108, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.loconautics.dispatcher.close"),
                         button -> onClose())
@@ -101,7 +114,13 @@ public final class DispatcherScreen extends NoBlurScreen {
         }
     }
 
-    private void sendHold(boolean hold) {
+    private void sendCommand(boolean hold) {
+        if (page == PAGE_SECTIONS) {
+            DispatcherSectionEntry selected = selectedSection();
+            if (selected == null) return;
+            PacketDistributor.sendToServer(new DispatcherSignalPacket(pos, selected.id(), hold));
+            return;
+        }
         DispatcherTrainEntry selected = selectedTrain();
         if (selected == null) return;
         if (!"loconautics".equals(selected.type())) {
@@ -112,13 +131,14 @@ public final class DispatcherScreen extends NoBlurScreen {
         PacketDistributor.sendToServer(new DispatcherCommandPacket(pos, selected.id(), hold));
     }
 
+    private DispatcherSectionEntry selectedSection() {
+        if (selectedSectionId == null) return null;
+        return sections.stream().filter(s -> s.id().equals(selectedSectionId)).findFirst().orElse(null);
+    }
+
     private DispatcherTrainEntry selectedTrain() {
         if (selectedId == null) return null;
         return trains.stream().filter(t -> t.id().equals(selectedId)).findFirst().orElse(null);
-    }
-
-    private List<DispatcherTrainEntry> visibleTrains() {
-        return trains == null ? List.of() : trains;
     }
 
     @Override
@@ -151,18 +171,14 @@ public final class DispatcherScreen extends NoBlurScreen {
         graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.live"),
                 left + WIDTH - 124, top + 17, 0xFF75D5A4, false);
 
-        renderTabContent(graphics, left, top, mouseX, mouseY);
+        if (page == PAGE_TRAINS) renderTrains(graphics, left, top);
+        else if (page == PAGE_SECTIONS) renderSections(graphics, left, top);
+        else renderEvents(graphics, left, top);
         renderSelectedFooter(graphics, left, top);
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderTabContent(GuiGraphics graphics, int left, int top, int mouseX, int mouseY) {
-        if (page == PAGE_TRAINS) renderTrains(graphics, left, top, mouseX, mouseY);
-        else if (page == PAGE_SECTIONS) renderSections(graphics, left, top);
-        else renderEvents(graphics, left, top);
-    }
-
-    private void renderTrains(GuiGraphics graphics, int left, int top, int mouseX, int mouseY) {
+    private void renderTrains(GuiGraphics graphics, int left, int top) {
         int x = left + 14;
         int y = top + 67;
         graphics.fill(x, y, left + WIDTH - 14, y + 18, 0xFF253744);
@@ -171,7 +187,7 @@ public final class DispatcherScreen extends NoBlurScreen {
         graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.col_position"), left + 338, y + 5, 0xFF8FAAB9, false);
         graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.col_state"), left + 422, y + 5, 0xFF8FAAB9, false);
 
-        List<DispatcherTrainEntry> rows = visibleTrains();
+        List<DispatcherTrainEntry> rows = trains;
         int visible = Math.min(8, Math.max(0, rows.size() - scroll));
         for (int i = 0; i < visible; i++) {
             DispatcherTrainEntry train = rows.get(scroll + i);
@@ -185,69 +201,62 @@ public final class DispatcherScreen extends NoBlurScreen {
             graphics.drawString(font, truncate(train.name(), 21), x + 54, rowY + 5, 0xFFEAF2F6, false);
             String speed = String.format(Locale.ROOT, "%.1f km/h", Math.abs(train.speed()) * 3.6);
             graphics.drawString(font, speed, left + 270, rowY + 5, 0xFFD6E6EC, false);
-            String location = train.x() + ", " + train.z();
-            graphics.drawString(font, location, left + 338, rowY + 5, 0xFFB8CBD4, false);
-            graphics.drawString(font, stateLabel(train.state()), left + 422, rowY + 5,
-                    stateColor(train.state()), false);
+            graphics.drawString(font, train.x() + ", " + train.z(), left + 338, rowY + 5, 0xFFB8CBD4, false);
+            graphics.drawString(font, stateLabel(train.state()), left + 422, rowY + 5, stateColor(train.state()), false);
         }
         if (rows.isEmpty()) {
             graphics.drawCenteredString(font, Component.translatable("gui.loconautics.dispatcher.no_trains"),
                     left + WIDTH / 2, y + 92, 0xFF9DB0BA);
         }
-        String pageCount = rows.isEmpty() ? "0" : (scroll + 1) + "–" + Math.min(rows.size(), scroll + 8) + " / " + rows.size();
-        graphics.drawString(font, pageCount, left + WIDTH - 82, top + 242, 0xFF8FAAB9, false);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.scroll_hint"),
-                left + 15, top + 242, 0xFF78909D, false);
     }
 
     private void renderSections(GuiGraphics graphics, int left, int top) {
-        int x = left + 16;
-        int y = top + 78;
+        int x = left + 14;
+        int y = top + 67;
+        graphics.fill(x, y, left + WIDTH - 14, y + 18, 0xFF253744);
+        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.col_section"), x + 7, y + 5, 0xFF8FAAB9, false);
+        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.col_state"), left + 200, y + 5, 0xFF8FAAB9, false);
+        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.col_trains"), left + 300, y + 5, 0xFF8FAAB9, false);
+
+        int visible = Math.min(7, Math.max(0, sections.size() - scroll));
+        for (int i = 0; i < visible; i++) {
+            DispatcherSectionEntry section = sections.get(scroll + i);
+            int rowY = y + 20 + i * 19;
+            boolean selected = section.id().equals(selectedSectionId);
+            int bg = selected ? 0xFF344E5E : (i % 2 == 0 ? 0xFF1D2B35 : 0xFF202F3A);
+            graphics.fill(x, rowY, left + WIDTH - 14, rowY + 18, bg);
+            String id = section.id().toString().substring(0, 8);
+            graphics.drawString(font, id, x + 5, rowY + 5, 0xFFEAF2F6, false);
+            graphics.drawString(font, sectionStateLabel(section.state()), left + 200, rowY + 5,
+                    sectionStateColor(section.state()), false);
+            graphics.drawString(font, truncate(section.trains(), 24), left + 300, rowY + 5, 0xFFB8CBD4, false);
+        }
+        if (sections.isEmpty()) {
+            graphics.drawCenteredString(font, Component.translatable("gui.loconautics.dispatcher.no_sections"),
+                    left + WIDTH / 2, y + 92, 0xFF9DB0BA);
+        }
         graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_total", totalSections),
-                x, y, 0xFFEAF2F6, false);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_occupied", occupiedSections),
-                x, y + 26, 0xFFFFC66D, false);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_reserved", reservedSections),
-                x, y + 52, 0xFF79C8E5, false);
-        int conflictColor = conflicts > 0 ? 0xFFFF6464 : 0xFF69D49A;
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_conflicts", conflicts),
-                x, y + 78, conflictColor, false);
-        graphics.fill(x, y + 112, left + WIDTH - 16, y + 113, 0xFF3A4D59);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_info_1"),
-                x, y + 126, 0xFFB8C9D1, false);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_info_2"),
-                x, y + 142, 0xFFB8C9D1, false);
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.sections_info_3"),
-                x, y + 158, 0xFFB8C9D1, false);
+                left + 14, top + 242, 0xFF8FAAB9, false);
     }
 
     private void renderEvents(GuiGraphics graphics, int left, int top) {
         int x = left + 16;
         int y = top + 76;
         int count = 0;
-        if (conflicts > 0) {
-            drawEvent(graphics, x, y + count++ * 23, 0xFFFF6060,
-                    Component.translatable("gui.loconautics.dispatcher.event_conflicts", conflicts));
-        }
-        for (DispatcherTrainEntry train : visibleTrains()) {
-            if (count >= 7) break;
-            if (train.state() == DispatcherTrainEntry.DERAILED) {
-                drawEvent(graphics, x, y + count++ * 23, 0xFFFF6060,
-                        Component.translatable("gui.loconautics.dispatcher.event_derailed", train.name()));
-            } else if (train.state() == DispatcherTrainEntry.WAITING) {
-                drawEvent(graphics, x, y + count++ * 23, 0xFFFFC66D,
-                        Component.translatable("gui.loconautics.dispatcher.event_waiting", train.name()));
-            } else if (train.dispatcherHeld()) {
-                drawEvent(graphics, x, y + count++ * 23, 0xFF75CDE0,
-                        Component.translatable("gui.loconautics.dispatcher.event_held", train.name()));
-            }
+        for (DispatcherEventEntry event : events) {
+            if (count >= 8) break;
+            int color = switch (event.kind()) {
+                case 1, 3 -> 0xFFFF6060;
+                case 2 -> 0xFFFFC66D;
+                default -> 0xFF75CDE0;
+            };
+            drawEvent(graphics, x, y + count++ * 23, color,
+                    Component.literal(event.subject() + " (" + (event.ageTicks() / 20) + "s)"));
         }
         if (count == 0) {
             graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.no_events"),
                     x, y, 0xFF75D5A4, false);
         }
-        graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.events_hint"),
-                x, top + 244, 0xFF78909D, false);
     }
 
     private void drawEvent(GuiGraphics graphics, int x, int y, int color, Component message) {
@@ -256,18 +265,23 @@ public final class DispatcherScreen extends NoBlurScreen {
     }
 
     private void renderSelectedFooter(GuiGraphics graphics, int left, int top) {
+        if (page == PAGE_SECTIONS) {
+            DispatcherSectionEntry selected = selectedSection();
+            if (selected != null) {
+                String details = selected.id().toString().substring(0, 8) + "  " + sectionStateLabel(selected.state());
+                if (selected.held()) details += "  HELD";
+                graphics.drawString(font, details, left + 250, top + HEIGHT - 24, 0xFF9EB4C0, false);
+            }
+            return;
+        }
         DispatcherTrainEntry selected = selectedTrain();
         if (selected == null || page != PAGE_TRAINS) {
             graphics.drawString(font, Component.translatable("gui.loconautics.dispatcher.command_scope"),
                     left + 250, top + HEIGHT - 24, 0xFF78909D, false);
             return;
         }
-        String dimension = selected.dimension();
-        String details = String.format(Locale.ROOT, "%s  %s  Y:%d  |  %d %s / %d %s",
-                selected.name(), dimension, selected.y(), selected.occupiedSections(),
-                Component.translatable("gui.loconautics.dispatcher.occupied_short").getString(),
-                selected.reservedSections(),
-                Component.translatable("gui.loconautics.dispatcher.reserved_short").getString());
+        String details = String.format(Locale.ROOT, "%s  %s  Y:%d",
+                selected.name(), selected.dimension(), selected.y());
         graphics.drawString(font, truncate(details, 48), left + 250, top + HEIGHT - 24, 0xFF9EB4C0, false);
     }
 
@@ -291,25 +305,51 @@ public final class DispatcherScreen extends NoBlurScreen {
         };
     }
 
+    private String sectionStateLabel(int state) {
+        return Component.translatable(switch (state) {
+            case DispatcherSectionEntry.OCCUPIED -> "gui.loconautics.dispatcher.section_occupied";
+            case DispatcherSectionEntry.RESERVED -> "gui.loconautics.dispatcher.section_reserved";
+            case DispatcherSectionEntry.CONFLICT -> "gui.loconautics.dispatcher.section_conflict";
+            default -> "gui.loconautics.dispatcher.section_clear";
+        }).getString();
+    }
+
+    private int sectionStateColor(int state) {
+        return switch (state) {
+            case DispatcherSectionEntry.OCCUPIED -> 0xFFFFC66D;
+            case DispatcherSectionEntry.RESERVED -> 0xFF79C8E5;
+            case DispatcherSectionEntry.CONFLICT -> 0xFFFF6464;
+            default -> 0xFF82D7A8;
+        };
+    }
+
     private String truncate(String value, int max) {
         if (value == null) return "";
         if (value.length() <= max) return value;
-        return value.substring(0, Math.max(1, max - 1)) + "…";
+        return value.substring(0, Math.max(1, max - 1)) + "\u2026";
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && page == PAGE_TRAINS) {
+        if (button == 0) {
             int left = (width - WIDTH) / 2;
             int top = (height - HEIGHT) / 2;
             int firstRowY = top + 87;
             if (mouseX >= left + 14 && mouseX <= left + WIDTH - 14
                     && mouseY >= firstRowY && mouseY < firstRowY + 8 * 19) {
                 int row = (int) ((mouseY - firstRowY) / 19.0);
-                int index = scroll + row;
-                if (index >= 0 && index < visibleTrains().size()) {
-                    selectedId = visibleTrains().get(index).id();
-                    return true;
+                if (page == PAGE_TRAINS) {
+                    int index = scroll + row;
+                    if (index >= 0 && index < trains.size()) {
+                        selectedId = trains.get(index).id();
+                        return true;
+                    }
+                } else if (page == PAGE_SECTIONS) {
+                    int index = scroll + row;
+                    if (index >= 0 && index < sections.size()) {
+                        selectedSectionId = sections.get(index).id();
+                        return true;
+                    }
                 }
             }
         }
@@ -319,7 +359,11 @@ public final class DispatcherScreen extends NoBlurScreen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (page == PAGE_TRAINS) {
-            scroll = Math.max(0, Math.min(Math.max(0, visibleTrains().size() - 8), scroll - (int) Math.signum(scrollY)));
+            scroll = Math.max(0, Math.min(Math.max(0, trains.size() - 8), scroll - (int) Math.signum(scrollY)));
+            return true;
+        }
+        if (page == PAGE_SECTIONS) {
+            scroll = Math.max(0, Math.min(Math.max(0, sections.size() - 7), scroll - (int) Math.signum(scrollY)));
             return true;
         }
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
