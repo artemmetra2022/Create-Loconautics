@@ -49,6 +49,8 @@ jobs:
           block_text = block.read_text(encoding="utf-8")
           block_text = block_text.replace("import com.lycoris.loconautics.network.packets.dispatcher.DispatcherService;\\n", "")
           block_text = block_text.replace("import com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket;\\n", "")
+          block_text = "\\n".join(line for line in block_text.splitlines()
+                                   if "network.packets.dispatcher.DispatcherService;" not in line) + "\\n"
           block.write_text(block_text, encoding="utf-8")
 
           screen = Path("src/main/java/com/lycoris/loconautics/content/dispatcher/DispatcherScreen.java")
