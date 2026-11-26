@@ -1,0 +1,72 @@
+name: Dispatcher Patch Build
+
+on:
+  push:
+    branches: ["indev"]
+    paths:
+      - ".github/patches/dispatcher.patch.gz.b64"
+      - ".github/workflows/dispatcher-patch-build.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out indev
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Apply dispatcher implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .github/patches/dispatcher.patch.gz.b64 | gzip -d > /tmp/dispatcher.patch
+          git apply --check /tmp/dispatcher.patch
+          git apply /tmp/dispatcher.patch
+          rm .github/patches/dispatcher.patch.gz.b64
+
+      - name: Download required runtime dependencies
+        env:
+          SABLE_JAR_URL: ${{ vars.SABLE_JAR_URL }}
+          AERONAUTICS_JAR_URL: ${{ vars.AERONAUTICS_JAR_URL }}
+          SIMULATED_JAR_URL: ${{ vars.SIMULATED_JAR_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p run/mods
+          for url in "$SABLE_JAR_URL" "$AERONAUTICS_JAR_URL" "$SIMULATED_JAR_URL"; do
+            if [[ -n "$url" ]]; then
+              curl -fL --retry 3 "$url" -o "run/mods/$(basename "${url%%\?*}")"
+            fi
+          done
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
+
+      - name: Build mod
+        run: ./gradlew build --no-daemon
+
+      - name: Commit verified sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add dispatcher system 0.1.14BETA"
+          git push origin HEAD:indev
+
+      - name: Upload compiled mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: Create-Loconautics-0.1.14BETA
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
