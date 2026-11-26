@@ -92,6 +92,9 @@ public final class LoconauticsNetwork {
         r.playToClient(com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket.TYPE,
                 com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.safety.SafetyAlertPacket::handle);
+        r.playToClient(com.lycoris.loconautics.network.packets.driverhint.DriverHintPacket.TYPE,
+                com.lycoris.loconautics.network.packets.driverhint.DriverHintPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.driverhint.DriverHintPacket::handle);
 
         r.playToServer(com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.TYPE,
                 com.lycoris.loconautics.network.packets.controls.selector.ValveSelectorApplyPacket.STREAM_CODEC,
@@ -207,6 +210,9 @@ public final class LoconauticsNetwork {
         r.playToClient(com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket.TYPE,
                 com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket.STREAM_CODEC,
                 com.lycoris.loconautics.network.packets.dispatcher.DispatcherSnapshotPacket::handle);
+        r.playToServer(com.lycoris.loconautics.network.packets.dispatcher.DispatcherSignalPacket.TYPE,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherSignalPacket.STREAM_CODEC,
+                com.lycoris.loconautics.network.packets.dispatcher.DispatcherSignalPacket::handle);
     }
 
     public static void sendMount(ServerPlayer player, boolean mounted, BlockPos pos) {
