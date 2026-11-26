@@ -1,11 +1,15 @@
 package com.lycoris.loconautics.content.dispatcher;
 
+import com.lycoris.loconautics.common.railway.SignalOverrides;
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.trainphysics.signal.TrainSignals;
 import com.lycoris.loconautics.trainphysics.state.CreateTrainShadow;
 import com.lycoris.loconautics.trainphysics.state.SableTrainRegistry;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.EdgePointType;
+import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -16,16 +20,22 @@ import org.joml.Vector3dc;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-/** Collects a unified read-only view of native Create trains and Loconautics trains. */
+/** Collects a unified view of Create trains, Loconautics trains and block sections. */
 public final class DispatcherService {
 
-    public record Snapshot(List<DispatcherTrainEntry> trains, int occupiedSections,
+    public record Snapshot(List<DispatcherTrainEntry> trains, List<DispatcherSectionEntry> sections,
+                           List<DispatcherEventEntry> events, int occupiedSections,
                            int reservedSections, int conflicts, int totalSections) {
+    }
+
+    private record Anchor(String dimension, int x, int y, int z, boolean held) {
     }
 
     private DispatcherService() {
@@ -34,16 +44,17 @@ public final class DispatcherService {
     public static Snapshot snapshot(MinecraftServer server) {
         List<DispatcherTrainEntry> result = new ArrayList<>();
         Set<UUID> seenSableConsists = new HashSet<>();
+        Map<UUID, String> trainNames = new HashMap<>();
 
-        // Native Create trains are the authoritative source for ordinary Create trains.
         for (Train train : new ArrayList<>(Create.RAILWAYS.trains.values())) {
             if (train == null || train.invalid || CreateTrainShadow.isShadow(train)) continue;
             DispatcherTrainEntry entry = createEntry(train);
-            if (entry != null) result.add(entry);
+            if (entry != null) {
+                result.add(entry);
+                trainNames.put(entry.id(), entry.name());
+            }
         }
 
-        // Loconautics mirrors its consists into Create's railway map for compatibility. Those
-        // mirrors are deliberately skipped above and represented here as one Sable consist.
         for (SableTrain train : SableTrainRegistry.all()) {
             Train shadow = CreateTrainShadow.of(train.id());
             if (shadow != null && CreateTrainShadow.isShadow(shadow)) {
@@ -51,11 +62,17 @@ public final class DispatcherService {
                 List<SableTrain> members = CreateTrainShadow.carsOf(shadow);
                 if (members.isEmpty()) members = List.of(train);
                 DispatcherTrainEntry entry = sableConsistEntry(shadow, members);
-                if (entry != null) result.add(entry);
+                if (entry != null) {
+                    result.add(entry);
+                    trainNames.put(entry.id(), entry.name());
+                }
             } else {
                 if (!seenSableConsists.add(train.id())) continue;
                 DispatcherTrainEntry entry = sableEntry(train, List.of(train));
-                if (entry != null) result.add(entry);
+                if (entry != null) {
+                    result.add(entry);
+                    trainNames.put(entry.id(), entry.name());
+                }
             }
         }
 
@@ -63,10 +80,12 @@ public final class DispatcherService {
                 .thenComparing(DispatcherTrainEntry::name, String.CASE_INSENSITIVE_ORDER)
                 .thenComparing(e -> e.id().toString()));
 
-        // Merge both engines by Create signal-group ID. A Loconautics carriage is represented
-        // by its consist shadow ID so several wagons in one section do not look like a collision.
+        Map<UUID, Anchor> anchors = collectAnchors();
         Set<UUID> allSectionIds = new HashSet<>(Create.RAILWAYS.signalEdgeGroups.keySet());
         allSectionIds.addAll(TrainSignals.trackedGroups());
+        allSectionIds.addAll(anchors.keySet());
+
+        List<DispatcherSectionEntry> sections = new ArrayList<>();
         int occupied = 0;
         int reserved = 0;
         int conflicts = 0;
@@ -82,11 +101,80 @@ public final class DispatcherService {
                 Train shadow = CreateTrainShadow.of(sableTrainId);
                 occupants.add(shadow != null && CreateTrainShadow.isShadow(shadow) ? shadow.id : sableTrainId);
             }
+            boolean isReserved = (group != null && group.reserved != null) || TrainSignals.reserved(sectionId);
             if (!occupants.isEmpty()) occupied++;
-            if (group != null && group.reserved != null || TrainSignals.reserved(sectionId)) reserved++;
+            if (isReserved) reserved++;
             if (occupants.size() > 1) conflicts++;
+
+            int state = occupants.size() > 1 ? DispatcherSectionEntry.CONFLICT
+                    : !occupants.isEmpty() ? DispatcherSectionEntry.OCCUPIED
+                    : isReserved ? DispatcherSectionEntry.RESERVED
+                    : DispatcherSectionEntry.CLEAR;
+
+            StringBuilder trainsLabel = new StringBuilder();
+            for (UUID id : occupants) {
+                if (trainsLabel.length() > 0) trainsLabel.append(", ");
+                trainsLabel.append(trainNames.getOrDefault(id, shortId(id)));
+                if (trainsLabel.length() > 48) {
+                    trainsLabel.setLength(45);
+                    trainsLabel.append("\u2026");
+                    break;
+                }
+            }
+            if (isReserved && occupants.isEmpty()) {
+                UUID reservedBy = TrainSignals.reservedBy(sectionId);
+                if (reservedBy != null) {
+                    trainsLabel.append(trainNames.getOrDefault(reservedBy, shortId(reservedBy)));
+                }
+            }
+
+            Anchor anchor = anchors.get(sectionId);
+            String dimension = anchor == null ? "" : anchor.dimension();
+            int x = anchor == null ? 0 : anchor.x();
+            int y = anchor == null ? 0 : anchor.y();
+            int z = anchor == null ? 0 : anchor.z();
+            boolean held = anchor != null && anchor.held();
+            sections.add(new DispatcherSectionEntry(sectionId, state, trainsLabel.toString(),
+                    dimension, x, y, z, held));
         }
-        return new Snapshot(List.copyOf(result), occupied, reserved, conflicts, allSectionIds.size());
+
+        sections.sort(Comparator.comparingInt((DispatcherSectionEntry s) -> -s.state())
+                .thenComparing(s -> s.id().toString()));
+        if (sections.size() > 48) {
+            sections = new ArrayList<>(sections.subList(0, 48));
+        }
+
+        DispatcherJournal.observe(server, result, sections);
+        return new Snapshot(List.copyOf(result), List.copyOf(sections),
+                DispatcherJournal.recent(server), occupied, reserved, conflicts, allSectionIds.size());
+    }
+
+    private static Map<UUID, Anchor> collectAnchors() {
+        Map<UUID, Anchor> anchors = new HashMap<>();
+        if (Create.RAILWAYS == null) return anchors;
+        for (TrackGraph graph : new ArrayList<>(Create.RAILWAYS.trackNetworks.values())) {
+            for (SignalBoundary signal : graph.getPoints(EdgePointType.SIGNAL)) {
+                for (boolean primary : new boolean[] { true, false }) {
+                    UUID group = signal.groups.get(primary);
+                    if (group == null || signal.blockEntities.get(primary).isEmpty()) continue;
+                    boolean held = SignalOverrides.held(signal.getId(), primary);
+                    BlockPos pos = signal.blockEntities.get(primary).keySet().iterator().next();
+                    String dimension = "";
+                    try {
+                        dimension = signal.edgeLocation.getFirst().getDimension().location().toString();
+                    } catch (Exception ignored) {
+                    }
+                    Anchor existing = anchors.get(group);
+                    if (existing == null) {
+                        anchors.put(group, new Anchor(dimension, pos.getX(), pos.getY(), pos.getZ(), held));
+                    } else if (held && !existing.held()) {
+                        anchors.put(group, new Anchor(existing.dimension(), existing.x(), existing.y(),
+                                existing.z(), true));
+                    }
+                }
+            }
+        }
+        return anchors;
     }
 
     private static DispatcherTrainEntry createEntry(Train train) {
@@ -117,21 +205,22 @@ public final class DispatcherService {
 
         boolean derailed = members.stream().anyMatch(SableTrain::isDerailed);
         boolean held = members.stream().anyMatch(t -> DispatcherTrainControl.isHeld(t.id()));
+        boolean signalHeld = members.stream().anyMatch(t -> TrainSignals.isHeld(t.id()));
         Set<UUID> occupiedGroups = new HashSet<>();
         Set<UUID> reservedGroups = new HashSet<>();
         for (SableTrain member : members) {
             occupiedGroups.addAll(TrainSignals.groupsOf(member.id()));
             reservedGroups.addAll(TrainSignals.reservedGroupsOf(member.id()));
         }
-        int occupied = occupiedGroups.size();
-        int reserved = reservedGroups.size();
         double speed = Double.isFinite(shadow.speed) ? shadow.speed * 20.0 : lead.speed() * 20.0;
         int state = derailed ? DispatcherTrainEntry.DERAILED : held ? DispatcherTrainEntry.DISPATCH_HELD
+                : signalHeld ? DispatcherTrainEntry.WAITING
                 : Math.abs(speed) > 0.02 ? DispatcherTrainEntry.MOVING : DispatcherTrainEntry.STOPPED;
         String name = shadow.name == null ? "" : shadow.name.getString().trim();
         if (name.isEmpty()) name = "Loconautics " + shortId(shadow.id);
         return new DispatcherTrainEntry(shadow.id, "loconautics", name, dimension.location().toString(),
-                floor(position.x), floor(position.y), floor(position.z), speed, state, occupied, reserved, held);
+                floor(position.x), floor(position.y), floor(position.z), speed, state,
+                occupiedGroups.size(), reservedGroups.size(), held);
     }
 
     private static DispatcherTrainEntry sableEntry(SableTrain train, List<SableTrain> members) {
@@ -139,8 +228,10 @@ public final class DispatcherService {
         Vec3 position = positionOf(train);
         if (position == null) return null;
         boolean held = DispatcherTrainControl.isHeld(train.id());
+        boolean signalHeld = TrainSignals.isHeld(train.id());
         int state = train.isDerailed() ? DispatcherTrainEntry.DERAILED : held
-                ? DispatcherTrainEntry.DISPATCH_HELD : Math.abs(train.speed()) > 0.02
+                ? DispatcherTrainEntry.DISPATCH_HELD : signalHeld ? DispatcherTrainEntry.WAITING
+                : Math.abs(train.speed()) > 0.02
                 ? DispatcherTrainEntry.MOVING : DispatcherTrainEntry.STOPPED;
         String name = train.name() == null || train.name().isBlank()
                 ? "Loconautics " + shortId(train.id()) : train.name();
@@ -177,7 +268,6 @@ public final class DispatcherService {
         return id.toString().substring(0, 8);
     }
 
-    /** Applies a dispatcher service-brake request to an entire Loconautics consist. */
     public static boolean setLoconauticsHold(UUID trainId, boolean held) {
         SableTrain train = SableTrainRegistry.get(trainId);
         if (train == null) return false;
@@ -185,7 +275,34 @@ public final class DispatcherService {
         List<SableTrain> members = shadow != null && CreateTrainShadow.isShadow(shadow)
                 ? CreateTrainShadow.carsOf(shadow) : List.of(train);
         if (members.isEmpty()) members = List.of(train);
+        boolean was = members.stream().anyMatch(t -> DispatcherTrainControl.isHeld(t.id()));
         for (SableTrain member : members) DispatcherTrainControl.setHeld(member.id(), held);
+        if (was != held) {
+            String name = train.name() == null || train.name().isBlank()
+                    ? shortId(train.id()) : train.name();
+            DispatcherJournal.record(held ? DispatcherJournal.HELD : DispatcherJournal.RELEASED, name);
+        }
+        return true;
+    }
+
+    /** Force every signal side that protects this section to red, or release those holds. */
+    public static boolean setSectionHold(UUID sectionId, boolean hold) {
+        if (sectionId == null || Create.RAILWAYS == null) return false;
+        int changed = 0;
+        for (TrackGraph graph : new ArrayList<>(Create.RAILWAYS.trackNetworks.values())) {
+            for (SignalBoundary signal : graph.getPoints(EdgePointType.SIGNAL)) {
+                for (boolean primary : new boolean[] { true, false }) {
+                    if (!sectionId.equals(signal.groups.get(primary))) continue;
+                    if (signal.blockEntities.get(primary).isEmpty()) continue;
+                    if (hold) SignalOverrides.hold(signal.getId(), primary);
+                    else SignalOverrides.release(signal.getId(), primary);
+                    changed++;
+                }
+            }
+        }
+        if (changed == 0) return false;
+        DispatcherJournal.record(hold ? DispatcherJournal.SIGNAL_CLOSED : DispatcherJournal.SIGNAL_OPENED,
+                shortId(sectionId));
         return true;
     }
 }
