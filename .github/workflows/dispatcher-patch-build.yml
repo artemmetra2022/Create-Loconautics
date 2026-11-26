@@ -45,6 +45,25 @@ jobs:
                   raise SystemExit("Could not find the railway-signal Ponder registration")
               plugin.write_text(source.replace(needle, addition, 1), encoding="utf-8")
 
+          block = Path("src/main/java/com/lycoris/loconautics/content/dispatcher/DispatcherBlock.java")
+          block_text = block.read_text(encoding="utf-8")
+          block_text = block_text.replace("import com.lycoris.loconautics.network.packets.dispatcher.DispatcherService;\\n", "")
+          block_text = block_text.replace("import com.lycoris.loconautics.network.packets.dispatcher.DispatcherRequestPacket;\\n", "")
+          block.write_text(block_text, encoding="utf-8")
+
+          screen = Path("src/main/java/com/lycoris/loconautics/content/dispatcher/DispatcherScreen.java")
+          screen_text = screen.read_text(encoding="utf-8")
+          screen_text = screen_text.replace(
+              "public boolean mouseScrolled(double mouseX, double mouseY, double delta)",
+              "public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY)")
+          screen_text = screen_text.replace("Math.signum(delta)", "Math.signum(scrollY)")
+          screen_text = screen_text.replace(
+              "super.mouseScrolled(mouseX, mouseY, delta)",
+              "super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)")
+          if "mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY)" not in screen_text:
+              raise SystemExit("Could not update Minecraft 1.21.1 mouseScrolled signature")
+          screen.write_text(screen_text, encoding="utf-8")
+
           translations = {
               "en_us": {
                   "block.loconautics.dispatcher": "Dispatcher Console",
