@@ -60,10 +60,10 @@ public class RailwaySignalBlock extends SignalBlock {
 
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
             Block.box(4, 0, 4, 12, 1.5, 12),
-            Block.box(6.5, 1.5, 6.5, 9.5, 10, 9.5),
-            Block.box(3, 10, 3.4, 13, 23, 10));
+            Block.box(6.5, 1.5, 6.5, 9.5, 19, 9.5),
+            Block.box(3, 19, 3.4, 13, 32.3, 10));
     private static final VoxelShape NORTH_SHAPE_ROUTE = Shapes.or(NORTH_SHAPE,
-            Block.box(4.6, 2.6, 5.0, 11.4, 10, 6.5));
+            Block.box(4.6, 11.6, 5.0, 11.4, 19, 6.5));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
     private static final VoxelShape[] SHAPES_ROUTE = new VoxelShape[4];
 
