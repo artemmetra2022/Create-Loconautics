@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SL",
+    "IR"
+  ],
+  "key": {
+    "S": {
+      "item": "loconautics:rail_signal"
+    },
+    "L": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "I": {
+      "item": "create:iron_sheet"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "loconautics:route_indicator",
+    "count": 1
+  }
+}

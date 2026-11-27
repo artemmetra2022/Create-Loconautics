@@ -18,7 +18,7 @@ public final class SignalLampPartVisual extends PanelPartVisual {
         super(context);
         identity = lamp;
         shell = create(PanelModels.slimBody(lamp.body()));
-        bulb = new PanelBulbVisual(this::create, LoconauticsPartialModels.SWITCH_BULB);
+        bulb = new PanelBulbVisual(this::create, LoconauticsPartialModels.SIGNAL_LAMP_BULB);
     }
 
     @Override

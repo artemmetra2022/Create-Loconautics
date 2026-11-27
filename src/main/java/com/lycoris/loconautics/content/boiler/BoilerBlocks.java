@@ -306,6 +306,16 @@ public final class BoilerBlocks {
             LOCOMOTIVE_STATUS_DISPLAY_ITEM = LoconauticsRegistries.ITEMS.register("locomotive_status_display", () ->
             new LocomotiveStatusBlockItem(LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
 
+    public static final DeferredHolder<Item, com.lycoris.loconautics.content.controls.panelcabsignal.CabSignalBlockItem>
+            CAB_SIGNAL_ITEM = LoconauticsRegistries.ITEMS.register("cab_signal", () ->
+            new com.lycoris.loconautics.content.controls.panelcabsignal.CabSignalBlockItem(
+                    LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
+
+    public static final DeferredHolder<Item, com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistanceBlockItem>
+            SIGNAL_DISTANCE_ITEM = LoconauticsRegistries.ITEMS.register("signal_distance", () ->
+            new com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistanceBlockItem(
+                    LOCOMOTIVE_GAUGE.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<Item, com.lycoris.loconautics.content.controls.panelvalve.ValveBlockItem>
             VALVE_ITEM = LoconauticsRegistries.ITEMS.register("locomotive_valve", () ->
             new com.lycoris.loconautics.content.controls.panelvalve.ValveBlockItem(

@@ -1,6 +1,16 @@
 package com.lycoris.loconautics.content.railsignal;
 
 import com.lycoris.loconautics.registry.LoconauticsRegistries;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.trains.signal.SignalBlock;
 import net.minecraft.core.BlockPos;
@@ -29,7 +39,7 @@ public class RailwaySignalBlock extends SignalBlock {
     public static final MapCodec<RailwaySignalBlock> CODEC = simpleCodec(RailwaySignalBlock::new);
 
     public enum Aspect implements StringRepresentable {
-        RED, YELLOW, GREEN;
+        RED, YELLOW, YELLOW_GREEN, GREEN;
 
         @Override
         public String getSerializedName() {
@@ -40,19 +50,36 @@ public class RailwaySignalBlock extends SignalBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Aspect> ASPECT = EnumProperty.create("aspect", Aspect.class);
 
+    /**
+     * Route indicator clamped to the mast: 0 = none, 1..11 = symbol index + 1 (digits 1-8, left,
+     * right, straight ahead - the same symbols as the {@link RouteIndicatorBlock}).
+     */
+    public static final IntegerProperty ROUTE = IntegerProperty.create("route", 0, RouteIndicatorBlock.SYMBOL_COUNT);
+    /** Whether the mounted route indicator is lit; maintained by the signal's block entity. */
+    public static final BooleanProperty ROUTE_LIT = BooleanProperty.create("route_lit");
+
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
-            Block.box(5, 0, 5, 11, 1, 11),
-            Block.box(7, 1, 7, 9, 8, 9),
-            Block.box(2, 2, 4, 14, 16, 12));
+            Block.box(4, 0, 4, 12, 1.5, 12),
+            Block.box(6.5, 1.5, 6.5, 9.5, 10, 9.5),
+            Block.box(3, 10, 3.4, 13, 23, 10));
+    private static final VoxelShape NORTH_SHAPE_ROUTE = Shapes.or(NORTH_SHAPE,
+            Block.box(4.6, 2.6, 5.0, 11.4, 10, 6.5));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
+    private static final VoxelShape[] SHAPES_ROUTE = new VoxelShape[4];
 
     static {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             SHAPES[direction.get2DDataValue()] = rotateShape(NORTH_SHAPE, direction);
+            SHAPES_ROUTE[direction.get2DDataValue()] = rotateShape(NORTH_SHAPE_ROUTE, direction);
         }
     }
 
-    private static VoxelShape rotateShape(VoxelShape shape, Direction facing) {
+    /** Only the tall mast signal can carry a route indicator; dwarf and shunting signals cannot. */
+    protected boolean canMountRouteIndicator() {
+        return getClass() == RailwaySignalBlock.class;
+    }
+
+    static VoxelShape rotateShape(VoxelShape shape, Direction facing) {
         int turns = switch (facing) {
             case EAST -> 1;
             case SOUTH -> 2;
@@ -73,7 +100,9 @@ public class RailwaySignalBlock extends SignalBlock {
         super(properties);
         registerDefaultState(defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(ASPECT, Aspect.RED));
+                .setValue(ASPECT, Aspect.RED)
+                .setValue(ROUTE, 0)
+                .setValue(ROUTE_LIT, false));
     }
 
     @Override
@@ -83,7 +112,7 @@ public class RailwaySignalBlock extends SignalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(FACING, ASPECT));
+        super.createBlockStateDefinition(builder.add(FACING, ASPECT, ROUTE, ROUTE_LIT));
     }
 
     @Override
@@ -104,7 +133,50 @@ public class RailwaySignalBlock extends SignalBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPES[state.getValue(FACING).get2DDataValue()];
+        int index = state.getValue(FACING).get2DDataValue();
+        return state.getValue(ROUTE) > 0 ? SHAPES_ROUTE[index] : SHAPES[index];
+    }
+
+    /** Right-click with a Route Indicator item clamps it to the mast. */
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hit) {
+        if (canMountRouteIndicator() && state.getValue(ROUTE) == 0
+                && stack.is(LoconauticsRegistries.ROUTE_INDICATOR_ITEM.get())) {
+            if (!level.isClientSide) {
+                level.setBlock(pos, state.setValue(ROUTE, 1).setValue(ROUTE_LIT, false), Block.UPDATE_ALL);
+                level.playSound(null, pos, getSoundType(state).getPlaceSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
+    }
+
+    /** Empty hand on a signal with an indicator: cycle the symbol; sneaking takes the indicator off. */
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                               BlockHitResult hit) {
+        if (!canMountRouteIndicator() || state.getValue(ROUTE) == 0) {
+            return super.useWithoutItem(state, level, pos, player, hit);
+        }
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+        if (player.isShiftKeyDown()) {
+            level.setBlock(pos, state.setValue(ROUTE, 0).setValue(ROUTE_LIT, false), Block.UPDATE_ALL);
+            level.playSound(null, pos, getSoundType(state).getBreakSound(), SoundSource.BLOCKS, 0.8f, 1.0f);
+            ItemStack back = new ItemStack(LoconauticsRegistries.ROUTE_INDICATOR_ITEM.get());
+            if (!player.getInventory().add(back)) {
+                player.drop(back, false);
+            }
+        } else {
+            int next = state.getValue(ROUTE) % RouteIndicatorBlock.SYMBOL_COUNT + 1;
+            level.setBlock(pos, state.setValue(ROUTE, next), Block.UPDATE_ALL);
+        }
+        return InteractionResult.CONSUME;
     }
 
     @Override

@@ -88,16 +88,8 @@ public class SignalRepeaterBlockEntity extends SmartBlockEntity {
                             },
                             scout.ignoreTurns(), scout.ignorePortals());
                     if (found[0] != null) {
-                        if (found[0].isForcedRed(primary[0])) {
-                            aspect = SignalRepeaterBlock.Aspect.RED;
-                        } else {
-                            SignalState state = found[0].cachedStates.get(primary[0]);
-                            aspect = switch (state) {
-                                case GREEN -> SignalRepeaterBlock.Aspect.GREEN;
-                                case YELLOW -> SignalRepeaterBlock.Aspect.YELLOW;
-                                default -> SignalRepeaterBlock.Aspect.RED;
-                            };
-                        }
+                        aspect = SignalRepeaterBlock.Aspect.valueOf(
+                                SignalAspects.displayed(level, found[0], primary[0]).name());
                     }
                     if (axis.lengthSqr() > 1.0e-6) {
                         double approachSign = targetPositive ? -1.0 : 1.0;

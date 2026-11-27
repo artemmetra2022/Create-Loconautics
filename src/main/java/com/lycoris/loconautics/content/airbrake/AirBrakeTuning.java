@@ -65,8 +65,18 @@ public final class AirBrakeTuning {
         if (clamped >= EMERGENCY_NOTCH) {
             return 0.0f;
         }
-        float t = (clamped - FIRST_SERVICE_NOTCH)
-                / (float) (LAST_SERVICE_NOTCH - FIRST_SERVICE_NOTCH);
-        return Mth.lerp(t, WORKING_PIPE_BAR - 0.2f, MIN_SERVICE_PIPE_BAR);
+        // Calibrated service curve: positions 2-7 remain progressive while
+        // 8-9 give a more decisive reduction for stronger service braking.
+        return switch (clamped) {
+            case 2 -> 4.80f;
+            case 3 -> 4.62f;
+            case 4 -> 4.43f;
+            case 5 -> 4.23f;
+            case 6 -> 4.02f;
+            case 7 -> 3.82f;
+            case 8 -> 3.57f;
+            case 9 -> 3.32f;
+            default -> WORKING_PIPE_BAR;
+        };
     }
 }

@@ -25,22 +25,37 @@ public final class CameraMonitorBlockItem extends PanelBlockItem {
     }
 
     @Override
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        InteractionResult binding = bindCamera(context);
+        if (binding != InteractionResult.PASS) return binding;
+        return super.onItemUseFirst(stack, context);
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext context) {
+        InteractionResult binding = bindCamera(context);
+        return binding != InteractionResult.PASS ? binding : super.useOn(context);
+    }
+
+    /**
+     * Bind before the clicked block's normal interaction runs. Some block
+     * interactions consume the click, which otherwise prevents BlockItem.useOn
+     * from being reached on all client/server interaction paths.
+     */
+    private InteractionResult bindCamera(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof CameraBlockEntity) {
-            if (!level.isClientSide) {
-                GlobalPos camera = GlobalPos.of(level.dimension(), pos);
-                ItemStack stack = context.getItemInHand();
-                CompoundTag data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-                CameraMonitorPart.writeToTag(data, camera);
-                stack.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
-                announceBound(stack, context.getPlayer(), level.getBlockState(pos));
-            }
-            return InteractionResult.SUCCESS;
+        if (!(level.getBlockEntity(pos) instanceof CameraBlockEntity)) return InteractionResult.PASS;
+
+        if (!level.isClientSide) {
+            GlobalPos camera = GlobalPos.of(level.dimension(), pos);
+            ItemStack stack = context.getItemInHand();
+            CompoundTag data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+            CameraMonitorPart.writeToTag(data, camera);
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(data));
+            announceBound(stack, context.getPlayer(), level.getBlockState(pos));
         }
-        return super.useOn(context);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

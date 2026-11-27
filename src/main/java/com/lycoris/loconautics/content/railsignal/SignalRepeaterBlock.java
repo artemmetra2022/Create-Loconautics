@@ -26,7 +26,7 @@ public class SignalRepeaterBlock extends Block implements IBE<SignalRepeaterBloc
     public static final MapCodec<SignalRepeaterBlock> CODEC = simpleCodec(SignalRepeaterBlock::new);
 
     public enum Aspect implements StringRepresentable {
-        RED, YELLOW, GREEN;
+        RED, YELLOW, YELLOW_GREEN, GREEN;
 
         @Override
         public String getSerializedName() {
@@ -38,9 +38,9 @@ public class SignalRepeaterBlock extends Block implements IBE<SignalRepeaterBloc
     public static final EnumProperty<Aspect> ASPECT = EnumProperty.create("aspect", Aspect.class);
 
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
-            Block.box(5, 0, 5, 11, 1, 11),
-            Block.box(7, 1, 7, 9, 8, 9),
-            Block.box(2, 2, 4, 14, 16, 12));
+            Block.box(4, 0, 4, 12, 1.5, 12),
+            Block.box(6.5, 1.5, 6.5, 9.5, 10, 9.5),
+            Block.box(3, 10, 3.4, 13, 23, 10));
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
     static {

@@ -80,6 +80,45 @@
     },
     {
       "when": {
+        "aspect": "yellow_green",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow_green"
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow_green",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow_green",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow_green",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow_green",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "aspect": "yellow_green",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_yellow_green",
+        "y": 270
+      }
+    },
+    {
+      "when": {
         "aspect": "green",
         "facing": "north"
       },
@@ -114,6 +153,952 @@
       },
       "apply": {
         "model": "loconautics:block/rail_signal_green",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_on"
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_off"
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "1",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_1_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_on"
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_off"
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "2",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_2_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_on"
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_off"
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "3",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_3_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_on"
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_off"
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "4",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_4_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_on"
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_off"
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "5",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_5_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_on"
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_off"
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "6",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_6_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_on"
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_off"
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "7",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_7_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_on"
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_off"
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "8",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_8_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_on"
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_off"
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "9",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_left_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_on"
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_off"
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "10",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_right_off",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_on"
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_on",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_on",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_on",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_off"
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_off",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_off",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "route": "11",
+        "route_lit": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "loconautics:block/rail_signal_route_ahead_off",
         "y": 270
       }
     }

@@ -123,6 +123,9 @@
     "loconautics:gradient_sign",
     "loconautics:station_border_sign",
     "loconautics:rail_signal",
+    "loconautics:dwarf_signal",
+    "loconautics:shunting_signal",
+    "loconautics:route_indicator",
     "loconautics:signal_repeater",
     "loconautics:dispatcher"
   ]

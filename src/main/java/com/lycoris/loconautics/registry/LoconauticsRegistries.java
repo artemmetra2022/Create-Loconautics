@@ -387,6 +387,57 @@ public final class LoconauticsRegistries {
                     RAIL_SIGNAL.get(), new Item.Properties().stacksTo(64),
                     com.simibubi.create.content.trains.graph.EdgePointType.SIGNAL));
 
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsignal.DwarfSignalBlock>
+            DWARF_SIGNAL = BLOCKS.register("dwarf_signal", () ->
+            new com.lycoris.loconautics.content.railsignal.DwarfSignalBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(2.0f)
+                            .sound(SoundType.METAL)
+                            .requiresCorrectToolForDrops()
+                            .noOcclusion()
+            ));
+
+    public static final DeferredHolder<Item, com.simibubi.create.content.trains.track.TrackTargetingBlockItem>
+            DWARF_SIGNAL_ITEM = ITEMS.register("dwarf_signal", () ->
+            new com.simibubi.create.content.trains.track.TrackTargetingBlockItem(
+                    DWARF_SIGNAL.get(), new Item.Properties().stacksTo(64),
+                    com.simibubi.create.content.trains.graph.EdgePointType.SIGNAL));
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsignal.ShuntingSignalBlock>
+            SHUNTING_SIGNAL = BLOCKS.register("shunting_signal", () ->
+            new com.lycoris.loconautics.content.railsignal.ShuntingSignalBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(2.0f)
+                            .sound(SoundType.METAL)
+                            .requiresCorrectToolForDrops()
+                            .noOcclusion()
+            ));
+
+    public static final DeferredHolder<Item, com.simibubi.create.content.trains.track.TrackTargetingBlockItem>
+            SHUNTING_SIGNAL_ITEM = ITEMS.register("shunting_signal", () ->
+            new com.simibubi.create.content.trains.track.TrackTargetingBlockItem(
+                    SHUNTING_SIGNAL.get(), new Item.Properties().stacksTo(64),
+                    com.simibubi.create.content.trains.graph.EdgePointType.SIGNAL));
+
+    public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsignal.RouteIndicatorBlock>
+            ROUTE_INDICATOR = BLOCKS.register("route_indicator", () ->
+            new com.lycoris.loconautics.content.railsignal.RouteIndicatorBlock(
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.METAL)
+                            .strength(1.5f)
+                            .sound(SoundType.METAL)
+                            .requiresCorrectToolForDrops()
+                            .noOcclusion()
+                            .lightLevel(state -> state.getValue(
+                                    com.lycoris.loconautics.content.railsignal.RouteIndicatorBlock.LIT) ? 6 : 0)
+            ));
+
+    public static final DeferredHolder<Item, BlockItem> ROUTE_INDICATOR_ITEM =
+            ITEMS.register("route_indicator", () ->
+                    new BlockItem(ROUTE_INDICATOR.get(), new Item.Properties().stacksTo(64)));
+
     public static final DeferredHolder<Block, com.lycoris.loconautics.content.dispatcher.DispatcherBlock>
             DISPATCHER = BLOCKS.register("dispatcher", () ->
             new com.lycoris.loconautics.content.dispatcher.DispatcherBlock(
@@ -404,7 +455,7 @@ public final class LoconauticsRegistries {
             com.lycoris.loconautics.content.railsignal.RailwaySignalBlockEntity>>
             RAIL_SIGNAL_BE = BLOCK_ENTITIES.register("rail_signal", () ->
             BlockEntityType.Builder.of(LoconauticsRegistries::createRailSignalBE,
-                    RAIL_SIGNAL.get()).build(null));
+                    RAIL_SIGNAL.get(), DWARF_SIGNAL.get(), SHUNTING_SIGNAL.get()).build(null));
 
     public static final DeferredHolder<Block, com.lycoris.loconautics.content.railsignal.SignalRepeaterBlock>
             SIGNAL_REPEATER = BLOCKS.register("signal_repeater", () ->
@@ -832,6 +883,8 @@ public final class LoconauticsRegistries {
                         output.accept(com.lycoris.loconautics.content.camera.CameraBlocks.CAMERA_MONITOR_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_GAUGE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.SIGNAL_LAMP_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.CAB_SIGNAL_ITEM.get());
+                        output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.SIGNAL_DISTANCE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.LOCOMOTIVE_STATUS_DISPLAY_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.VALVE_ITEM.get());
                         output.accept(com.lycoris.loconautics.content.boiler.BoilerBlocks.GAUGE_BUTTON_ITEM.get());
@@ -842,6 +895,9 @@ public final class LoconauticsRegistries {
                         output.accept(com.simibubi.create.AllBlocks.TRACK_STATION.asStack());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_SIGNAL.asStack());
                         output.accept(RAIL_SIGNAL_ITEM.get());
+                        output.accept(DWARF_SIGNAL_ITEM.get());
+                        output.accept(SHUNTING_SIGNAL_ITEM.get());
+                        output.accept(ROUTE_INDICATOR_ITEM.get());
                         output.accept(SIGNAL_REPEATER_ITEM.get());
                         output.accept(DISPATCHER_ITEM.get());
                         output.accept(com.simibubi.create.AllBlocks.TRACK_OBSERVER.asStack());

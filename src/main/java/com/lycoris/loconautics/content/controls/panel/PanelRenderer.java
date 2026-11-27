@@ -57,6 +57,29 @@ public class PanelRenderer<T extends PanelBlockEntity> implements BlockEntityRen
                 case com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPart display ->
                         com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPartRenderer.render(
                                 ms, buffers, packedLight, state);
+                case com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePart dist -> {
+                    PanelBodyRenderer.renderSlimBody(ms, buffers.getBuffer(RenderType.cutout()), packedLight,
+                            state, dist.body());
+                    float glow = PanelBulbRenderer.glowFor(panel.bulbGlow(slot, partialTick));
+                    for (int i = 0; i < com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePart.LAMPS; i++) {
+                        ms.pushPose();
+                        ms.translate((4 + com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePartVisual.OFFSET_X[i]) / 16.0, 0,
+                                (4 + com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePartVisual.OFFSET_Z[i]) / 16.0);
+                        ms.scale(com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePartVisual.LAMP_SCALE, 1f,
+                                com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePartVisual.LAMP_SCALE);
+                        ms.translate(-4 / 16.0, 0, -4 / 16.0);
+                        PanelBulbRenderer.render(ms, buffers, packedLight, state, i < dist.lit() ? glow : 0f,
+                                LoconauticsPartialModels.SWITCH_BULB, dist.tint());
+                        ms.popPose();
+                    }
+                }
+                case com.lycoris.loconautics.content.controls.panelcabsignal.CabSignalPart cab -> {
+                    PanelBodyRenderer.renderSlimBody(ms, buffers.getBuffer(RenderType.cutout()), packedLight,
+                            state, cab.body());
+                    PanelBulbRenderer.render(ms, buffers, packedLight, state,
+                            PanelBulbRenderer.glowFor(panel.bulbGlow(slot, partialTick)),
+                            LoconauticsPartialModels.SWITCH_BULB, cab.tint());
+                }
                 case SignalLampPart lamp -> {
                     PanelBodyRenderer.renderSlimBody(ms, buffers.getBuffer(RenderType.cutout()), packedLight,
                             state, lamp.body());

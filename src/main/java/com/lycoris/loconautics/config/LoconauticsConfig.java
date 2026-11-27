@@ -13,6 +13,7 @@ public final class LoconauticsConfig {
 
     public static ModConfigSpec.BooleanValue ENABLE_SABLE_TRAINS;
     public static ModConfigSpec.BooleanValue ENABLE_CREATE_TRAINS;
+    public static ModConfigSpec.BooleanValue FOUR_ASPECT_SIGNALS;
     public static ModConfigSpec.DoubleValue BEARING_AXLE_MAX_SPEED;
     public static ModConfigSpec.DoubleValue TRAIN_MAX_SPEED;
     public static ModConfigSpec.BooleanValue GEARING_ENABLED;
@@ -142,6 +143,12 @@ public final class LoconauticsConfig {
                 .comment("Lets a Station assemble regular Create Trains.")
                 .translation(TRANSLATION_PREFIX + "foundation.enableCreateTrains")
                 .define("enableCreateTrains", true);
+
+        FOUR_ASPECT_SIGNALS = BUILDER
+                .comment("Four-aspect automatic block signalling for Loconautics signals: green, yellow-green, yellow, red.",
+                        "Off, the signals show only the three Create aspects.")
+                .translation(TRANSLATION_PREFIX + "foundation.fourAspectSignals")
+                .define("fourAspectSignals", true);
 
         BUILDER.pop();
 

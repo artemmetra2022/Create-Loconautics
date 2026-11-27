@@ -4,6 +4,8 @@ import com.lycoris.loconautics.common.sable.SubLevelBlocks;
 import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
 import com.lycoris.loconautics.content.airbrake.AirPipeBus;
 import com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
+import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
 import com.lycoris.loconautics.content.airbrake.EmergencyBrakeBlockEntity;
 import com.lycoris.loconautics.content.dispatcher.DispatcherTrainControl;
 import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
@@ -136,7 +138,9 @@ public final class DriverHintService {
             if (TrainSignals.isHeld(car.id())) {
                 signalHold = true;
             }
-            if (car.brakeHold() || car.isBraked()) {
+            // Do not trust the train physics' cached isBraked flag here: it can
+            // remain set for a tick after every pneumatic cylinder has released.
+            if (car.brakeHold()) {
                 brakeApplied = true;
             }
             if (car.doorsOpen()) {
@@ -163,6 +167,12 @@ public final class DriverHintService {
                 if (pipe >= 0f && pipe < LOW_PIPE_BAR && valve.getNotch() > 0) {
                     lowPipe = true;
                 }
+            }
+            for (TripleValveBlockEntity valve : SubLevelBlocks.findAll(sub, TripleValveBlockEntity.class)) {
+                if (valve.getBrakeCylinderPressure() > 0.05f) brakeApplied = true;
+            }
+            for (BrakeControllerBlockEntity controller : SubLevelBlocks.findAll(sub, BrakeControllerBlockEntity.class)) {
+                if (controller.isBraking()) brakeApplied = true;
             }
             for (SafetyBlockEntity safety : SubLevelBlocks.findAll(sub, SafetyBlockEntity.class)) {
                 if (safety.isEmergency()) {

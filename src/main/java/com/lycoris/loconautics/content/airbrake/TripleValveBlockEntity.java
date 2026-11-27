@@ -101,7 +101,8 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
      * emergency flag separately bypasses that service cap in TrainBrakes.
      */
     public float getCylinderFraction() {
-        return Mth.clamp(brakeCylinderPressure / MAX_SERVICE_CYLINDER_BAR, 0f, 1f);
+        float fullPressure = emergency ? MAX_EMERGENCY_CYLINDER_BAR : MAX_SERVICE_CYLINDER_BAR;
+        return Mth.clamp(brakeCylinderPressure / fullPressure, 0f, 1f);
     }
 
     public boolean isEmergency() {
@@ -293,22 +294,18 @@ public class TripleValveBlockEntity extends SmartBlockEntity implements IHaveGog
 
         // Emergency-reservoir air is used first, then the auxiliary reservoir
         // supplements it if the emergency reservoir is depleted.
-        float fromEmergency = Math.min(remaining,
-                emergencyReservoirPressure * EMERGENCY_TO_CYLINDER_RATIO);
+        float fromEmergency = Math.min(remaining, emergencyReservoirPressure);
         if (fromEmergency > 0f) {
             brakeCylinderPressure += fromEmergency;
-            emergencyReservoirPressure = Math.max(0f, emergencyReservoirPressure
-                    - fromEmergency * EMERGENCY_TO_CYLINDER_RATIO);
+            emergencyReservoirPressure = Math.max(0f, emergencyReservoirPressure - fromEmergency);
             remaining -= fromEmergency;
         }
 
         if (remaining > 0f) {
-            float fromAuxiliary = Math.min(remaining,
-                    auxPressure * AUX_TO_CYLINDER_RATIO);
+            float fromAuxiliary = Math.min(remaining, auxPressure);
             if (fromAuxiliary > 0f) {
                 brakeCylinderPressure += fromAuxiliary;
-                auxPressure = Math.max(0f, auxPressure
-                        - fromAuxiliary * AUX_TO_CYLINDER_RATIO);
+                auxPressure = Math.max(0f, auxPressure - fromAuxiliary);
             }
         }
 

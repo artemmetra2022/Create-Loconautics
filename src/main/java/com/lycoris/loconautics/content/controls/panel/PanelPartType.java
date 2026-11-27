@@ -25,7 +25,9 @@ public enum PanelPartType implements StringRepresentable {
             new double[]{2, 0, 1, 6, 2, 7}),
     SIGNAL_LAMP(com.lycoris.loconautics.content.controls.panellamp.SignalLampPart::read, PanelBlock.FLAT_SLOT_BOX),
     STATUS_DISPLAY(com.lycoris.loconautics.content.controls.paneldisplay.LocomotiveStatusPart::read, PanelBlock.FLAT_SLOT_BOX),
-    CAMERA_MONITOR(com.lycoris.loconautics.content.camera.CameraMonitorPart::read, PanelBlock.FLAT_SLOT_BOX);
+    CAMERA_MONITOR(com.lycoris.loconautics.content.camera.CameraMonitorPart::read, PanelBlock.FLAT_SLOT_BOX),
+    CAB_SIGNAL(com.lycoris.loconautics.content.controls.panelcabsignal.CabSignalPart::read, PanelBlock.FLAT_SLOT_BOX),
+    SIGNAL_DISTANCE(com.lycoris.loconautics.content.controls.panelcabsignal.SignalDistancePart::read, PanelBlock.FLAT_SLOT_BOX);
 
     public static final int PALETTE_COLORS = 35;
 

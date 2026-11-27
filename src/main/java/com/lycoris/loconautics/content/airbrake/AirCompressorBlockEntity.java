@@ -26,6 +26,8 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
     private float internalPressure;
     private float syncedPressure;
     private boolean pumping;
+    private boolean reservoirDetected;
+    private boolean distributorDetected;
 
     public AirCompressorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -74,6 +76,14 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         float rpm = Math.abs(getSpeed());
         boolean hasReservoir = !targets.isEmpty();
         boolean hasDistributor = AirReservoirScanner.hasDistributor(this);
+        boolean detectionChanged = reservoirDetected != hasReservoir
+                || distributorDetected != hasDistributor;
+        reservoirDetected = hasReservoir;
+        distributorDetected = hasDistributor;
+        if (detectionChanged) {
+            setChanged();
+            sendData();
+        }
         boolean hasTargets = hasReservoir && hasDistributor;
         if (!hasTargets && internalPressure > 0.0f) {
             internalPressure = 0.0f;
@@ -157,8 +167,10 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("loconautics.air_compressor.goggles.header")
                 .withStyle(ChatFormatting.GRAY));
-        boolean hasReservoir = AirReservoirScanner.hasReservoir(this);
-        boolean hasDistributor = AirReservoirScanner.hasDistributor(this);
+        // The scanner uses ServerSubLevel and intentionally runs only on the
+        // server. Read the last synchronized scan result in client-side tooltips.
+        boolean hasReservoir = reservoirDetected;
+        boolean hasDistributor = distributorDetected;
         tooltip.add(Component.literal(" ")
                 .append(Component.translatable(
                         pumping ? "loconautics.air_compressor.goggles.pumping" : "loconautics.air_compressor.goggles.idle"))
@@ -185,6 +197,8 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         super.write(tag, registries, clientPacket);
         tag.putFloat("Pressure", internalPressure);
         tag.putBoolean("Pumping", pumping);
+        tag.putBoolean("ReservoirDetected", reservoirDetected);
+        tag.putBoolean("DistributorDetected", distributorDetected);
     }
 
     @Override
@@ -193,5 +207,7 @@ public class AirCompressorBlockEntity extends KineticBlockEntity {
         internalPressure = Mth.clamp(tag.getFloat("Pressure"), 0f, AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR);
         syncedPressure = internalPressure;
         pumping = tag.getBoolean("Pumping");
+        reservoirDetected = tag.getBoolean("ReservoirDetected");
+        distributorDetected = tag.getBoolean("DistributorDetected");
     }
 }

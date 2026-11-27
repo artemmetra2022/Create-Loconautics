@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "steel": "loconautics:block/signal/steel",
+    "head": "loconautics:block/signal/head",
+    "visor": "loconautics:block/signal/visor",
+    "route_6_off": "loconautics:block/signal/route_6_off",
+    "particle": "loconautics:block/signal/steel"
+  },
+  "elements": [
+    {
+      "from": [
+        6.2,
+        2.6,
+        6.2
+      ],
+      "to": [
+        9.8,
+        3.0,
+        9.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            3.6,
+            0.4
+          ],
+          "texture": "#steel"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            3.6,
+            0.4
+          ],
+          "texture": "#steel"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            3.6,
+            0.4
+          ],
+          "texture": "#steel"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            3.6,
+            3.6
+          ],
+          "texture": "#steel"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            3.6,
+            3.6
+          ],
+          "texture": "#steel"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        5.4
+      ],
+      "to": [
+        11,
+        9.4,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            6,
+            6.4
+          ],
+          "texture": "#head"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1.1,
+            6.4
+          ],
+          "texture": "#head"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1.1,
+            6.4
+          ],
+          "texture": "#head"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            6,
+            1.1
+          ],
+          "texture": "#head"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            6,
+            1.1
+          ],
+          "texture": "#head"
+        }
+      }
+    },
+    {
+      "from": [
+        6.1,
+        3.3,
+        5.3
+      ],
+      "to": [
+        9.9,
+        9.0,
+        5.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            24
+          ],
+          "texture": "#route_6_off"
+        }
+      }
+    },
+    {
+      "from": [
+        4.6,
+        9.4,
+        5.0
+      ],
+      "to": [
+        11.4,
+        10.0,
+        6.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            6.8,
+            0.6
+          ],
+          "texture": "#visor"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            6.8,
+            0.6
+          ],
+          "texture": "#visor"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1.6,
+            0.6
+          ],
+          "texture": "#visor"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1.6,
+            0.6
+          ],
+          "texture": "#visor"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            6.8,
+            1.6
+          ],
+          "texture": "#visor"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            6.8,
+            1.6
+          ],
+          "texture": "#visor"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

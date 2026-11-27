@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "loconautics:signal_lamp"
+    },
+    {
+      "item": "loconautics:rail_signal"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "id": "loconautics:cab_signal",
+    "count": 1
+  }
+}

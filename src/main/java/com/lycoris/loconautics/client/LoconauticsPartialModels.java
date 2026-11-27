@@ -93,6 +93,8 @@ public class LoconauticsPartialModels {
 
     public static final PartialModel SWITCH_BULB =
             PartialModel.of(LoconauticsConstants.id("block/controls/gauge/switch_bulb"));
+    public static final PartialModel SIGNAL_LAMP_BULB =
+            PartialModel.of(LoconauticsConstants.id("block/controls/gauge/signal_lamp_bulb"));
 
     public static final PartialModel SWITCH_PADDLE =
             PartialModel.of(LoconauticsConstants.id("block/controls/gauge/switch_paddle"));
