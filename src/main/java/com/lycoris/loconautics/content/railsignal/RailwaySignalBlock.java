@@ -118,7 +118,10 @@ public class RailwaySignalBlock extends SignalBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        return state == null ? null : state.setValue(FACING, context.getHorizontalDirection().getOpposite());
+        // The block entity aligns the signal with the track and the target direction. Use the
+        // player's look direction here as well, otherwise the signal visibly flips 180 degrees
+        // on the first tick after placement.
+        return state == null ? null : state.setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
