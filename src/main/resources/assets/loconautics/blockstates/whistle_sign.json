@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,half=lower": {
+      "model": "loconautics:block/speed_sign/lower"
+    },
+    "facing=north,half=upper": {
+      "model": "loconautics:block/rail_sign/whistle_sign"
+    },
+    "facing=east,half=lower": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 90
+    },
+    "facing=east,half=upper": {
+      "model": "loconautics:block/rail_sign/whistle_sign",
+      "y": 90
+    },
+    "facing=south,half=lower": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 180
+    },
+    "facing=south,half=upper": {
+      "model": "loconautics:block/rail_sign/whistle_sign",
+      "y": 180
+    },
+    "facing=west,half=lower": {
+      "model": "loconautics:block/speed_sign/lower",
+      "y": 270
+    },
+    "facing=west,half=upper": {
+      "model": "loconautics:block/rail_sign/whistle_sign",
+      "y": 270
+    }
+  }
+}

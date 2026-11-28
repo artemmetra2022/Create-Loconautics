@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create:small_bogey",
+    "create:large_bogey",
+    "loconautics:boiler_bogey"
+  ]
+}

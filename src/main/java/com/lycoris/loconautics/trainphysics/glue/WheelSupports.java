@@ -1,0 +1,267 @@
+package com.lycoris.loconautics.trainphysics.glue;
+
+import com.lycoris.loconautics.common.sable.BodyRef;
+import com.lycoris.loconautics.trainphysics.PoseTweak;
+import com.lycoris.loconautics.trainphysics.SableTrain;
+import com.lycoris.loconautics.trainphysics.state.CartEvent;
+import com.lycoris.loconautics.trainphysics.state.CartStateStore;
+import com.lycoris.loconautics.trainphysics.SableTrain.Car;
+import com.lycoris.loconautics.trainphysics.rail.RailCarriage;
+import dev.ryanhcode.sable.api.physics.PhysicsPipeline;
+import dev.ryanhcode.sable.api.physics.PhysicsPipelineBody;
+import dev.ryanhcode.sable.api.physics.constraint.ConstraintJointAxis;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintConfiguration;
+import dev.ryanhcode.sable.api.physics.constraint.GenericConstraintHandle;
+import dev.ryanhcode.sable.api.physics.force.ForceTotal;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
+import dev.ryanhcode.sable.api.physics.mass.MassData;
+import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
+import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import org.joml.Quaterniond;
+import org.joml.Vector3d;
+
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+
+public final class WheelSupports {
+
+    private WheelSupports() {
+    }
+
+    public static final CartStateStore STORE = new CartStateStore() {
+        @Override
+        public void forget(SableTrain train, UUID subId, CartEvent event) {
+            if (clears(event)) {
+                release(subId);
+            }
+        }
+
+        @Override
+        public void retain(Set<UUID> liveTrains, Set<UUID> liveSubs) {
+            WheelSupports.retain(liveSubs);
+        }
+
+        @Override
+        public String describe(UUID trainId, UUID subId) {
+            return SUPPORTS.containsKey(subId) ? "supports held" : "";
+        }
+
+        @Override
+        public boolean clears(CartEvent event) {
+            return event.moved() || event == CartEvent.REERAILED || event == CartEvent.GHOSTED
+                    || event == CartEvent.REMOVED;
+        }
+    };
+
+    // side is 1 on the left of the chord and 1 on the right, host is null on a rail in the world
+    public record Wheel(Vector3d rail, Vector3d seatPoint, Vector3d local, Vector3d normal, Vector3d tangent,
+                        int side, ServerSubLevel host) {
+    }
+
+    public record Prepared(Wheel[] wheels, RailCarriage.PointFrame first, RailCarriage.PointFrame last) {
+    }
+
+    private record Support(GenericConstraintHandle handle, UUID hostId) {
+    }
+
+    private static final double SUSPENSION_FREQUENCY_HZ = 1.25;
+    private static final double SUSPENSION_DAMPING_RATIO = 0.82;
+    private static final double SUSPENSION_COMPRESSION = 0.08;
+    private static final double SUSPENSION_FORCE_MULTIPLIER = 2.5;
+
+    private static final ConcurrentHashMap<UUID, Support[]> SUPPORTS = new ConcurrentHashMap<>();
+
+    public static Prepared prepare(ServerSubLevel sub, List<SableTrain.Bogey> chain, RollFrame frame,
+                                   PoseTweak.Applied seated) {
+        Wheel[] wheels = new Wheel[chain.size() * 2];
+        Quaterniond seatInverse = new Quaterniond(frame.seat).conjugate();
+        RailCarriage.PointFrame first = null;
+        RailCarriage.PointFrame last = null;
+        for (int i = 0; i < chain.size(); i++) {
+            RailCarriage rail = chain.get(i).rail();
+            RailCarriage.PointFrame point = rail.railFrame(frame.tangent);
+            if (point == null) {
+                return null;
+            }
+            if (i == 0) {
+                first = point;
+            }
+            last = point;
+            Vector3d lateral = new Vector3d(point.t()).cross(point.n()).normalize();
+            double half = RailGauge.halfGauge(rail.trackMaterial());
+            ServerSubLevel host = rail.activeSub();
+            for (int index = 0; index < 2; index++) {
+                int side = index == 0 ? -1 : 1;
+                Vector3d onRail = new Vector3d(point.c()).fma(CarriageRoll.RAIL_TOP, point.n())
+                        .fma(side * half, lateral);
+                Vector3d local = seatInverse.transform(new Vector3d(onRail).sub(frame.reference))
+                        .add(frame.anchorLocal);
+                wheels[i * 2 + index] = new Wheel(onRail, RollFrame.seatedPoint(sub, seated, local), local,
+                        new Vector3d(point.n()), new Vector3d(point.t()), side, host);
+            }
+        }
+        return new Prepared(wheels, first, last);
+    }
+
+    public static void drive(PhysicsPipeline pipeline, ServerSubLevel sub, Car car, SableTrain train,
+                             RollFrame frame, Prepared prepared, PoseTweak.Applied seated, double dt) {
+        UUID id = sub.getUniqueId();
+        MassData md = sub.getMassTracker();
+        RigidBodyHandle handle = RigidBodyHandle.of(sub);
+        Wheel[] wheels = prepared.wheels();
+        Pose3d pose = sub.logicalPose();
+        CarriageRoll.Roll roll = CarriageRoll.of(id);
+        long now = sub.getLevel().getGameTime();
+        CarriageRoll.beginStep(roll, now);
+
+        double phi = CarriageRoll.twist(seated.orientation(), pose.orientation(), frame.forward0);
+        int side = CarriageRoll.updateSide(roll, phi);
+
+        int count = wheels.length;
+        double[] y = new double[count];
+        int lifted = 0;
+        for (int i = 0; i < count; i++) {
+            Wheel wheel = wheels[i];
+            Vector3d point = pose.transformPosition(new Vector3d(wheel.local()), new Vector3d());
+            y[i] = new Vector3d(point).sub(wheel.seatPoint()).dot(wheel.normal());
+            if (y[i] > CarriageRoll.LIFT_EPS) {
+                lifted++;
+            }
+        }
+        roll.y = y;
+        roll.lifted = lifted;
+
+        Vector3d massCenter = pose.transformPosition(new Vector3d(md.getCenterOfMass()), new Vector3d());
+        noteHinge(sub, roll, md, pose, frame, seated, side, massCenter);
+        roll.preUp = handle.getLinearVelocity(new Vector3d()).dot(frame.up);
+        roll.preValid = true;
+
+        ForceTotal forces = new ForceTotal();
+        RollDynamics.Step step = new RollDynamics.Step(sub, car, md, handle, pose, frame, prepared, massCenter,
+                dt, forces);
+        boolean pushed = RollDynamics.torsion(step, phi, side);
+        pushed |= RollDynamics.curveRelief(step, phi, side);
+        if (pushed) {
+            pipeline.wakeUp(sub);
+            handle.applyForcesAndReset(forces);
+        }
+        updateJoints(pipeline, sub, wheels);
+    }
+
+    private static void noteHinge(ServerSubLevel sub, CarriageRoll.Roll roll, MassData md, Pose3d pose,
+                                  RollFrame frame, PoseTweak.Applied seated, int side, Vector3d massCenter) {
+        double gN = Math.max(0.0, -DimensionPhysicsData.getGravity(sub.getLevel()).dot(frame.up));
+        roll.gN = gN;
+        roll.axis = new Vector3d(frame.tangent);
+        roll.up = new Vector3d(frame.up);
+        roll.seat = new Quaterniond(seated.orientation());
+        roll.half = frame.half;
+        roll.mass = md.getMass();
+        roll.hingeK = RollDynamics.hingeStiffness(md.getMass(), gN, frame.half);
+        roll.hingeI = RollDynamics.hingeInertia(md, pose, frame, side, massCenter);
+        roll.couplerTorque = 0.0;
+        roll.couplerTwist = 0.0;
+    }
+
+    private static void updateJoints(PhysicsPipeline pipeline, ServerSubLevel sub, Wheel[] wheels) {
+        UUID id = sub.getUniqueId();
+        MassData bodyMass = sub.getMassTracker();
+        double mass = bodyMass == null || bodyMass.isInvalid() ? 1.0 : Math.max(0.1, bodyMass.getMass());
+        double sprungMass = mass / Math.max(1, wheels.length);
+        double gravity = Math.max(0.1, DimensionPhysicsData.getGravity(sub.getLevel()).length());
+        double omega = 2.0 * Math.PI * SUSPENSION_FREQUENCY_HZ;
+        double spring = sprungMass * omega * omega;
+        double damping = 2.0 * SUSPENSION_DAMPING_RATIO * Math.sqrt(spring * sprungMass);
+        double forceLimit = sprungMass * gravity * SUSPENSION_FORCE_MULTIPLIER;
+
+        Support[] supports = SUPPORTS.get(id);
+        if (supports == null || supports.length != wheels.length) {
+            release(id);
+            supports = new Support[wheels.length];
+            SUPPORTS.put(id, supports);
+        }
+        for (int i = 0; i < wheels.length; i++) {
+            Wheel wheel = wheels[i];
+            Support held = supports[i];
+            if (BodyRef.ofBody(wheel.host()).absent()) {
+                dropSupport(supports, i);
+                continue;
+            }
+            UUID hostId = wheel.host() == null ? null : wheel.host().getUniqueId();
+            Vector3d pos1 = wheel.host() == null ? new Vector3d(wheel.seatPoint())
+                    : wheel.host().logicalPose().transformPositionInverse(new Vector3d(wheel.seatPoint()),
+                    new Vector3d());
+            Quaterniond frame1 = hostFrame(wheel);
+            if (held != null && held.handle().isValid() && Objects.equals(held.hostId(), hostId)) {
+                held.handle().setFrame1(pos1, frame1);
+                held.handle().setFrame2(new Vector3d(wheel.local()), new Quaterniond());
+                tuneSuspension(held.handle(), spring, damping, forceLimit);
+                continue;
+            }
+            dropSupport(supports, i);
+            PhysicsPipelineBody bodyA = wheel.host();
+            GenericConstraintConfiguration config = new GenericConstraintConfiguration(pos1,
+                    new Vector3d(wheel.local()), frame1, new Quaterniond(), EnumSet.noneOf(ConstraintJointAxis.class));
+            GenericConstraintHandle created = pipeline.addConstraint(bodyA, sub, config);
+            if (created == null) {
+                continue;
+            }
+            created.setLimit(ConstraintJointAxis.LINEAR_Y, -SUSPENSION_COMPRESSION, CarriageRoll.LIFT_RANGE);
+            tuneSuspension(created, spring, damping, forceLimit);
+            supports[i] = new Support(created, hostId);
+        }
+    }
+
+    private static void tuneSuspension(GenericConstraintHandle handle, double spring,
+                                       double damping, double forceLimit) {
+        // The bogey can move a short distance into the spring; the motor returns it smoothly.
+        handle.setMotor(ConstraintJointAxis.LINEAR_Y, 0.0, spring, damping, true, forceLimit);
+    }
+
+    private static Quaterniond hostFrame(Wheel wheel) {
+        Vector3d joint = new Vector3d(wheel.tangent()).cross(wheel.normal()).normalize();
+        Quaterniond world = RailGlue.basisQuaternion(wheel.tangent(), wheel.normal(), joint);
+        if (wheel.host() == null) {
+            return world;
+        }
+        return new Quaterniond(wheel.host().logicalPose().orientation()).conjugate().mul(world);
+    }
+
+    private static void dropSupport(Support[] supports, int index) {
+        Support held = supports[index];
+        if (held != null && held.handle().isValid()) {
+            held.handle().remove();
+        }
+        supports[index] = null;
+    }
+
+    public static void release(UUID id) {
+        Support[] supports = SUPPORTS.remove(id);
+        if (supports == null) {
+            return;
+        }
+        for (Support held : supports) {
+            if (held != null && held.handle().isValid()) {
+                held.handle().remove();
+            }
+        }
+    }
+
+    public static void retain(Set<UUID> live) {
+        for (UUID id : List.copyOf(SUPPORTS.keySet())) {
+            if (!live.contains(id)) {
+                release(id);
+            }
+        }
+    }
+
+    public static void clearAll() {
+        SUPPORTS.clear();
+    }
+}

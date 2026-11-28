@@ -1,0 +1,148 @@
+{
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "t": "loconautics:block/airbrake/brake_hose_connector_open",
+    "particle": "loconautics:block/airbrake/brake_hose_connector_open"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        4,
+        0
+      ],
+      "to": [
+        12,
+        12,
+        3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            4.75,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            0.0,
+            4.75,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            0.75
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            2.0,
+            0.0,
+            4.0,
+            0.75
+          ],
+          "texture": "#t"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        5,
+        3
+      ],
+      "to": [
+        11,
+        11,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            10.25,
+            0.0,
+            11.75,
+            1.5
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            8.75,
+            0.0,
+            10.25,
+            1.5
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            6.25,
+            0.0,
+            7.5,
+            1.5
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            7.5,
+            0.0,
+            8.75,
+            1.5
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            4.75,
+            0.0,
+            6.25,
+            1.25
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            4.75,
+            0.0,
+            6.25,
+            1.25
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ]
+}

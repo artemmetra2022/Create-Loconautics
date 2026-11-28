@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {"item": "loconautics:gauge_switch"},
+    {"item": "minecraft:lever"}
+  ],
+  "result": {
+    "id": "loconautics:gauge_reverser",
+    "count": 1
+  }
+}

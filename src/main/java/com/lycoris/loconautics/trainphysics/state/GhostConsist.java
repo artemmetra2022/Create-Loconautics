@@ -1,0 +1,39 @@
+package com.lycoris.loconautics.trainphysics.state;
+
+import com.lycoris.loconautics.trainphysics.SableTrain;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+
+final class GhostConsist {
+
+    private GhostConsist() {
+    }
+
+    // sorted by body id so every car picks the same leader
+    static List<SableTrain> ghosts(SableTrain train, boolean railedOnly) {
+        List<SableTrain> out = new ArrayList<>();
+        out.add(train);
+        for (UUID id : train.consistCache()) {
+            SableTrain other = SableTrainRegistry.bySubLevel(id);
+            if (other != null && other != train && other.isGhost() && other.car() != null
+                    && other.car().subLevelId() != null && other.level() == train.level()
+                    && !(railedOnly && (other.isDerailed() || other.isPhysics()))) {
+                out.add(other);
+            }
+        }
+        out.sort(Comparator.comparing(member -> member.car().subLevelId()));
+        return out;
+    }
+
+    static SableTrain leader(List<SableTrain> group) {
+        for (SableTrain member : group) {
+            if (member.isScheduleDriven()) {
+                return member;
+            }
+        }
+        return group.get(0);
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "values": [
+        "#loconautics:boiler_body",
+        "#loconautics:boiler_firebox",
+        {"id": "#railways:locometal_boilers", "required": false}
+    ]
+}

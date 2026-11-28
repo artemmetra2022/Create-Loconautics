@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {"item": "loconautics:rail_signal"},
+    {"item": "minecraft:redstone_torch"}
+  ],
+  "result": {"id": "loconautics:signal_repeater", "count": 1}
+}

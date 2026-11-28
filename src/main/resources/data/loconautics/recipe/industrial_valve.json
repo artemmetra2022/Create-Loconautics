@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "industrialFluids"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AB"
+  ],
+  "key": {
+    "A": {
+      "item": "create:iron_sheet"
+    },
+    "B": {
+      "item": "create:fluid_pipe"
+    }
+  },
+  "result": {
+    "id": "loconautics:industrial_valve",
+    "count": 1
+  }
+}

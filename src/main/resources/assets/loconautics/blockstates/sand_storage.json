@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "fill_level=0": {
+      "model": "loconautics:block/sand_storage_0"
+    },
+    "fill_level=1": {
+      "model": "loconautics:block/sand_storage_1"
+    },
+    "fill_level=2": {
+      "model": "loconautics:block/sand_storage_2"
+    },
+    "fill_level=3": {
+      "model": "loconautics:block/sand_storage_3"
+    },
+    "fill_level=4": {
+      "model": "loconautics:block/sand_storage_4"
+    }
+  }
+}

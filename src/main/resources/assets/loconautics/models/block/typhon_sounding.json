@@ -1,0 +1,6 @@
+{
+  "parent": "loconautics:block/typhon",
+  "textures": {
+    "mouth": "loconautics:block/brakes/on"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "boilerworks"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "loconautics:paneled_boiler_bodies"
+    },
+    {
+      "item": "create:brass_ingot"
+    }
+  ],
+  "result": {
+    "id": "loconautics:brass_paneled_boiler_body",
+    "count": 1
+  }
+}

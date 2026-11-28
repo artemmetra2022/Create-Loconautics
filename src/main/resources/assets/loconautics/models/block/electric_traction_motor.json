@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "loconautics:block/electric_traction_motor_side",
+    "down": "loconautics:block/electric_traction_motor_side",
+    "up": "loconautics:block/electric_traction_motor_top",
+    "north": "loconautics:block/electric_traction_motor_front",
+    "south": "loconautics:block/electric_traction_motor_back",
+    "west": "loconautics:block/electric_traction_motor_side",
+    "east": "loconautics:block/electric_traction_motor_side"
+  }
+}

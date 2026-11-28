@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "airBrakes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I ",
+    "IBI",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:iron_sheet"
+    },
+    "B": {
+      "item": "create:fluid_tank"
+    }
+  },
+  "result": {
+    "id": "loconautics:air_reservoir",
+    "count": 1
+  }
+}
