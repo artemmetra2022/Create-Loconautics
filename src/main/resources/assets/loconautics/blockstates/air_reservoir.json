@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "loconautics:block/airbrake/air_reservoir"
+    },
+    "facing=south": {
+      "model": "loconautics:block/airbrake/air_reservoir",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "loconautics:block/airbrake/air_reservoir",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "loconautics:block/airbrake/air_reservoir",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "loconautics:block/airbrake/air_reservoir",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "loconautics:block/airbrake/air_reservoir",
+      "x": 90
+    }
+  }
+}

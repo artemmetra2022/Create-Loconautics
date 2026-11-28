@@ -1,0 +1,334 @@
+{
+  "variants": {
+    "facing=north,lit=true,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_on"
+    },
+    "facing=east,lit=true,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_off"
+    },
+    "facing=east,lit=false,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=0": {
+      "model": "loconautics:block/route_indicator_1_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_on"
+    },
+    "facing=east,lit=true,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_off"
+    },
+    "facing=east,lit=false,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=1": {
+      "model": "loconautics:block/route_indicator_2_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_on"
+    },
+    "facing=east,lit=true,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_off"
+    },
+    "facing=east,lit=false,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=2": {
+      "model": "loconautics:block/route_indicator_3_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_on"
+    },
+    "facing=east,lit=true,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_off"
+    },
+    "facing=east,lit=false,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=3": {
+      "model": "loconautics:block/route_indicator_4_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_on"
+    },
+    "facing=east,lit=true,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_off"
+    },
+    "facing=east,lit=false,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=4": {
+      "model": "loconautics:block/route_indicator_5_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_on"
+    },
+    "facing=east,lit=true,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_off"
+    },
+    "facing=east,lit=false,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=5": {
+      "model": "loconautics:block/route_indicator_6_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_on"
+    },
+    "facing=east,lit=true,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_off"
+    },
+    "facing=east,lit=false,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=6": {
+      "model": "loconautics:block/route_indicator_7_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_on"
+    },
+    "facing=east,lit=true,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_off"
+    },
+    "facing=east,lit=false,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=7": {
+      "model": "loconautics:block/route_indicator_8_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_on"
+    },
+    "facing=east,lit=true,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_off"
+    },
+    "facing=east,lit=false,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=8": {
+      "model": "loconautics:block/route_indicator_left_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_on"
+    },
+    "facing=east,lit=true,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_off"
+    },
+    "facing=east,lit=false,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=9": {
+      "model": "loconautics:block/route_indicator_right_off",
+      "y": 270
+    },
+    "facing=north,lit=true,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_on"
+    },
+    "facing=east,lit=true,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_on",
+      "y": 90
+    },
+    "facing=south,lit=true,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_on",
+      "y": 180
+    },
+    "facing=west,lit=true,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_on",
+      "y": 270
+    },
+    "facing=north,lit=false,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_off"
+    },
+    "facing=east,lit=false,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_off",
+      "y": 90
+    },
+    "facing=south,lit=false,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_off",
+      "y": 180
+    },
+    "facing=west,lit=false,symbol=10": {
+      "model": "loconautics:block/route_indicator_ahead_off",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "t": "loconautics:block/airbrake/triple_valve",
+    "particle": "loconautics:block/airbrake/triple_valve"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            2.5,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            0.0,
+            5.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            2.5,
+            0.0,
+            5.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            2.5,
+            0.0,
+            5.0,
+            2.0
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            5.0,
+            0.0,
+            7.5,
+            2.5
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            7.5,
+            0.0,
+            10.0,
+            2.5
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ]
+}

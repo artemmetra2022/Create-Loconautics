@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "boilerworks"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "loconautics:framed_boiler_bodies"
+    },
+    {
+      "item": "minecraft:black_dye"
+    }
+  ],
+  "result": {
+    "id": "loconautics:black_framed_boiler_body",
+    "count": 1
+  }
+}

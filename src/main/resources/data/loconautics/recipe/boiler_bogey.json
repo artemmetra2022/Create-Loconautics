@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "boilerworks"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "L",
+    "T",
+    "B"
+  ],
+  "key": {
+    "L": {
+      "item": "create:redstone_link"
+    },
+    "T": {
+      "item": "loconautics:boiler_tubes"
+    },
+    "B": {
+      "item": "create:industrial_iron_block"
+    }
+  },
+  "result": {
+    "id": "loconautics:boiler_bogey",
+    "count": 1
+  }
+}

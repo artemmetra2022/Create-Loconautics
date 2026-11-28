@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S",
+    "B"
+  ],
+  "key": {
+    "S": {
+      "item": "create:speedometer"
+    },
+    "B": {
+      "item": "create:industrial_iron_block"
+    }
+  },
+  "result": {
+    "id": "loconautics:speedometer",
+    "count": 1
+  }
+}

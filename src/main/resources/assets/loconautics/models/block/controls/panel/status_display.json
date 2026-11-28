@@ -1,0 +1,59 @@
+{
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "frame": "minecraft:block/deepslate_tiles",
+    "screen": "loconautics:block/controls/status_display_screen",
+    "particle": "minecraft:block/deepslate_tiles"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        1
+      ],
+      "to": [
+        6,
+        2,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#frame"
+        },
+        "south": {
+          "texture": "#frame"
+        },
+        "east": {
+          "texture": "#frame"
+        },
+        "west": {
+          "texture": "#frame"
+        },
+        "down": {
+          "texture": "#frame"
+        },
+        "up": {
+          "texture": "#frame"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        2.01,
+        1.5
+      ],
+      "to": [
+        5.5,
+        2.02,
+        6.5
+      ],
+      "faces": {
+        "up": {
+          "texture": "#screen"
+        }
+      }
+    }
+  ]
+}

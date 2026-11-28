@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "loconautics:block/overhead/contact_wire_x"
+    },
+    "axis=z": {
+      "model": "loconautics:block/overhead/contact_wire_z"
+    }
+  }
+}

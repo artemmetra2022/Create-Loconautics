@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,tripped=false": {
+      "model": "loconautics:block/safety_unit"
+    },
+    "facing=north,tripped=true": {
+      "model": "loconautics:block/safety_unit_tripped"
+    },
+    "facing=east,tripped=false": {
+      "model": "loconautics:block/safety_unit",
+      "y": 90
+    },
+    "facing=east,tripped=true": {
+      "model": "loconautics:block/safety_unit_tripped",
+      "y": 90
+    },
+    "facing=south,tripped=false": {
+      "model": "loconautics:block/safety_unit",
+      "y": 180
+    },
+    "facing=south,tripped=true": {
+      "model": "loconautics:block/safety_unit_tripped",
+      "y": 180
+    },
+    "facing=west,tripped=false": {
+      "model": "loconautics:block/safety_unit",
+      "y": 270
+    },
+    "facing=west,tripped=true": {
+      "model": "loconautics:block/safety_unit_tripped",
+      "y": 270
+    }
+  }
+}

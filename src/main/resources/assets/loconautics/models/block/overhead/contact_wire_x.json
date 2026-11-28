@@ -1,0 +1,153 @@
+{
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "wire": "loconautics:block/overhead/contact_wire",
+    "particle": "loconautics:block/overhead/steel_metal",
+    "messenger": "loconautics:block/overhead/messenger",
+    "dropper": "loconautics:block/overhead/dropper"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        7
+      ],
+      "to": [
+        16,
+        15,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wire"
+        },
+        "south": {
+          "texture": "#wire"
+        },
+        "east": {
+          "texture": "#wire"
+        },
+        "west": {
+          "texture": "#wire"
+        },
+        "up": {
+          "texture": "#wire"
+        },
+        "down": {
+          "texture": "#wire"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        7
+      ],
+      "to": [
+        16,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#messenger"
+        },
+        "south": {
+          "texture": "#messenger"
+        },
+        "east": {
+          "texture": "#messenger"
+        },
+        "west": {
+          "texture": "#messenger"
+        },
+        "up": {
+          "texture": "#messenger"
+        },
+        "down": {
+          "texture": "#messenger"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        7.25
+      ],
+      "to": [
+        3,
+        14,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        7.25
+      ],
+      "to": [
+        8,
+        14,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        10,
+        7.25
+      ],
+      "to": [
+        14,
+        14,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dropper"
+        },
+        "south": {
+          "texture": "#dropper"
+        },
+        "east": {
+          "texture": "#dropper"
+        },
+        "west": {
+          "texture": "#dropper"
+        }
+      }
+    }
+  ]
+}

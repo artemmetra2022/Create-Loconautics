@@ -1,0 +1,178 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "axis": "z",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/unpowered"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/powered"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "up": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_up"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "down": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_down"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "east": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_east"
+      }
+    },
+    {
+      "when": {
+        "axis": "z",
+        "west": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_west"
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/unpowered",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/powered",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "up": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_up",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "down": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_down",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "south": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_east",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "x",
+        "north": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_west",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/unpowered",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/powered",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "north": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_up",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "south": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_down",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "east": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_east",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "axis": "y",
+        "west": "true"
+      },
+      "apply": {
+        "model": "loconautics:block/transmission/lever_west",
+        "x": 90
+      }
+    }
+  ]
+}

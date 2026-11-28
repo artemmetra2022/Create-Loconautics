@@ -1,0 +1,11 @@
+{
+    "loader": "loconautics:connected_variants",
+    "along": true,
+    "textures": {
+        "particle": "loconautics:block/boiler/barrel/red/shell_atlas"
+    },
+    "single": "loconautics:block/boiler/firebox/body",
+    "start": "loconautics:block/boiler/firebox/body_link",
+    "middle": "loconautics:block/boiler/firebox/body_link",
+    "end": "loconautics:block/boiler/firebox/body"
+}

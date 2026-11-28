@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "airBrakes"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IPI",
+    "SKS",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "create:industrial_iron_block"
+    },
+    "P": {
+      "item": "create:mechanical_pump"
+    },
+    "S": {
+      "item": "create:shaft"
+    },
+    "K": {
+      "item": "create:cogwheel"
+    }
+  },
+  "result": {
+    "id": "loconautics:air_compressor",
+    "count": 1
+  }
+}

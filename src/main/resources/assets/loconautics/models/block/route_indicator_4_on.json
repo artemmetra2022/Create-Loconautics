@@ -1,0 +1,270 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "concrete": "loconautics:block/signal/concrete",
+    "head": "loconautics:block/signal/head",
+    "steel": "loconautics:block/signal/steel",
+    "visor": "loconautics:block/signal/visor",
+    "route_4_on": "loconautics:block/signal/route_4_on",
+    "particle": "loconautics:block/signal/head"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            8,
+            1
+          ],
+          "texture": "#concrete"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            8,
+            1
+          ],
+          "texture": "#concrete"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            8,
+            1
+          ],
+          "texture": "#concrete"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            8,
+            1
+          ],
+          "texture": "#concrete"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ],
+          "texture": "#concrete"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ],
+          "texture": "#concrete"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1,
+        5
+      ],
+      "to": [
+        13,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            10,
+            15
+          ],
+          "texture": "#head"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            10,
+            15
+          ],
+          "texture": "#head"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            5,
+            15
+          ],
+          "texture": "#head"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            5,
+            15
+          ],
+          "texture": "#head"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            10,
+            5
+          ],
+          "texture": "#head"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            10,
+            5
+          ],
+          "texture": "#head"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        2,
+        4.7
+      ],
+      "to": [
+        12.5,
+        15,
+        5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            9,
+            13
+          ],
+          "texture": "#steel"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2.5,
+        4.5
+      ],
+      "to": [
+        12,
+        14.5,
+        4.7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#route_4_on"
+        }
+      },
+      "shade": false,
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      }
+    },
+    {
+      "from": [
+        3.2,
+        15,
+        4.6
+      ],
+      "to": [
+        12.8,
+        16,
+        5.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            9.6,
+            1
+          ],
+          "texture": "#visor"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            9.6,
+            1
+          ],
+          "texture": "#visor"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            0.8,
+            1
+          ],
+          "texture": "#visor"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            0.8,
+            1
+          ],
+          "texture": "#visor"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            9.6,
+            0.8
+          ],
+          "texture": "#visor"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            9.6,
+            0.8
+          ],
+          "texture": "#visor"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

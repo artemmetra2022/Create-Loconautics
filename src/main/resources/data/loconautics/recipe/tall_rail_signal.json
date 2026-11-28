@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {"item": "loconautics:rail_signal"},
+    {"item": "create:iron_sheet"}
+  ],
+  "result": {"id": "loconautics:tall_rail_signal", "count": 1}
+}

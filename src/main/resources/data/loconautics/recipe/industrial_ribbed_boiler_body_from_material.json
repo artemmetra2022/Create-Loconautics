@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "loconautics:experimental",
+      "feature": "boilerworks"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "loconautics:ribbed_boiler_bodies"
+    },
+    {
+      "item": "loconautics:industrial_iron_sheet"
+    }
+  ],
+  "result": {
+    "id": "loconautics:industrial_ribbed_boiler_body",
+    "count": 1
+  }
+}

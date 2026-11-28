@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {"item": "loconautics:dwarf_signal"},
+    {"item": "minecraft:lapis_lazuli"}
+  ],
+  "result": {"id": "loconautics:shunting_signal", "count": 1}
+}

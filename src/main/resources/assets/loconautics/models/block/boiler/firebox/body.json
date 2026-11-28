@@ -1,0 +1,11 @@
+{
+    "loader": "neoforge:obj",
+    "model": "loconautics:models/block/boiler/firebox/obj/firebox.obj",
+    "flip_v": true,
+    "automatic_culling": false,
+    "render_type": "minecraft:cutout",
+    "textures": {
+        "0": "loconautics:block/boiler/barrel/red/shell_atlas",
+        "particle": "loconautics:block/boiler/barrel/red/shell_atlas"
+    }
+}

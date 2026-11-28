@@ -1,0 +1,697 @@
+package com.lycoris.loconautics.content.controls.panelgauge;
+
+import com.lycoris.loconautics.compat.gauge.AeronauticsGauges;
+import com.lycoris.loconautics.compat.gauge.DieselGauges;
+import com.lycoris.loconautics.compat.gauge.PropulsionGauges;
+import com.lycoris.loconautics.content.boiler.firebox.FireboxBlockEntity;
+import com.lycoris.loconautics.content.airbrake.AirBrakeTuning;
+import com.lycoris.loconautics.content.airbrake.AirCompressorBlockEntity;
+import com.lycoris.loconautics.content.airbrake.AirReservoirBlockEntity;
+import com.lycoris.loconautics.content.airbrake.DriverBrakeValveBlockEntity;
+import com.lycoris.loconautics.content.airbrake.TripleValveBlockEntity;
+import com.lycoris.loconautics.content.brakes.BrakeControllerBlockEntity;
+import com.lycoris.loconautics.content.combustion.SmallEngineBlockEntity;
+import com.lycoris.loconautics.content.combustion.SmallEngineTuning;
+import com.lycoris.loconautics.content.safety.SafetyBlockEntity;
+import com.lycoris.loconautics.content.speedometer.SpeedometerBlockEntity;
+import com.mojang.serialization.Codec;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
+import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+import dev.simulated_team.simulated.content.blocks.altitude_sensor.AltitudeSensorBlockEntity;
+import dev.simulated_team.simulated.content.blocks.gimbal_sensor.GimbalSensorBlockEntity;
+import dev.simulated_team.simulated.content.blocks.portable_engine.PortableEngineBlockEntity;
+import dev.simulated_team.simulated.content.blocks.velocity_sensor.VelocitySensorBlockEntity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public enum GaugeMetric implements StringRepresentable {
+
+    TEMPERATURE(FireboxBlockEntity.class,
+            FireboxBlockEntity::formattedTemperature,
+            FireboxBlockEntity::temperatureFraction, ChatFormatting.GOLD, 27),
+    PRESSURE(FireboxBlockEntity.class,
+            be -> pct(be.getDisplayPressure()),
+            FireboxBlockEntity::getDisplayPressure, ChatFormatting.AQUA, 21),
+    STEAM_OUTPUT(FireboxBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f SU", be.getDisplaySu()),
+            be -> over(be.getDisplaySu(), be.getDisplayMaxSu()), ChatFormatting.AQUA, 15),
+    SHAFT_RPM(FireboxBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f RPM", be.getDisplayRpm()),
+            be -> over(be.getDisplayRpm(), (float) FireboxBlockEntity.TAKEOFF_MAX_RPM),
+            ChatFormatting.AQUA, 9),
+    BURN_RATE(FireboxBlockEntity.class,
+            be -> String.format(Locale.US, "%.2fx", be.getLastBurnRate()),
+            be -> over(be.getLastBurnRate(), 4f), ChatFormatting.GOLD, 22),
+    FIRE(FireboxBlockEntity.class,
+            be -> be.getDisplayFire() > 0f ? pct(be.getDisplayFire())
+                    : Component.translatable("loconautics.gui.goggles.gauge_fire_out").getString(),
+            FireboxBlockEntity::getDisplayFire, ChatFormatting.GOLD, 22),
+    FUEL_REMAINING(FireboxBlockEntity.class,
+            be -> FireboxBlockEntity.formatTime(be.getDisplayRemaining()),
+            be -> over(be.getDisplayRemaining(), 600f), ChatFormatting.WHITE, 32),
+    WATER_LEVEL(FireboxBlockEntity.class,
+            GaugeMetric::waterLevel,
+            be -> be.isDisplayValid() ? over(be.getDisplayWater(), be.getWaterCapacity()) : 0f,
+            ChatFormatting.BLUE, 2),
+    EFFICIENCY(FireboxBlockEntity.class,
+            be -> pct(be.getDisplayEfficiency()),
+            FireboxBlockEntity::getDisplayEfficiency, ChatFormatting.GREEN, 17),
+    NETWORK_STRESS(FireboxBlockEntity.class,
+            be -> pct(be.getLastStressRatio()),
+            FireboxBlockEntity::getLastStressRatio, ChatFormatting.AQUA, 23),
+    TRAIN_WEIGHT(FireboxBlockEntity.class,
+            GaugeMetric::trainWeight,
+            be -> over((float) Math.max(0.0, be.getLastTrainMass()), 3000f), ChatFormatting.GOLD, 3),
+    BOILER_LEVEL(FireboxBlockEntity.class,
+            be -> be.getDisplayLevel() + " / " + be.getDisplayMaxLevel(),
+            be -> over(be.getDisplayLevel(), be.getDisplayMaxLevel()), ChatFormatting.GOLD, 6),
+    BOGEY_POWER(FireboxBlockEntity.class,
+            be -> be.getDisplayBogeyDemand() <= 0f ? "--"
+                    : String.format(Locale.US, "%,.0f / %,.0f SU", be.getDisplayBogeyDemand(), be.getDisplayMaxSu()),
+            be -> over(be.getDisplayBogeyDemand(), be.getDisplayMaxSu()), ChatFormatting.AQUA, 15),
+
+    SPEEDOMETER_RPM(SpeedGaugeBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f RPM", Math.abs(be.getSpeed())),
+            be -> SpeedGaugeBlockEntity.getDialTarget(be.getSpeed()), ChatFormatting.AQUA, 9),
+
+    STRESSOMETER_LOAD_SU(StressGaugeBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f/%,.0f SU",
+                    be.getNetworkStress(), be.getNetworkCapacity()),
+            be -> over(be.getNetworkStress(), be.getNetworkCapacity()), ChatFormatting.AQUA, 23),
+    STRESSOMETER_LOAD(StressGaugeBlockEntity.class,
+            be -> pct(over(be.getNetworkStress(), be.getNetworkCapacity())),
+            be -> over(be.getNetworkStress(), be.getNetworkCapacity()), ChatFormatting.AQUA, 22),
+    STRESSOMETER_SPARE(StressGaugeBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f SU (%s)",
+                    Math.max(0f, be.getNetworkCapacity() - be.getNetworkStress()),
+                    pct(over(Math.max(0f, be.getNetworkCapacity() - be.getNetworkStress()),
+                            be.getNetworkCapacity()))),
+            be -> over(Math.max(0f, be.getNetworkCapacity() - be.getNetworkStress()),
+                    be.getNetworkCapacity()), ChatFormatting.GREEN, 17),
+
+    SUB_LEVEL_SPEED(VelocitySensorBlockEntity.class,
+            be -> speed(be, 1.0, "m/s"), GaugeMetric::speedFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    SUB_LEVEL_SPEED_FPS(VelocitySensorBlockEntity.class,
+            be -> speed(be, 3.28084, "ft/s"), GaugeMetric::speedFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    SUB_LEVEL_SPEED_KMH(VelocitySensorBlockEntity.class,
+            be -> speed(be, 3.6, "km/h"), GaugeMetric::speedFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    SUB_LEVEL_SPEED_MPH(VelocitySensorBlockEntity.class,
+            be -> speed(be, 2.23694, "mph"), GaugeMetric::speedFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    ALTITUDE_HEIGHT(AltitudeSensorBlockEntity.class,
+            be -> String.format(Locale.US, "%,.1f m", be.getWorldHeight()),
+            AltitudeSensorBlockEntity::getNormalHeight, ChatFormatting.AQUA,
+            GaugeBlockEntity.DEFAULT_BACKGROUND),
+    ALTITUDE_AIR_PRESSURE(AltitudeSensorBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f%%", be.getAirPressure() * 100.0),
+            be -> (float) be.getAirPressure(), ChatFormatting.WHITE, 21),
+
+    GIMBAL_X_ANGLE(GimbalSensorBlockEntity.class,
+            be -> degrees(be.getXAngle()),
+            be -> angleFraction(be.getXAngle()), ChatFormatting.RED,
+            GaugeBlockEntity.DEFAULT_BACKGROUND),
+    GIMBAL_Z_ANGLE(GimbalSensorBlockEntity.class,
+            be -> degrees(be.getZAngle()),
+            be -> angleFraction(be.getZAngle()), ChatFormatting.BLUE,
+            GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    FLUID_VALVE_STATE(FluidValveBlockEntity.class,
+            be -> Component.translatable(valveOpen(be)
+                    ? "loconautics.gui.goggles.gauge_valve_open"
+                    : "loconautics.gui.goggles.gauge_valve_closed").getString(),
+            be -> valveOpen(be) ? 1f : 0f, ChatFormatting.AQUA,
+            GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    ENGINE_RPM(PortableEngineBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f RPM", Math.abs(be.getGeneratedSpeed())),
+            be -> over(Math.abs(be.getGeneratedSpeed()), 256f), ChatFormatting.AQUA, 9),
+    ENGINE_FUEL(PortableEngineBlockEntity.class,
+            GaugeMetric::engineFuel, GaugeMetric::engineFuelFraction, ChatFormatting.WHITE, 32),
+    TANK_FLUID(FluidTankBlockEntity.class,
+            GaugeMetric::tankFluid, GaugeMetric::tankFraction, ChatFormatting.BLUE, 2),
+    TANK_FILL(FluidTankBlockEntity.class,
+            be -> pct(tankFraction(be)), GaugeMetric::tankFraction, ChatFormatting.BLUE, 2),
+
+    DIESEL_FUEL(Group.DIESEL_ENGINE, DieselGauges::fuel, DieselGauges::fuelFraction, ChatFormatting.GOLD, 32),
+    DIESEL_FILL(Group.DIESEL_ENGINE, DieselGauges::fuelFill, DieselGauges::fuelFraction, ChatFormatting.GOLD, 32),
+    DIESEL_RPM(Group.DIESEL_ENGINE, DieselGauges::rpm, DieselGauges::rpmFraction, ChatFormatting.AQUA, 9),
+    DIESEL_THROTTLE(Group.DIESEL_ENGINE, DieselGauges::throttle, DieselGauges::throttleFraction,
+            ChatFormatting.GREEN, 17),
+    DIESEL_BURNS_FOR(Group.DIESEL_ENGINE, DieselGauges::burnsFor, DieselGauges::burnsForFraction,
+            ChatFormatting.WHITE, 32),
+
+    THRUSTER_FUEL(Group.THRUSTER, PropulsionGauges::thrusterFuel, PropulsionGauges::thrusterFuelFraction,
+            ChatFormatting.GOLD, 32),
+    THRUSTER_THROTTLE(Group.THRUSTER, PropulsionGauges::thrusterThrottle, PropulsionGauges::thrusterPower,
+            ChatFormatting.GREEN, 17),
+    THRUSTER_THRUST(Group.THRUSTER, PropulsionGauges::thrusterThrust, PropulsionGauges::thrusterPower,
+            ChatFormatting.AQUA, 9),
+    THRUSTER_ION_ENERGY(Group.THRUSTER, PropulsionGauges::ionEnergy, PropulsionGauges::ionEnergyFraction,
+            ChatFormatting.AQUA, 23),
+
+    BURNER_FUEL(Group.LIQUID_BURNER, PropulsionGauges::burnerFuel, PropulsionGauges::burnerFuelFraction,
+            ChatFormatting.GOLD, 32),
+    BURNER_TIME(Group.LIQUID_BURNER, PropulsionGauges::burnerTime, PropulsionGauges::burnerTimeFraction,
+            ChatFormatting.WHITE, 32),
+    BURNER_HEAT(Group.LIQUID_BURNER, PropulsionGauges::burnerHeat, PropulsionGauges::burnerHeatFraction,
+            ChatFormatting.GOLD, 22),
+
+    PROPELLER_RPM(Group.PROPELLER_BEARING, AeronauticsGauges::bearingRpm, AeronauticsGauges::bearingSpeedFraction,
+            ChatFormatting.AQUA, 9),
+    PROPELLER_THRUST(Group.PROPELLER_BEARING, AeronauticsGauges::bearingThrust,
+            AeronauticsGauges::bearingSpeedFraction, ChatFormatting.AQUA, 9),
+    PROPELLER_AIRFLOW(Group.PROPELLER_BEARING, AeronauticsGauges::bearingAirflow,
+            AeronauticsGauges::bearingSpeedFraction, ChatFormatting.WHITE, 21),
+
+    HOT_AIR_OUTPUT(Group.HOT_AIR_BURNER, AeronauticsGauges::hotAirOutput, AeronauticsGauges::hotAirFraction,
+            ChatFormatting.GOLD, 22),
+    STEAM_VENT_OUTPUT(Group.STEAM_VENT, AeronauticsGauges::steamOutput, AeronauticsGauges::steamFraction,
+            ChatFormatting.WHITE, 21),
+
+    SMALL_ENGINE_RPM(SmallEngineBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f RPM", be.getOutputRpm()),
+            be -> over(be.getOutputRpm(), SmallEngineTuning.TOP_RPM), ChatFormatting.AQUA, 9),
+    SMALL_ENGINE_OUTPUT(SmallEngineBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f SU", be.getOutputSu()),
+            be -> over(be.getOutputSu(), SmallEngineTuning.SU_PER_ENGINE * SmallEngineTuning.MAX_TANDEM),
+            ChatFormatting.AQUA, 15),
+    SMALL_ENGINE_THROTTLE(SmallEngineBlockEntity.class,
+            be -> SmallEngineTuning.isOff(be.getControlSignal()) ? "0%"
+                    : pct(SmallEngineTuning.speedFraction(be.getControlSignal())),
+            be -> SmallEngineTuning.speedFraction(be.getControlSignal()), ChatFormatting.GREEN, 17),
+    SMALL_ENGINE_FUEL(SmallEngineBlockEntity.class,
+            be -> String.format(Locale.US, "%,d / %,d mB", be.getFuelAmount(), be.getFuelCapacity()),
+            be -> over(be.getFuelAmount(), be.getFuelCapacity()), ChatFormatting.GOLD, 32),
+    SMALL_ENGINE_FILL(SmallEngineBlockEntity.class,
+            be -> pct(over(be.getFuelAmount(), be.getFuelCapacity())),
+            be -> over(be.getFuelAmount(), be.getFuelCapacity()), ChatFormatting.GOLD, 32),
+    SMALL_ENGINE_BURNS_FOR(SmallEngineBlockEntity.class,
+            GaugeMetric::smallEngineBurnsFor,
+            be -> be.getBurnsForSeconds() < 0 ? 0f : over(be.getBurnsForSeconds(), 600f),
+            ChatFormatting.WHITE, 32),
+
+    TRAIN_SPEED_KMH(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f km/h", be.getSpeed() * 3.6f),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRAIN_SPEED_MS(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f m/s", be.getSpeed()),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRAIN_SPEED_MPH(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.1f mph", be.getSpeed() * 2.23694f),
+            be -> over(be.getSpeed(), (float) SpeedometerBlockEntity.FULL_SCALE),
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    ODOMETER_KM(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.2f km", be.getTotalMeters() / 1000.0),
+            be -> (float) ((be.getTotalMeters() / 1000.0) % 1.0),
+            ChatFormatting.GOLD, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    TRIP_KM(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.2f km", be.getTripMeters() / 1000.0),
+            be -> (float) ((be.getTripMeters() / 1000.0) % 1.0),
+            ChatFormatting.GOLD, GaugeBlockEntity.DEFAULT_BACKGROUND),
+    CLOCK(SpeedometerBlockEntity.class,
+            GaugeMetric::clockText, GaugeMetric::clockFraction,
+            ChatFormatting.WHITE, GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    ACCELERATION(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%+.2f m/s²", be.getAcceleration()),
+            GaugeMetric::accelerationFraction,
+            ChatFormatting.AQUA, GaugeBlockEntity.DEFAULT_BACKGROUND),
+
+    // brake controller: appended last on purpose, the network codec writes enum ordinals
+    BRAKE_PRESSURE(BrakeControllerBlockEntity.class,
+            GaugeMetric::brakePressureText, GaugeMetric::brakeLevelFraction,
+            ChatFormatting.GOLD, 22),
+    BRAKE_FORCE(BrakeControllerBlockEntity.class,
+            be -> be.isActive() ? pct(brakeForce(be)) : inactiveBrake(),
+            be -> be.isActive() ? brakeForce(be) : 0f,
+            ChatFormatting.GOLD, 22),
+    BRAKE_STATE(BrakeControllerBlockEntity.class,
+            GaugeMetric::brakeStateText, GaugeMetric::brakeStateFraction,
+            ChatFormatting.GREEN, 22),
+
+    // safety unit: appended last on purpose, the network codec writes enum ordinals
+    SAFETY_STATUS(SafetyBlockEntity.class,
+            GaugeMetric::safetyStatusText, GaugeMetric::safetyStatusFraction,
+            ChatFormatting.GREEN, 22),
+    SAFETY_SPEED_LIMIT(SafetyBlockEntity.class,
+            be -> String.format(Locale.US, "%d km/h", be.speedLimit()),
+            be -> over(be.speedLimit(), SafetyBlockEntity.MAX_SPEED_LIMIT),
+            ChatFormatting.AQUA, 22),
+
+    // air brakes: appended last on purpose, the network codec writes enum ordinals
+    MAIN_RESERVOIR_PRESSURE(AirReservoirBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPressureBar()),
+            be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.AQUA, 21),
+    BRAKE_PIPE_PRESSURE(DriverBrakeValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPipePressure()),
+            be -> over(be.getPipePressure(), AirBrakeTuning.WORKING_PIPE_BAR),
+            ChatFormatting.AQUA, 21),
+    BRAKE_CYLINDER_PRESSURE(TripleValveBlockEntity.class,
+            be -> pct(be.getCylinderDisplayFraction()),
+            TripleValveBlockEntity::getCylinderDisplayFraction,
+            ChatFormatting.GOLD, 22),
+    DRIVER_MAIN_PRESSURE(DriverBrakeValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getMainPressure()),
+            be -> over(be.getMainPressure(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.DARK_AQUA, 21),
+
+    // Appended to preserve existing gauge metric ordinals used by saved panels and packets.
+    TRAIN_MASS(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%,.0f", be.getConsistMass()),
+            be -> over(be.getConsistMass(), 3000f), ChatFormatting.GOLD, 3),
+    TRACK_GRADE(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%+.1f%%", be.getTrackGrade()),
+            be -> (float) (0.5 + Mth.clamp(be.getTrackGrade(), -10f, 10f) / 20f),
+            ChatFormatting.AQUA, 21),
+    ADHESION_LIMIT(SpeedometerBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f m/s²", be.getAdhesionLimit()),
+            be -> over(be.getAdhesionLimit(), 5f), ChatFormatting.GREEN, 17),
+    POWERED_AXLE_SLIP(SpeedometerBlockEntity.class,
+            be -> pct(be.getPoweredAxleSlip()),
+            SpeedometerBlockEntity::getPoweredAxleSlip, ChatFormatting.YELLOW, 22),
+    TRAIN_BRAKE_DEMAND(SpeedometerBlockEntity.class,
+            be -> pct(be.getBrakeDemand()),
+            SpeedometerBlockEntity::getBrakeDemand, ChatFormatting.RED, 22),
+
+    // Pneumatic system metrics are appended to keep all existing saved metric ordinals stable.
+    MAIN_RESERVOIR_PRESSURE_PERCENT(AirReservoirBlockEntity.class,
+            be -> pct(over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR)),
+            be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.GREEN, 17),
+    DRIVER_BRAKE_NOTCH(DriverBrakeValveBlockEntity.class,
+            be -> String.format(Locale.US, "%d / %d", be.getNotch(), AirBrakeTuning.MAX_NOTCH),
+            be -> over(be.getNotch(), AirBrakeTuning.MAX_NOTCH),
+            ChatFormatting.GOLD, 22),
+    AIR_COMPRESSOR_PRESSURE(AirCompressorBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPressureBar()),
+            be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.AQUA, 21),
+    AIR_COMPRESSOR_FILL(AirCompressorBlockEntity.class,
+            be -> pct(over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR)),
+            be -> over(be.getPressureBar(), AirBrakeTuning.MAX_MAIN_RESERVOIR_BAR),
+            ChatFormatting.GREEN, 17),
+    AIR_COMPRESSOR_STATE(AirCompressorBlockEntity.class,
+            be -> Component.translatable(be.isPumping()
+                    ? "loconautics.gui.goggles.gauge_air_compressor_pumping"
+                    : "loconautics.gui.goggles.gauge_air_compressor_idle").getString(),
+            be -> be.isPumping() ? 1f : 0f, ChatFormatting.GREEN, 22),
+    TRIPLE_VALVE_PIPE_PRESSURE(TripleValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getPipePressure()),
+            be -> over(be.getPipePressure(), AirBrakeTuning.WORKING_PIPE_BAR),
+            ChatFormatting.AQUA, 21),
+    TRIPLE_VALVE_AUX_PRESSURE(TripleValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getAuxPressure()),
+            be -> over(be.getAuxPressure(), AirBrakeTuning.MAX_AUX_RESERVOIR_BAR),
+            ChatFormatting.DARK_AQUA, 21),
+    TRIPLE_VALVE_EMERGENCY_RESERVOIR_PRESSURE(TripleValveBlockEntity.class,
+            be -> String.format(Locale.US, "%.2f bar", be.getEmergencyReservoirPressure()),
+            be -> over(be.getEmergencyReservoirPressure(), AirBrakeTuning.MAX_AUX_RESERVOIR_BAR),
+            ChatFormatting.GOLD, 21);
+
+    public enum Group {
+        FIREBOX("loconautics", "Loconautics", "Firebox", FireboxBlockEntity.class),
+        SPEEDOMETER("create", "Create", "Speedometer", SpeedGaugeBlockEntity.class),
+        STRESSOMETER("create", "Create", "Stressometer", StressGaugeBlockEntity.class),
+        VELOCITY("simulated", "Create: Simulated", "Velocity Sensor", VelocitySensorBlockEntity.class),
+        ALTITUDE("simulated", "Create: Simulated", "Altitude Sensor", AltitudeSensorBlockEntity.class),
+        GIMBAL("simulated", "Create: Simulated", "Gimbal Sensor", GimbalSensorBlockEntity.class),
+        SMALL_ENGINE("loconautics", "Loconautics", "Small Combustion Engine", SmallEngineBlockEntity.class),
+        TRAIN_SPEEDOMETER("loconautics", "Loconautics", "Speedometer", SpeedometerBlockEntity.class),
+        FLUID_VALVE("create", "Create", "Fluid Valve", FluidValveBlockEntity.class),
+        PORTABLE_ENGINE("simulated", "Create: Simulated", "Portable Engine", PortableEngineBlockEntity.class),
+        FLUID_TANK("create", "Create", "Fluid Tank", FluidTankBlockEntity.class),
+        DIESEL_ENGINE("createdieselgenerators", "Create: Diesel Generators", "Diesel Engines",
+                DieselGauges::sources),
+        THRUSTER("createpropulsion", "Create: Propulsion", "Thrusters", PropulsionGauges::thrusterSources),
+        LIQUID_BURNER("createpropulsion", "Create: Propulsion", "Liquid Burner", PropulsionGauges::burnerSources),
+        PROPELLER_BEARING("aeronautics", "Create: Aeronautics", "Propeller Bearing",
+                AeronauticsGauges::bearingSources),
+        HOT_AIR_BURNER("aeronautics", "Create: Aeronautics", "Hot Air Burner", AeronauticsGauges::hotAirSources),
+        STEAM_VENT("aeronautics", "Create: Aeronautics", "Steam Vent", AeronauticsGauges::steamSources),
+        BRAKE_CONTROLLER("loconautics", "Loconautics", "Brake Controller", BrakeControllerBlockEntity.class),
+        SAFETY_UNIT("loconautics", "Loconautics", "Safety Unit", SafetyBlockEntity.class),
+        AIR_RESERVOIR("loconautics", "Loconautics", "Air Reservoir", AirReservoirBlockEntity.class),
+        DRIVER_BRAKE_VALVE("loconautics", "Loconautics", "Driver's Brake Valve", DriverBrakeValveBlockEntity.class),
+        TRIPLE_VALVE("loconautics", "Loconautics", "Triple Valve", TripleValveBlockEntity.class),
+        AIR_COMPRESSOR("loconautics", "Loconautics", "Air Compressor", AirCompressorBlockEntity.class);
+
+        private final String modId;
+        private final String modName;
+        private final String blockName;
+        private final Supplier<List<Class<? extends BlockEntity>>> sourceList;
+        private List<Class<? extends BlockEntity>> sources;
+
+        Group(String modId, String modName, String blockName, Class<? extends BlockEntity> source) {
+            this(modId, modName, blockName, () -> List.of(source));
+        }
+
+        Group(String modId, String modName, String blockName,
+              Supplier<List<Class<? extends BlockEntity>>> sourceList) {
+            this.modId = modId;
+            this.modName = modName;
+            this.blockName = blockName;
+            this.sourceList = sourceList;
+        }
+
+        public String modId() {
+            return modId;
+        }
+
+        public String modName() {
+            return modName;
+        }
+
+        public String blockName() {
+            return blockName;
+        }
+
+        private List<Class<? extends BlockEntity>> sources() {
+            if (sources == null) {
+                sources = ModList.get().isLoaded(modId) ? sourceList.get() : List.of();
+            }
+            return sources;
+        }
+
+        @Nullable
+        public static Group of(@Nullable BlockEntity source) {
+            if (source == null) return null;
+            for (Group group : values()) {
+                for (Class<? extends BlockEntity> type : group.sources()) {
+                    if (type.isInstance(source)) return group;
+                }
+            }
+            return null;
+        }
+
+        static Group declaring(Class<? extends BlockEntity> source) {
+            for (Group group : values()) {
+                if (group.sources().contains(source)) return group;
+            }
+            throw new IllegalArgumentException("no panelgauge group declares " + source);
+        }
+    }
+
+    public static final Codec<GaugeMetric> CODEC = StringRepresentable.fromValues(GaugeMetric::values);
+
+    public static final StreamCodec<io.netty.buffer.ByteBuf, GaugeMetric> STREAM_CODEC =
+            ByteBufCodecs.idMapper(GaugeMetric::byOrdinal, GaugeMetric::ordinal);
+
+    public static GaugeMetric byOrdinal(int ordinal) {
+        GaugeMetric[] all = values();
+        return ordinal < 0 || ordinal >= all.length ? TEMPERATURE : all[ordinal];
+    }
+
+    private final Group group;
+    private final Function<BlockEntity, String> reader;
+    private final Function<BlockEntity, Float> normalizer;
+    private final ChatFormatting color;
+    private final int defaultBackground;
+
+    <S extends BlockEntity> GaugeMetric(Class<S> source, Function<S, String> reader,
+                                        Function<S, Float> normalizer,
+                                        ChatFormatting color, int defaultBackground) {
+        this.group = Group.declaring(source);
+        this.reader = from(source, reader);
+        this.normalizer = from(source, normalizer);
+        this.color = color;
+        this.defaultBackground = defaultBackground;
+    }
+
+    GaugeMetric(Group group, Function<BlockEntity, String> reader, Function<BlockEntity, Float> normalizer,
+                ChatFormatting color, int defaultBackground) {
+        this.group = group;
+        this.reader = reader;
+        this.normalizer = normalizer;
+        this.color = color;
+        this.defaultBackground = defaultBackground;
+    }
+
+    private static <S extends BlockEntity, T> Function<BlockEntity, T> from(Class<S> source,
+                                                                            Function<S, T> reader) {
+        return be -> source.isInstance(be) ? reader.apply(source.cast(be)) : null;
+    }
+
+    /** the brake cylinder pressure the dial shows, the full lever and the emergency brake both read this */
+    public static final float BRAKE_FULL_BAR = 5.0f;
+
+    private static float brakeLevelFraction(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return 0f;
+        if (be.isEmergency()) return 1f;
+        return over(be.getEffectiveBrakeSignal(), BrakeControllerBlockEntity.MAX_SIGNAL);
+    }
+
+    private static String brakePressureText(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return inactiveBrake();
+        return String.format(Locale.US, "%.1f bar", brakeLevelFraction(be) * BRAKE_FULL_BAR);
+    }
+
+    /** the share of the shaft speed the brake takes away right now */
+    private static float brakeForce(BrakeControllerBlockEntity be) {
+        return 1f - be.getBrakeCoefficient();
+    }
+
+    private static String brakeStateText(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return inactiveBrake();
+        String key = be.isEmergency() ? "loconautics.gui.goggles.gauge_brake_emergency"
+                : be.isBraking() ? "loconautics.gui.goggles.gauge_brake_braking"
+                : "loconautics.gui.goggles.gauge_brake_released";
+        return Component.translatable(key).getString();
+    }
+
+    // 0 released, 0.5 braking with the lever, 1 emergency
+    private static float brakeStateFraction(BrakeControllerBlockEntity be) {
+        if (!be.isActive()) return 0f;
+        return be.isEmergency() ? 1f : be.isBraking() ? 0.5f : 0f;
+    }
+
+    private static String inactiveBrake() {
+        return Component.translatable("loconautics.gui.goggles.gauge_brake_inactive").getString();
+    }
+
+    private static String safetyStatusText(SafetyBlockEntity be) {
+        String key = switch (be.alarmState()) {
+            case SafetyBlockEntity.ALARM_APPROACHING_LIMIT -> "loconautics.gui.goggles.gauge_safety_warning";
+            case SafetyBlockEntity.ALARM_ANTI_ROLLBACK -> "loconautics.gui.goggles.gauge_safety_rollback";
+            case SafetyBlockEntity.ALARM_OVERSPEED -> "loconautics.gui.goggles.gauge_safety_overspeed";
+            case SafetyBlockEntity.ALARM_DERAILMENT -> "loconautics.gui.goggles.gauge_safety_derailed";
+            case SafetyBlockEntity.ALARM_RED_SIGNAL -> "loconautics.gui.goggles.gauge_safety_red_signal";
+            default -> be.activeMask() == 0
+                    ? "loconautics.gui.goggles.gauge_safety_off"
+                    : "loconautics.gui.goggles.gauge_safety_armed";
+        };
+        return Component.translatable(key).getString();
+    }
+
+    private static float safetyStatusFraction(SafetyBlockEntity be) {
+        int alarm = be.alarmState();
+        if (SafetyBlockEntity.isEmergencyAlarm(alarm)) return 1f;
+        if (alarm == SafetyBlockEntity.ALARM_APPROACHING_LIMIT) return 0.5f;
+        return 0f;
+    }
+
+    private static boolean valveOpen(FluidValveBlockEntity be) {
+        BlockState state = be.getBlockState();
+        return state.hasProperty(FluidValveBlock.ENABLED) && state.getValue(FluidValveBlock.ENABLED);
+    }
+
+    private static String smallEngineBurnsFor(SmallEngineBlockEntity be) {
+        int seconds = be.getBurnsForSeconds();
+        if (seconds < 0) return Component.translatable("loconautics.gui.goggles.gauge_small_engine_idle").getString();
+        return FireboxBlockEntity.formatTime(seconds);
+    }
+
+    public static String formatTime(int sec) {
+        return FireboxBlockEntity.formatTime(sec);
+    }
+
+    private static String engineFuel(PortableEngineBlockEntity be) {
+        if (be.isCurrentFuelInfinite()) return "∞";
+        return FireboxBlockEntity.formatTime(be.getCurrentBurnTime() / 20);
+    }
+
+    private static float engineFuelFraction(PortableEngineBlockEntity be) {
+        if (be.isCurrentFuelInfinite()) return 1f;
+        return over(be.getCurrentBurnTime(), be.getTotalBurnTime());
+    }
+
+    private static String tankFluid(FluidTankBlockEntity be) {
+        FluidTankBlockEntity controller = be.getControllerBE();
+        if (controller == null) return null;
+        return String.format(Locale.US, "%,d / %,d mB",
+                controller.getTankInventory().getFluidAmount(),
+                controller.getTankInventory().getCapacity());
+    }
+
+    private static float tankFraction(FluidTankBlockEntity be) {
+        FluidTankBlockEntity controller = be.getControllerBE();
+        if (controller == null) return 0f;
+        return over(controller.getTankInventory().getFluidAmount(),
+                controller.getTankInventory().getCapacity());
+    }
+
+    private static float clockHours(SpeedometerBlockEntity be) {
+        if (be.getLevel() == null) return 0f;
+        // day time 0 is six in the morning
+        return ((be.getLevel().getDayTime() % 24000L) / 1000f + 6f) % 24f;
+    }
+
+    private static String clockText(SpeedometerBlockEntity be) {
+        float hours = clockHours(be);
+        int whole = (int) hours;
+        return String.format(Locale.US, "%02d:%02d", whole, (int) ((hours - whole) * 60f));
+    }
+
+    // a twelve hour dial, the needle goes round twice a day
+    private static float clockFraction(SpeedometerBlockEntity be) {
+        return (clockHours(be) % 12f) / 12f;
+    }
+
+    // centered dial: 0 m/s^2 sits at the middle (0.5), full scale braking/accelerating swings it to either end
+    private static float accelerationFraction(SpeedometerBlockEntity be) {
+        double clamped = Mth.clamp(be.getAcceleration(),
+                -SpeedometerBlockEntity.ACCELERATION_FULL_SCALE, SpeedometerBlockEntity.ACCELERATION_FULL_SCALE);
+        return (float) (0.5 + clamped / (SpeedometerBlockEntity.ACCELERATION_FULL_SCALE * 2.0));
+    }
+
+    private static String speed(VelocitySensorBlockEntity be, double factor, String unit) {
+        return String.format(Locale.US, "%.1f %s", Math.abs(be.getAdjustedVelocity()) * factor, unit);
+    }
+
+    private static float speedFraction(VelocitySensorBlockEntity be) {
+        return over((float) Math.abs(be.getAdjustedVelocity()), be.getMaxSpeed().getValue());
+    }
+
+    private static String degrees(double radians) {
+        return String.format(Locale.US, "%.1f°", Math.toDegrees(radians));
+    }
+
+    private static float angleFraction(double radians) {
+        return (float) ((Math.toDegrees(radians) + 90.0) / 180.0);
+    }
+
+    public Group group() {
+        return group;
+    }
+
+    public boolean accepts(BlockEntity source) {
+        return source != null && reader.apply(source) != null;
+    }
+
+    public static GaugeMetric[] valuesOf(Group group) {
+        List<GaugeMetric> list = new ArrayList<>();
+        for (GaugeMetric metric : values()) {
+            if (metric.group == group) list.add(metric);
+        }
+        return list.toArray(new GaugeMetric[0]);
+    }
+
+    public static GaugeMetric defaultFor(Group group) {
+        return valuesOf(group)[0];
+    }
+
+    public int defaultBackground() {
+        return defaultBackground;
+    }
+
+    public float normalized(BlockEntity source) {
+        if (source == null) return 0f;
+        Float value = normalizer.apply(source);
+        return value == null || Float.isNaN(value) ? 0f : Math.max(0f, Math.min(1f, value));
+    }
+
+    public static float over(float value, float fullScale) {
+        return fullScale <= 0f ? 0f : value / fullScale;
+    }
+
+    public String read(BlockEntity source) {
+        if (source == null) return "--";
+        String value = reader.apply(source);
+        return value == null ? "--" : value;
+    }
+
+    public ChatFormatting color() {
+        return color;
+    }
+
+    public ChatFormatting colorFor(BlockEntity source) {
+        if (group == Group.BRAKE_CONTROLLER && source instanceof BrakeControllerBlockEntity be) {
+            if (be.isEmergency()) return ChatFormatting.RED;
+            if (this == BRAKE_STATE && be.isBraking()) return ChatFormatting.GOLD;
+        }
+        if (group == Group.SAFETY_UNIT && source instanceof SafetyBlockEntity be) {
+            if (be.isEmergency()) return ChatFormatting.RED;
+            if (be.isApproachingLimit()) return ChatFormatting.GOLD;
+            if (be.activeMask() == 0) return ChatFormatting.DARK_GRAY;
+            return ChatFormatting.GREEN;
+        }
+        return color;
+    }
+
+    public String langKey() {
+        return "gui.goggles.gauge_" + getSerializedName();
+    }
+
+    private static String waterLevel(FireboxBlockEntity be) {
+        if (!be.isDisplayValid()) {
+            return Component.translatable("loconautics.gui.goggles.gauge_boiler_missing").getString();
+        }
+        return String.format(Locale.US, "%,d / %,d mB", be.getDisplayWater(), be.getWaterCapacity());
+    }
+
+    public boolean faulted(BlockEntity source) {
+        if (group == Group.BRAKE_CONTROLLER) {
+            return source instanceof BrakeControllerBlockEntity be && !be.isActive();
+        }
+        if (group == Group.SAFETY_UNIT) {
+            return source instanceof SafetyBlockEntity be && (be.isEmergency() || be.problemMask() != 0);
+        }
+        return this == WATER_LEVEL && source instanceof FireboxBlockEntity be && !be.isDisplayValid();
+    }
+
+    private static String trainWeight(FireboxBlockEntity be) {
+        if (!be.onATrain()) {
+            return Component.translatable("loconautics.gui.goggles.gauge_not_on_train").getString();
+        }
+        return String.format(Locale.US, "%,.0f", be.getLastTrainMass());
+    }
+
+    public static GaugeMetric byName(String name) {
+        for (GaugeMetric metric : values()) {
+            if (metric.getSerializedName().equals(name)) return metric;
+        }
+        return TEMPERATURE;
+    }
+
+    public static String pct(float fraction) {
+        return (int) (fraction * 100f) + "%";
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
+    }
+}
