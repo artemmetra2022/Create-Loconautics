@@ -1,5 +1,7 @@
 package com.lycoris.loconautics.trainphysics.signal;
 
+import com.lycoris.loconautics.content.railsignal.RailwaySignalBlock;
+import com.lycoris.loconautics.content.railsignal.SignalAspects;
 import com.lycoris.loconautics.trainphysics.SableTrain;
 import com.lycoris.loconautics.trainphysics.station.TrainStations;
 import com.lycoris.loconautics.trainphysics.rail.RailCarriage;
@@ -7,8 +9,8 @@ import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.TrackGraph;
-import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
+import net.minecraft.world.level.Level;
 
 public final class TrainSignalAccessor {
 
@@ -52,7 +54,8 @@ public final class TrainSignalAccessor {
                 TrainSignals.gapToRed(train, -1.0, QUERY_RANGE));
     }
 
-    public record SignalAhead(SignalBoundary signal, boolean primary, double distance) {
+    public record SignalAhead(Level level, SignalBoundary signal, boolean primary,
+                              double distance) {
     }
 
     public static double gapToAnySignal(SableTrain train) {
@@ -67,8 +70,13 @@ public final class TrainSignalAccessor {
         if (ahead.signal().isForcedRed(ahead.primary())) {
             return true;
         }
-        SignalState state = ahead.signal().cachedStates.get(ahead.primary());
-        return state == null || state == SignalState.RED || state == SignalState.INVALID;
+
+        // The cached Create state can be stale or unavailable for Loconautics'
+        // own signal blocks. Read the aspect actually shown by the signal head
+        // so green, yellow and four-aspect yellow-green are not treated as red.
+        RailwaySignalBlock.Aspect aspect = SignalAspects.displayed(
+                ahead.level(), ahead.signal(), ahead.primary());
+        return aspect == RailwaySignalBlock.Aspect.RED;
     }
 
     public static SignalAhead nextSignal(SableTrain train) {
@@ -106,7 +114,8 @@ public final class TrainSignalAccessor {
             if (!(pair.getFirst() instanceof SignalBoundary signal)) {
                 return false;
             }
-            found[0] = new SignalAhead(signal, signal.isPrimary(pair.getSecond().getSecond()),
+            found[0] = new SignalAhead(train.level(), signal,
+                    signal.isPrimary(pair.getSecond().getSecond()),
                     Math.abs(distance) - SignalSnap.stopOffset);
             return true;
         };
